@@ -173,11 +173,49 @@ img.ProseMirror-separator {
   .cdl-ActionFavoriteButton { cursor: pointer; }
   .cdl-ActionFavoriteButton svg { pointer-events: none; }
 
+  .amws-WorkspaceSelect {
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+  }
+
+  .amws-WorkspaceSelect_Button {
+    background: var(--gray-3-next, #f5f6f7) !important;
+  }
+
+  .am-Content_Body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .am-WebAppMenuContent {
+    width: calc(100% + 16px) !important;
+    margin: 12px -8px 0 !important;
+  }
+
+  .am-InviteUsersTrigger {
+    width: 100% !important;
+  }
+
+  .am-Content_Footer {
+    width: calc(100% - 24px) !important;
+    height: 64px !important;
+    margin: 0 12px !important;
+    border-top: 1px solid var(--gray, #dfe1e6) !important;
+    box-sizing: border-box !important;
+  }
+
+  .am-Content_Footer .amn-Nav,
+  .am-Content_Footer .amnl-List {
+    width: 100% !important;
+  }
+
   .am-Content_Body .amn-Nav.oboard-sidebar-sectioned {
     --oboard-sidebar-panel-bg: var(--gray-0, #fcfcfd);
     --oboard-sidebar-panel-border: var(--gray, #dfe1e6);
     --oboard-sidebar-handle: var(--grey-1-next, #b5bbc5);
     --oboard-top-section-height: 280px;
+    height: 100%;
   }
 
   .oboard-sidebar-sections {
@@ -185,6 +223,7 @@ img.ProseMirror-separator {
     flex-direction: column;
     gap: 0;
     width: 100%;
+    height: 100%;
   }
 
   .oboard-nav-section {
@@ -216,6 +255,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-nav-section-favorites {
+    flex: 1 1 auto;
     min-height: 118px;
   }
 
@@ -228,18 +268,29 @@ img.ProseMirror-separator {
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 32px;
-    padding: 4px 4px 4px 8px;
+    width: 100%;
+    height: 40px;
+    padding: 8px;
     color: var(--dark-2, #42526e);
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 16px;
+    font-size: 14.4px;
+    font-weight: 400;
+    line-height: normal;
     text-transform: none;
+    border-radius: 6px;
   }
 
   .oboard-favorites-header .svg-icon {
     color: var(--dark-2, #42526e);
     flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-favorites-header .amni-Item_Text {
+    color: var(--dark-2, #42526e);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
   }
 
   .oboard-favorites-list.amnl-List-children {
@@ -263,7 +314,7 @@ img.ProseMirror-separator {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 22px;
+    height: 12px;
     margin: 0 -8px;
     cursor: row-resize;
     user-select: none;
@@ -280,8 +331,6 @@ img.ProseMirror-separator {
     transition: opacity 140ms ease, background-color 140ms ease;
   }
 
-  .oboard-sidebar-sections:has(.oboard-nav-section:hover) .oboard-section-resizer::before,
-  .oboard-sidebar-sections:has(.oboard-nav-section:focus-within) .oboard-section-resizer::before,
   .oboard-section-resizer:hover::before,
   .oboard-section-resizer.oboard-section-resizer-active::before {
     opacity: 0.75;
@@ -3901,8 +3950,8 @@ img.ProseMirror-separator {
     favoritesSection.className = 'oboard-nav-section oboard-nav-section-favorites';
 
     const favoritesHeader = document.createElement('div');
-    favoritesHeader.className = 'oboard-favorites-header';
-    favoritesHeader.innerHTML = '<svg data-target-id="icon-favorite-filled" height="16" width="16" aria-hidden="true" class="svg-icon ai-Icon"><use xlink:href="#icon-favorite-filled" href="#icon-favorite-filled"></use></svg><span>Favorites</span>';
+    favoritesHeader.className = 'amni-Item amni-Item-default oboard-favorites-header';
+    favoritesHeader.innerHTML = '<svg data-target-id="icon-favorite-filled" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon amni-Item_Icon"><use xlink:href="#icon-favorite-filled" href="#icon-favorite-filled"></use></svg><span class="amni-Item_Text">Favorites</span>';
 
     originalFavorites.classList.add('oboard-favorites-list');
     dashboardItem.removeChild(originalFavorites);
