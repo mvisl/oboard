@@ -195,6 +195,17 @@ img.ProseMirror-separator {
     border-radius: 14px;
     background: var(--oboard-sidebar-panel-bg);
     overflow: hidden;
+    box-shadow: none;
+    transform: translateY(0);
+    transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  .oboard-nav-section:hover,
+  .oboard-nav-section:focus-within {
+    background: var(--white-color, #fff);
+    border-color: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
+    box-shadow: rgba(0, 0, 0, 0.035) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.08) 0 12px 28px 0;
+    transform: translateY(-1px);
   }
 
   .oboard-nav-section-primary {
@@ -265,6 +276,14 @@ img.ProseMirror-separator {
     height: 4px;
     border-radius: 999px;
     background: var(--oboard-sidebar-handle);
+    opacity: 0;
+    transition: opacity 140ms ease, background-color 140ms ease;
+  }
+
+  .oboard-sidebar-sections:has(.oboard-nav-section:hover) .oboard-section-resizer::before,
+  .oboard-sidebar-sections:has(.oboard-nav-section:focus-within) .oboard-section-resizer::before,
+  .oboard-section-resizer:hover::before,
+  .oboard-section-resizer.oboard-section-resizer-active::before {
     opacity: 0.75;
   }
 
