@@ -171,7 +171,20 @@ img.ProseMirror-separator {
   .tb-Cell-favorites,
   .cdl-ActionFavoriteButton { height: 27px !important; }
   .cdl-ActionFavoriteButton { cursor: pointer; }
-  .cdl-ActionFavoriteButton svg { pointer-events: none; }
+  .cdl-ActionFavoriteButton svg {
+    pointer-events: none;
+    transition: opacity 120ms ease;
+  }
+
+  .tb-Body .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 0;
+  }
+
+  .tb-Body .tb-RowWrapper:hover .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"],
+  .tb-Body .tb-RowWrapper:focus-within .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"],
+  .tb-Body .tb-RowWrapper.oboard-dragging .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 1;
+  }
 
   .oboard-dashboard-mode-switcher {
     display: inline-flex;
@@ -704,6 +717,17 @@ img.ProseMirror-separator {
   .oboard-grouped-favorite .ai-Icon {
     width: 24px;
     height: 24px;
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-grouped-dashboard .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 0;
+  }
+
+  .oboard-grouped-dashboard:hover .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"],
+  .oboard-grouped-dashboard:focus-within .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"],
+  .oboard-grouped-dashboard.oboard-dragging .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 1;
   }
 
   .oboard-grouped-drag-handle {
