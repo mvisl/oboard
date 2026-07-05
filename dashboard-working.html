@@ -177,6 +177,16 @@ img.ProseMirror-separator {
     position: relative;
   }
 
+  .dp-MainContent-CustomDashboardList {
+    --oboard-dashboard-reorder-gutter: 44px;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-Header,
+  .dp-MainContent-CustomDashboardList .tb-Row {
+    padding-left: calc(var(--page-left-padding, 32px) + var(--oboard-dashboard-reorder-gutter)) !important;
+    --padding-left: calc(var(--page-left-padding, 32px) + var(--oboard-dashboard-reorder-gutter)) !important;
+  }
+
   .oboard-drag-handle {
     align-items: center;
     justify-content: center;
@@ -204,7 +214,7 @@ img.ProseMirror-separator {
     display: flex;
     position: absolute;
     top: 50%;
-    left: calc(var(--page-left-padding, 24px) - 24px);
+    left: calc(var(--page-left-padding, 32px) + 6px);
     z-index: 2;
     transform: translateY(-50%);
   }
@@ -892,6 +902,433 @@ img.ProseMirror-separator {
 
   .oboard-sidebar-sectioned .oboard-nav-section-favorites .amnl-List-children {
     display: block;
+  }
+
+  .oboard-nav-section-primary .oboard-prototype-active {
+    background: var(--grey-3-next, #f5f6f7) !important;
+    color: var(--primary-color-next, #0052cc) !important;
+  }
+
+  .oboard-nav-section-primary .oboard-prototype-active .svg-icon,
+  .oboard-nav-section-primary .oboard-prototype-active .amni-Item_Text {
+    color: var(--primary-color-next, #0052cc) !important;
+  }
+
+  .oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item:not(.amni-Item-exact-active) {
+    background: transparent !important;
+    color: var(--dark-2, #42526e) !important;
+  }
+
+  .oboard-static-view {
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 40px var(--page-right-padding, 32px) 48px var(--page-left-padding, 32px);
+    background: var(--white-color, #fff);
+    color: var(--dark-1, #172b4d);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .oboard-static-view[hidden] {
+    display: none !important;
+  }
+
+  .oboard-static-toolbar,
+  .oboard-static-toolbar-left,
+  .oboard-static-toolbar-right,
+  .oboard-static-segment,
+  .oboard-static-card-header,
+  .oboard-static-row,
+  .oboard-static-row-main,
+  .oboard-static-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .oboard-static-toolbar {
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .oboard-static-toolbar-left,
+  .oboard-static-toolbar-right {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .oboard-static-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--grey-3-next, #f5f6f7);
+    color: var(--dark-2, #42526e);
+    font: inherit;
+    font-weight: 700;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  .oboard-static-button svg {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+  }
+
+  .oboard-static-button-dark {
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-static-button-primary {
+    background: var(--primary-color-next, #0052cc);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-static-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--grey-2-next, #dfe1e6);
+  }
+
+  .oboard-static-title {
+    margin: 0 0 24px;
+    color: var(--dark-1, #172b4d);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+  }
+
+  .oboard-static-subtitle {
+    margin: 32px 0 16px;
+    color: var(--dark-1, #172b4d);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+
+  .oboard-static-card {
+    overflow: hidden;
+    border: 1px solid var(--grey-2-next, #dfe1e6);
+    border-radius: 12px;
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-static-card-header {
+    justify-content: space-between;
+    min-height: 56px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
+  }
+
+  .oboard-static-card-title {
+    color: var(--dark-1, #172b4d);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+
+  .oboard-static-segment {
+    gap: 2px;
+    padding: 4px;
+    border-radius: 8px;
+    background: var(--grey-3-next, #f5f6f7);
+    color: var(--dark-2, #42526e);
+    font-weight: 700;
+  }
+
+  .oboard-static-segment span {
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .oboard-static-segment .is-active {
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.08) 0 1px 3px;
+  }
+
+  .oboard-progress-card {
+    padding: 28px 32px 32px;
+  }
+
+  .oboard-progress-tabs {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 28px;
+    color: var(--dark-2, #42526e);
+    font-weight: 700;
+  }
+
+  .oboard-progress-tabs span {
+    padding-bottom: 10px;
+    border-bottom: 3px solid transparent;
+  }
+
+  .oboard-progress-tabs .is-active {
+    color: var(--primary-color-next, #0052cc);
+    border-bottom-color: var(--primary-color-next, #0052cc);
+  }
+
+  .oboard-progress-body {
+    display: grid;
+    grid-template-columns: minmax(280px, 1.2fr) 200px minmax(220px, 0.8fr);
+    gap: 40px;
+    align-items: center;
+  }
+
+  .oboard-line-chart {
+    height: 210px;
+    position: relative;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
+    background:
+      linear-gradient(to bottom, transparent 24%, var(--grey-3-next, #f5f6f7) 24%, var(--grey-3-next, #f5f6f7) calc(24% + 1px), transparent calc(24% + 1px)),
+      linear-gradient(to bottom, transparent 49%, var(--grey-3-next, #f5f6f7) 49%, var(--grey-3-next, #f5f6f7) calc(49% + 1px), transparent calc(49% + 1px)),
+      linear-gradient(to bottom, transparent 74%, var(--grey-3-next, #f5f6f7) 74%, var(--grey-3-next, #f5f6f7) calc(74% + 1px), transparent calc(74% + 1px));
+  }
+
+  .oboard-line-chart svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .oboard-progress-number {
+    text-align: center;
+    color: var(--dark-1, #172b4d);
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 64px;
+  }
+
+  .oboard-status-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .oboard-status-line {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 14px;
+    align-items: center;
+    color: var(--dark-2, #42526e);
+    font-weight: 700;
+  }
+
+  .oboard-status-track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--grey-3-next, #f5f6f7);
+  }
+
+  .oboard-status-track span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--grade-medium-color-next, #ff8541);
+  }
+
+  .oboard-static-list-card {
+    border: 1px solid var(--grey-2-next, #dfe1e6);
+    border-radius: 12px;
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-static-row {
+    min-height: 56px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--dark-1, #172b4d);
+    font-weight: 600;
+  }
+
+  .oboard-static-row:last-child {
+    border-bottom: 0;
+  }
+
+  .oboard-static-row-main {
+    min-width: 0;
+    gap: 12px;
+  }
+
+  .oboard-static-code {
+    color: var(--primary-color-next, #0052cc);
+    font-weight: 700;
+  }
+
+  .oboard-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 7px;
+    border-radius: 7px;
+    background: var(--primary-color-next, #0052cc);
+    color: var(--white-color, #fff);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .oboard-badge-kpi {
+    background: var(--grade-low-color-next, #f64963);
+  }
+
+  .oboard-badge-kr {
+    background: var(--grade-medium-color-next, #ff8541);
+  }
+
+  .oboard-badge-group {
+    background: rgba(var(--grade-medium-color-rgb-next, 255,133,65), 0.2);
+    color: var(--dark-1, #172b4d);
+  }
+
+  .oboard-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 6px;
+    background: var(--grey-3-next, #f5f6f7);
+    color: var(--dark-2, #42526e);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .oboard-chip-outline {
+    border: 1px solid var(--grey-2-next, #dfe1e6);
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-chip-low {
+    border: 1px solid var(--grade-low-color-next-100, #fbacb8);
+    background: var(--white-color, #fff);
+    color: var(--grade-low-color-next, #f64963);
+  }
+
+  .oboard-chip-high {
+    border: 1px solid var(--grade-high-color-next-100, #c4eddc);
+    background: var(--white-color, #fff);
+    color: var(--grade-high-color-next, #36b27e);
+  }
+
+  .oboard-empty-checkins {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    margin-bottom: 32px;
+    color: var(--grey-semi-medium, #6b778c);
+    text-align: center;
+  }
+
+  .oboard-empty-checkins svg {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 16px;
+    color: var(--grey-1-next, #b5bbc5);
+  }
+
+  .oboard-empty-checkins strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--dark-1, #172b4d);
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .oboard-checkin-card {
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .oboard-checkin-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    color: var(--grey-semi-medium, #6b778c);
+    font-weight: 600;
+  }
+
+  .oboard-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+    font-weight: 700;
+  }
+
+  .oboard-checkin-update {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--grey-2-next, #dfe1e6);
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-checkin-update strong {
+    color: var(--dark-1, #172b4d);
+  }
+
+  .oboard-objectives-table {
+    min-width: 960px;
+    border-top: 1px solid var(--grey-2-next, #dfe1e6);
+  }
+
+  .oboard-objectives-head,
+  .oboard-objectives-row {
+    display: grid;
+    grid-template-columns: minmax(420px, 1.5fr) 120px 150px 110px 80px 130px 110px 150px;
+    align-items: center;
+    min-height: 48px;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
+    column-gap: 16px;
+    padding: 0 8px 0 36px;
+  }
+
+  .oboard-objectives-head {
+    color: var(--grey-semi-medium, #6b778c);
+    font-weight: 700;
+  }
+
+  .oboard-objectives-row {
+    color: var(--dark-1, #172b4d);
+    font-weight: 600;
+  }
+
+  .oboard-objectives-row.is-child {
+    padding-left: 72px;
+  }
+
+  .oboard-progress-value {
+    color: var(--grade-low-color-next, #f64963);
+    font-weight: 700;
+  }
+
+  .oboard-progress-value.is-good {
+    color: var(--grade-high-color-next, #36b27e);
+  }
+
+  .oboard-static-overflow {
+    overflow-x: auto;
+  }
+
+  @media (max-width: 1100px) {
+    .oboard-progress-body {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
@@ -5325,6 +5762,207 @@ img.ProseMirror-separator {
     });
   }
 
+  function svgIcon(id, className = '') {
+    return '<svg data-target-id="' + id + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon ' + className + '"><use xlink:href="#' + id + '" href="#' + id + '"></use></svg>';
+  }
+
+  function homeViewTemplate() {
+    return [
+      '<section class="oboard-static-view-inner oboard-static-home">',
+      '<div class="oboard-static-toolbar">',
+      '<div class="oboard-static-toolbar-left">',
+      '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-calendar-next') + 'Q3 2026</button>',
+      '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-user-next') + 'Viacheslav Makhankov</button>',
+      '</div>',
+      '<div class="oboard-static-toolbar-right">',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-export-pdf') + 'PDF</button>',
+      '<button class="oboard-static-button oboard-static-button-primary" type="button">' + svgIcon('icon-plus-next') + 'Create</button>',
+      '</div>',
+      '</div>',
+      '<div class="oboard-static-card oboard-progress-card">',
+      '<div class="oboard-progress-tabs"><span class="is-active">Objectives’ progress 29%</span><span>Metrics progress 0%</span></div>',
+      '<div class="oboard-progress-body">',
+      '<div class="oboard-line-chart"><svg viewBox="0 0 520 210" preserveAspectRatio="none"><polyline points="10,178 92,178 172,178 250,120 330,126 410,142 510,144" fill="none" stroke="var(--primary-color-next, #0052cc)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline><circle cx="250" cy="120" r="5" fill="var(--primary-color-next, #0052cc)"></circle><circle cx="330" cy="126" r="5" fill="var(--primary-color-next, #0052cc)"></circle><circle cx="410" cy="142" r="5" fill="var(--primary-color-next, #0052cc)"></circle></svg></div>',
+      '<div class="oboard-progress-number">29%</div>',
+      '<div class="oboard-status-list">',
+      '<div class="oboard-status-line"><span>NOT STARTED&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
+      '<div class="oboard-status-line"><span>AT RISK&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
+      '<div class="oboard-status-line"><span>BEHIND&nbsp; 1</span><div class="oboard-status-track"><span style="width:28%"></span></div></div>',
+      '<div class="oboard-status-line"><span>ON TRACK&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
+      '<div class="oboard-status-line"><span>CLOSED&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
+      '<div class="oboard-status-line"><span>ABANDONED&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
+      '</div>',
+      '</div>',
+      '</div>',
+      '<h2 class="oboard-static-subtitle">Viacheslav Makhankov’s objectives</h2>',
+      '<div class="oboard-static-list-card">',
+      '<div class="oboard-static-row"><div class="oboard-static-row-main"><span class="oboard-badge">Dp</span><span><span class="oboard-static-code">LIB-7</span> Make the Referral program one of our primary new customer acquisition channels</span></div><span class="oboard-progress-value is-good">29%</span><span class="oboard-avatar">V</span><span class="oboard-chip">2 months ago</span></div>',
+      '</div>',
+      '<h2 class="oboard-static-subtitle">Viacheslav Makhankov’s groups</h2>',
+      '<div class="oboard-static-list-card">',
+      '<div class="oboard-static-row"><div class="oboard-static-row-main"><span class="oboard-badge oboard-badge-group">' + svgIcon('icon-group-objective') + '</span><span>Libertex</span></div><span>Avg progress</span><span>Objectives <strong>0%</strong></span><span>Metrics <strong>0%</strong></span></div>',
+      '</div>',
+      '</section>'
+    ].join('');
+  }
+
+  function checkinsViewTemplate() {
+    return [
+      '<section class="oboard-static-view-inner oboard-static-checkins">',
+      '<div class="oboard-static-toolbar">',
+      '<div class="oboard-static-toolbar-left">',
+      '<button class="oboard-static-button oboard-static-button-dark" type="button">All</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-plus-next') + 'Add filter</button>',
+      '</div>',
+      '<div class="oboard-static-toolbar-right">',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-arrow-left-next') + '</button>',
+      '<button class="oboard-static-button" type="button">Apr 2026</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-arrow-right-next') + '</button>',
+      '</div>',
+      '</div>',
+      '<h1 class="oboard-static-title">July, 2026</h1>',
+      '<div class="oboard-static-card oboard-empty-checkins">' + svgIcon('icon-checkin-module') + '<strong>No check-ins</strong><span>No check-ins have been made yet</span></div>',
+      '<h2 class="oboard-static-subtitle">Wednesday, April 22, 2026</h2>',
+      '<div class="oboard-static-card oboard-checkin-card">',
+      '<div class="oboard-checkin-meta"><span class="oboard-avatar">V</span><strong>Viacheslav Makhankov</strong><span>Apr 22, 8:02 PM</span></div>',
+      '<div class="oboard-static-row-main" style="margin-bottom:16px"><span class="oboard-badge oboard-badge-kr">KR</span><span><span class="oboard-static-code">LIB-23</span> Improve our Net Promoter Score (NPS) from 60 to 90</span><span class="oboard-chip">Q2 2026</span><span class="oboard-chip">Product</span><span class="oboard-chip">+1</span></div>',
+      '<div class="oboard-checkin-update"><strong>Value</strong><span>65 &rarr; <strong>70</strong></span></div>',
+      '<div class="oboard-checkin-update"><strong>Progress</strong><span>17% &rarr; <strong class="oboard-progress-value is-good">33%</strong></span></div>',
+      '<div class="oboard-checkin-update"><strong>Status</strong><span><span class="oboard-chip oboard-chip-high">ON TRACK</span></span></div>',
+      '<div class="oboard-static-actions" style="gap:16px;margin-top:16px;color:var(--dark-2,#42526e);font-weight:700"><span>Reply</span><span>React</span></div>',
+      '</div>',
+      '<div class="oboard-static-card oboard-checkin-card">',
+      '<div class="oboard-checkin-meta"><span class="oboard-avatar">V</span><strong>Viacheslav Makhankov</strong><span>Apr 22, 7:55 PM</span></div>',
+      '<div class="oboard-static-row-main" style="margin-bottom:16px"><span class="oboard-badge oboard-badge-kpi">KPI</span><span><span class="oboard-static-code">LIB-59</span> test KPI</span><span class="oboard-chip">Q2 2026</span></div>',
+      '<div class="oboard-checkin-update"><strong>Progress</strong><span>0% &rarr; <strong>0%</strong></span></div>',
+      '<div class="oboard-static-actions" style="gap:16px;margin-top:16px;color:var(--dark-2,#42526e);font-weight:700"><span>Reply</span><span>React</span></div>',
+      '</div>',
+      '</section>'
+    ].join('');
+  }
+
+  function objectivesViewTemplate() {
+    const rows = [
+      ['T', 'LIB-58', 'Test', 'OKR', '', '0%', '', 'NOT STARTED', 'Q2 2026', 'Lib... +2', ''],
+      ['Dp', 'LIB-60', 'Test Dep', '', '', '0%', '', 'NOT STARTED', 'Q2 2026', 'Libertex', ''],
+      ['KPI', 'LIB-59', 'test KPI', '', '&ndash; / &ge; 100', '0%', '', 'NOT STARTED', 'Q2 2026', 'Libertex', ''],
+      ['C', 'LIB-3', 'Improve Operational Efficiency and Scalability ✨', '', '', '12%', '', 'AT RISK', 'Q2 2026', 'Libertex', ''],
+      ['KR', 'LIB-14', 'Scale the team two times from 100 to 200 employees', '', '', '11%', '', 'AT RISK', 'Q2 2026', 'Lib... +1', 'is-child'],
+      ['KR', 'LIB-12', 'Reduce infrastructure costs by 25%', '', '', '25%', '', 'AT RISK', 'Q2 2026', 'Libertex', 'is-child'],
+      ['C', 'LIB-2', 'Elevate Product Excellence to Unprecedented Levels 🚀', '', '', '86%', '', 'ON TRACK', 'Q2 2026', 'Libertex', ''],
+      ['C', 'LIB-1', 'Become the market leader in the AI calendar assistance category in 2026', '', '', '40%', '', 'BEHIND', 'Q2 2026', 'Libertex', '']
+    ];
+    const rowHtml = rows.map(row => {
+      const [badge, code, title, label, current, progress, weight, status, interval, group, childClass] = row;
+      const statusClass = status === 'ON TRACK' ? 'oboard-chip-high' : status === 'AT RISK' || status === 'BEHIND' ? 'oboard-chip-low' : 'oboard-chip-outline';
+      const progressClass = status === 'ON TRACK' ? 'is-good' : '';
+      const badgeClass = badge === 'KPI' ? 'oboard-badge-kpi' : badge === 'KR' ? 'oboard-badge-kr' : '';
+      return '<div class="oboard-objectives-row ' + childClass + '"><div class="oboard-static-row-main"><span class="oboard-badge ' + badgeClass + '">' + badge + '</span><span><span class="oboard-static-code">' + code + '</span> ' + title + '</span></div><span>' + label + '</span><span>' + current + '</span><span class="oboard-progress-value ' + progressClass + '">' + progress + '</span><span>' + weight + '</span><span><span class="oboard-chip ' + statusClass + '">' + status + '</span></span><span>' + interval + '</span><span><span class="oboard-chip" style="background:rgba(var(--grade-medium-color-rgb-next,255,133,65),.55)">' + group + '</span></span></div>';
+    }).join('');
+    return [
+      '<section class="oboard-static-view-inner oboard-static-objectives">',
+      '<div class="oboard-static-toolbar">',
+      '<div class="oboard-static-toolbar-left">',
+      '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-calendar-next') + 'Q2 2026</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-user-next') + 'All owners</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-group-objective') + 'All groups</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-plus-next') + 'More</button>',
+      '</div>',
+      '<div class="oboard-static-toolbar-right"><button class="oboard-static-button" type="button">' + svgIcon('icon-search-next') + 'Search</button></div>',
+      '</div>',
+      '<div class="oboard-static-toolbar">',
+      '<div class="oboard-static-toolbar-left">',
+      '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-list_bulleted') + 'Alignment view</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-roadmap-switch-list') + 'List</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-progress-gap-arrow') + 'Progress</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-roadmap-switch-list') + 'Roadmap</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-sort-two-ways-next') + 'Sort</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-bulk-actions') + 'Bulk edit</button>',
+      '</div>',
+      '<div class="oboard-static-toolbar-right">',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-share') + 'Share</button>',
+      '<button class="oboard-static-button" type="button">' + svgIcon('icon-xls') + 'Download .xlsx</button>',
+      '<button class="oboard-static-button oboard-static-button-primary" type="button">' + svgIcon('icon-plus-next') + 'Create</button>',
+      '</div>',
+      '</div>',
+      '<div class="oboard-static-overflow">',
+      '<div class="oboard-objectives-table">',
+      '<div class="oboard-objectives-head"><span>' + svgIcon('icon-arrows-up-down-sorting-next') + ' Objectives and Metrics</span><span>Labels</span><span>Current / Target</span><span>Progress</span><span>We...</span><span>Status</span><span>Interval</span><span>Groups</span></div>',
+      rowHtml,
+      '</div>',
+      '</div>',
+      '</section>'
+    ].join('');
+  }
+
+  function initStaticPages() {
+    const appMain = document.querySelector('.app-App > main');
+    const dashboardPage = document.querySelector('.dp-DashboardPage') || document.querySelector('.dp-MainContent-CustomDashboardList')?.closest('main')?.firstElementChild;
+    if (!appMain || !dashboardPage) return;
+    let staticHost = appMain.querySelector('.oboard-static-view');
+    if (!staticHost) {
+      staticHost = document.createElement('div');
+      staticHost.className = 'oboard-static-view';
+      staticHost.hidden = true;
+      dashboardPage.insertAdjacentElement('afterend', staticHost);
+    }
+
+    const pages = {
+      home: { selector: '.amnl-List_Item-homePage > .amni-Item', url: '#/workspaces/23574', html: homeViewTemplate },
+      checkins: { selector: '.amnl-List_Item-checkinsFeed > .amni-Item', url: '#/check-ins/feed', html: checkinsViewTemplate },
+      objectives: { selector: '.amnl-List_Item-objectives > .amni-Item', url: '#/workspaces/23574/objectives/alignment/table?filterPreset=myGroup', html: objectivesViewTemplate },
+      dashboard: { selector: '.oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item', url: '#/workspaces/23574/dashboard/custom-dashboard/list?ownerIds=[0]&sortBy=%22A-Z%22&sortField=%22name%22' }
+    };
+
+    function setActive(pageName) {
+      Object.values(pages).forEach(page => {
+        const link = document.querySelector(page.selector);
+        link?.classList.remove('amni-Item-exact-active');
+        link?.classList.remove('oboard-prototype-active');
+      });
+      const activeLink = document.querySelector(pages[pageName]?.selector);
+      if (!activeLink) return;
+      activeLink.classList.add(pageName === 'dashboard' ? 'amni-Item-exact-active' : 'oboard-prototype-active');
+    }
+
+    function showPage(pageName, push = true) {
+      hidePreview();
+      if (pageName === 'dashboard') {
+        dashboardPage.style.display = '';
+        staticHost.hidden = true;
+      } else {
+        const page = pages[pageName];
+        staticHost.innerHTML = page.html();
+        staticHost.hidden = false;
+        dashboardPage.style.display = 'none';
+      }
+      setActive(pageName);
+      if (push) history.pushState({ oboardPage: pageName }, '', pages[pageName].url);
+    }
+
+    Object.entries(pages).forEach(([pageName, page]) => {
+      const link = document.querySelector(page.selector);
+      if (!link || link.dataset.oboardStaticNavReady === 'true') return;
+      link.dataset.oboardStaticNavReady = 'true';
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        showPage(pageName);
+      });
+    });
+
+    window.addEventListener('popstate', () => showPage(resolvePageFromHash(), false));
+
+    function resolvePageFromHash() {
+      const hash = window.location.hash;
+      if (hash.includes('/check-ins')) return 'checkins';
+      if (hash.includes('/objectives') && !hash.includes('/dashboard')) return 'objectives';
+      if (hash === '#/workspaces/23574' || hash === '#/workspaces/23574/') return 'home';
+      return 'dashboard';
+    }
+
+    showPage(resolvePageFromHash(), false);
+  }
+
   window.addEventListener('scroll', hidePreview, true);
   window.addEventListener('resize', () => {
     if (previewSource) positionPreview(previewSource);
@@ -5349,6 +5987,7 @@ img.ProseMirror-separator {
   syncSidebar();
   initTableSortable();
   initFavoriteSortable();
+  initStaticPages();
 })();
 </script>
 
