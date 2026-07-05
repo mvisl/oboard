@@ -222,6 +222,328 @@ img.ProseMirror-separator {
     box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.15), 0 2px 4px 0 rgba(0, 0, 0, 0.15);
   }
 
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-Header,
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-Body,
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .atcb-Button,
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-EndBlock {
+    display: none !important;
+  }
+
+  .oboard-grouped-list {
+    display: none;
+    width: 100%;
+    margin-top: 30px;
+    color: var(--dark-blue, #172b4d);
+    font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  }
+
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-grouped-list {
+    display: block;
+  }
+
+  .oboard-grouped-head,
+  .oboard-grouped-row-inner {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) 112px 274px 224px 24px;
+    column-gap: 16px;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .oboard-grouped-head {
+    height: 33px;
+    padding: 0 32px 8px 56px;
+    border-bottom: 1px solid var(--gray, #dfe1e6);
+    color: var(--grey-semi-medium, #6b778c);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  .oboard-grouped-head-name {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .oboard-grouped-head-favorite,
+  .oboard-grouped-head-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .oboard-grouped-head-favorite .ai-Icon {
+    width: 24px;
+    height: 24px;
+    color: var(--grey-semi-medium, #6b778c);
+  }
+
+  .oboard-grouped-sort {
+    color: var(--gray, #dfe1e6);
+    font-size: 18px;
+    line-height: 16px;
+  }
+
+  .oboard-grouped-row {
+    position: relative;
+    height: 48px;
+    border-bottom: 1px solid var(--gray, #dfe1e6);
+    box-sizing: border-box;
+  }
+
+  .oboard-grouped-row-inner {
+    height: 48px;
+    padding-right: 32px;
+  }
+
+  .oboard-grouped-collection .oboard-grouped-row-inner {
+    padding-left: 12px;
+  }
+
+  .oboard-grouped-dashboard .oboard-grouped-row-inner {
+    padding-left: 52px;
+  }
+
+  .oboard-grouped-dashboard.is-hover-demo,
+  .oboard-grouped-dashboard:hover,
+  .oboard-grouped-dashboard:focus-within {
+    background: var(--surface-subtle, #f4f7fc);
+  }
+
+  .oboard-grouped-name-cell,
+  .oboard-grouped-owner-cell,
+  .oboard-grouped-visibility-cell,
+  .oboard-grouped-collections-cell {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .oboard-grouped-name-cell {
+    gap: 16px;
+  }
+
+  .oboard-grouped-title {
+    overflow: hidden;
+    min-width: 0;
+    color: var(--dark-blue, #172b4d);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .oboard-grouped-chevrons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--dark-2, #42526e);
+    cursor: pointer;
+  }
+
+  .oboard-grouped-chevrons .ai-Icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 160ms ease;
+  }
+
+  .oboard-grouped-collection.is-collapsed .oboard-grouped-chevrons .ai-Icon {
+    transform: rotate(-90deg);
+  }
+
+  .oboard-grouped-collection-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: var(--purple-600, #a769f6);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-grouped-collection-icon .ai-Icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .oboard-grouped-owner-cell {
+    gap: 8px;
+  }
+
+  .oboard-grouped-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 16px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-grouped-avatar .ai-Icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .oboard-grouped-owner-name,
+  .oboard-grouped-private {
+    overflow: hidden;
+    min-width: 0;
+    color: var(--dark-blue, #172b4d);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .oboard-grouped-private {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .oboard-grouped-private .ai-Icon {
+    width: 24px;
+    height: 24px;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-grouped-favorite {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    color: var(--grey-1-next, #b5bbc5);
+  }
+
+  .oboard-grouped-favorite .ai-Icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-grouped-drag-handle {
+    display: flex;
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+  }
+
+  .oboard-grouped-dashboard:not(:hover):not(:focus-within):not(.is-hover-demo) .oboard-grouped-drag-handle {
+    opacity: 0;
+  }
+
+  .oboard-grouped-dashboard:hover .oboard-grouped-drag-handle,
+  .oboard-grouped-dashboard:focus-within .oboard-grouped-drag-handle,
+  .oboard-grouped-dashboard.is-hover-demo .oboard-grouped-drag-handle {
+    opacity: 1;
+  }
+
+  .oboard-grouped-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: var(--gray-blue-250, #dde2ea);
+    color: var(--dark-2, #42526e);
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  .oboard-grouped-dashboard:hover .oboard-grouped-more,
+  .oboard-grouped-dashboard:focus-within .oboard-grouped-more,
+  .oboard-grouped-dashboard.is-hover-demo .oboard-grouped-more {
+    opacity: 1;
+  }
+
+  .oboard-grouped-more .ai-Icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-grouped-collection-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+    padding: 2px 6px 2px 0;
+    border-radius: 6px;
+    background: var(--component-colors-components-buttons-tertiary-color-button-tertiary-color-bg-hover, #eff4ff);
+    color: var(--dark-blue, #172b4d);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  .oboard-grouped-collection-badge .ai-Icon {
+    width: 24px;
+    height: 24px;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-grouped-tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    z-index: 30;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: rgba(23, 43, 77, 0.94);
+    color: var(--white-color, #fff);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-grouped-tooltip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color: rgba(23, 43, 77, 0.94);
+    transform: translateX(-50%);
+  }
+
+  .oboard-grouped-collection-badge:hover .oboard-grouped-tooltip,
+  .oboard-grouped-collection-badge:focus-within .oboard-grouped-tooltip {
+    opacity: 1;
+  }
+
+  .oboard-grouped-dashboard[hidden] {
+    display: none;
+  }
+
   .tb-Body .tb-RowWrapper {
     position: relative;
   }
@@ -5046,6 +5368,7 @@ img.ProseMirror-separator {
   let favoriteOrder = [...originalSidebarOrder];
   let tableSortable = null;
   let favoriteSortable = null;
+  let groupedSortable = null;
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   const navTemplates = new Map(existingChildItems.map(item => {
@@ -5816,6 +6139,19 @@ img.ProseMirror-separator {
     });
   }
 
+  function initGroupedSortable() {
+    if (!window.Sortable) return;
+    const host = document.querySelector('.oboard-grouped-list');
+    if (!host) return;
+    groupedSortable?.destroy();
+    groupedSortable = window.Sortable.create(host, {
+      ...sortableBaseOptions(() => {}, event => event.item.getBoundingClientRect()),
+      draggable: '.oboard-grouped-dashboard',
+      filter: '.oboard-grouped-collection, .oboard-grouped-head',
+      preventOnFilter: false
+    });
+  }
+
   function svgIcon(id, className = '') {
     return '<svg data-target-id="' + id + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon ' + className + '"><use xlink:href="#' + id + '" href="#' + id + '"></use></svg>';
   }
@@ -5828,6 +6164,171 @@ img.ProseMirror-separator {
       '<path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>',
       '</svg>'
     ].join('');
+  }
+
+  function collectionIcon() {
+    return [
+      '<span class="oboard-grouped-collection-icon">',
+      '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="svg-icon ai-Icon">',
+      '<path d="M1.333 8c0 .128.036.252.105.36.068.107.166.193.282.247l5.733 2.606c.173.079.361.119.55.119.19 0 .378-.04.55-.119l5.72-2.6c.118-.053.218-.139.288-.248.07-.109.107-.236.106-.365M1.333 11.333c0 .128.036.253.105.36.068.108.166.193.282.247l5.733 2.607c.173.078.361.118.55.118.19 0 .378-.04.55-.118l5.72-2.6c.118-.053.218-.14.288-.249.07-.108.107-.235.106-.365M8.553 1.453a1.333 1.333 0 0 0-1.106 0l-5.714 2.6a.667.667 0 0 0 0 1.22l5.72 2.607c.174.079.363.12.554.12.19 0 .379-.041.553-.12l5.72-2.6a.667.667 0 0 0 0-1.22L8.553 1.453Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>',
+      '</svg>',
+      '</span>'
+    ].join('');
+  }
+
+  const groupedCollections = [
+    {
+      name: 'Collection 4',
+      owner: 'Sofia Chen',
+      items: [
+        { name: 'Social Media Trends 2024', owner: 'Sofia Chen', favorite: false, hover: true, private: true }
+      ]
+    },
+    {
+      name: 'Collection 3',
+      owner: 'Sofia Chen',
+      items: [
+        { name: 'Financial Projections Q4', owner: 'Angelina Baker', badge: '+1', badgeTitle: 'Collection 1', private: true }
+      ]
+    },
+    {
+      name: 'Collection 2',
+      owner: 'Sofia Chen',
+      items: [
+        { name: 'User Behavior Analysis 2024', owner: 'Evelyn Hayes', private: true }
+      ]
+    },
+    {
+      name: 'Collection 1',
+      owner: 'Sofia Chen',
+      items: [
+        { name: 'Financial Projections Q4', owner: 'Angelina Baker', badge: '+1', badgeTitle: 'Collection 3', private: true }
+      ]
+    }
+  ];
+
+  function ownerCell(name) {
+    return [
+      '<div class="oboard-grouped-owner-cell">',
+      '<span class="oboard-grouped-avatar">' + svgIcon('icon-user-next') + '</span>',
+      '<span class="oboard-grouped-owner-name">' + escapeHtml(name) + '</span>',
+      '</div>'
+    ].join('');
+  }
+
+  function privateCell() {
+    return '<span class="oboard-grouped-private">' + svgIcon('icon-lock-next') + '<span>Private</span></span>';
+  }
+
+  function collectionBadge(item) {
+    if (!item.badge) return '';
+    return [
+      '<span class="oboard-grouped-collection-badge" tabindex="0">',
+      layersIcon(),
+      '<span>' + escapeHtml(item.badge) + '</span>',
+      '<span class="oboard-grouped-tooltip">' + escapeHtml(item.badgeTitle || 'Other collections') + '</span>',
+      '</span>'
+    ].join('');
+  }
+
+  function groupedDashboardRow(item, collectionName) {
+    return [
+      '<div class="oboard-grouped-row oboard-grouped-dashboard' + (item.hover ? ' is-hover-demo' : '') + '" data-dashboard-name="' + escapeHtml(item.name) + '" data-collection="' + escapeHtml(collectionName) + '">',
+      '<button class="oboard-drag-handle oboard-grouped-drag-handle" type="button" aria-label="Reorder dashboard">' + svgIcon(DRAG) + '</button>',
+      '<div class="oboard-grouped-row-inner">',
+      '<div class="oboard-grouped-name-cell">',
+      '<span class="oboard-grouped-favorite">' + svgIcon(item.favorite ? FILLED : EMPTY) + '</span>',
+      '<span class="oboard-grouped-title">' + escapeHtml(item.name) + '</span>',
+      '</div>',
+      '<div class="oboard-grouped-collections-cell">' + collectionBadge(item) + '</div>',
+      ownerCell(item.owner),
+      '<div class="oboard-grouped-visibility-cell">' + (item.private ? privateCell() : '') + '</div>',
+      '<button class="oboard-grouped-more" type="button" aria-label="More actions">' + svgIcon('icon-more-next') + '</button>',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function groupedCollectionRow(collection) {
+    return [
+      '<div class="oboard-grouped-row oboard-grouped-collection" data-collection="' + escapeHtml(collection.name) + '">',
+      '<div class="oboard-grouped-row-inner">',
+      '<div class="oboard-grouped-name-cell">',
+      '<button class="oboard-grouped-chevrons" type="button" aria-label="Collapse collection">' + svgIcon('icon-chevron-down-sm') + '</button>',
+      collectionIcon(),
+      '<span class="oboard-grouped-title">' + escapeHtml(collection.name) + '</span>',
+      '</div>',
+      '<div class="oboard-grouped-collections-cell"></div>',
+      ownerCell(collection.owner),
+      '<div class="oboard-grouped-visibility-cell"></div>',
+      '<span></span>',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function groupedListHtml() {
+    return [
+      '<div class="oboard-grouped-head">',
+      '<div class="oboard-grouped-head-name">',
+      '<span class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></span>',
+      '<span class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></span>',
+      '</div>',
+      '<div></div>',
+      '<div class="oboard-grouped-head-label"><span>Owner</span><span class="oboard-grouped-sort">↕</span></div>',
+      '<div class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></div>',
+      '<div></div>',
+      '</div>',
+      groupedCollections.map(collection => groupedCollectionRow(collection) + collection.items.map(item => groupedDashboardRow(item, collection.name)).join('')).join('')
+    ].join('');
+  }
+
+  function initGroupedList() {
+    const page = document.querySelector('.dp-MainContent-CustomDashboardList');
+    const table = document.querySelector('.tb-Body')?.parentElement;
+    if (!page || !table) return null;
+    let host = page.querySelector('.oboard-grouped-list');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'oboard-grouped-list';
+      table.insertAdjacentElement('afterend', host);
+    }
+    host.innerHTML = groupedListHtml();
+    host.querySelectorAll('.oboard-grouped-collection').forEach(collectionRow => {
+      const button = collectionRow.querySelector('.oboard-grouped-chevrons');
+      button?.addEventListener('click', () => {
+        const collection = collectionRow.dataset.collection;
+        const collapsed = !collectionRow.classList.contains('is-collapsed');
+        collectionRow.classList.toggle('is-collapsed', collapsed);
+        button.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
+        host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
+          row.hidden = collapsed;
+        });
+      });
+    });
+    initGroupedSortable();
+    return host;
+  }
+
+  function setButtonText(button, text) {
+    if (!button) return;
+    Array.from(button.childNodes).forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+        node.textContent = text;
+      }
+    });
+  }
+
+  function applyDashboardMode(mode) {
+    const page = document.querySelector('.dp-MainContent-CustomDashboardList');
+    const createButton = document.querySelector('.cdl-DashboardHeader_NewReport');
+    const grouped = mode === 'grouped';
+    page?.classList.toggle('oboard-grouped-mode', grouped);
+    setButtonText(createButton, grouped ? 'Create collection' : 'Create dashboard');
+    if (grouped) {
+      hidePreview();
+      initGroupedList();
+    }
   }
 
   function initDashboardGroupSwitcher() {
@@ -5852,6 +6353,7 @@ img.ProseMirror-separator {
         option.setAttribute('aria-checked', active ? 'true' : 'false');
       });
       window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
+      applyDashboardMode(normalizedMode);
     }
 
     switcher.addEventListener('click', event => {
