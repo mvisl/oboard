@@ -317,6 +317,76 @@ img.ProseMirror-separator {
     height: 24px;
   }
 
+  .sortable-fallback {
+    pointer-events: none !important;
+    z-index: 10001 !important;
+    opacity: 0.96 !important;
+    border-radius: 8px;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+    box-sizing: border-box;
+  }
+
+  .tb-Body .tb-RowWrapper.sortable-chosen,
+  .oboard-favorites-list > .amnl-List_Item.sortable-chosen {
+    opacity: 0.16;
+  }
+
+  .tb-Body .tb-RowWrapper.original-chosen,
+  .oboard-favorites-list > .amnl-List_Item.original-chosen {
+    cursor: grabbing;
+  }
+
+  .tb-Body .tb-RowWrapper.oboard-sortable-drag,
+  .oboard-favorites-list > .amnl-List_Item.oboard-sortable-drag {
+    opacity: 0.96 !important;
+    border-radius: 8px;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .tb-Body .tb-RowWrapper.oboard-sortable-drag .tb-Row {
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-favorites-list > .amnl-List_Item.oboard-sortable-drag {
+    list-style: none;
+  }
+
+  .oboard-sortable-drag .oboard-drag-handle,
+  .original-chosen .oboard-drag-handle,
+  .sortable-fallback .oboard-drag-handle {
+    opacity: 1;
+  }
+
+  .sortable-fallback.tb-RowWrapper .tb-Row {
+    background: var(--white-color, #fff);
+  }
+
+  .sortable-fallback.amnl-List_Item {
+    list-style: none;
+  }
+
+  .sortable-fallback.amnl-List_Item .amni-Item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
+    box-sizing: border-box;
+    padding: 8px 28px 8px 36px;
+    border-radius: 6px;
+    background: var(--white-color, #fff);
+  }
+
+  .sortable-fallback.amnl-List_Item .amni-Item_Text {
+    overflow: hidden;
+    min-width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .oboard-dashboard-preview {
     position: fixed;
     z-index: 10000;
@@ -4401,6 +4471,7 @@ img.ProseMirror-separator {
 
 <img src="https://bq.oboard.io/g/collect?v=2&amp;tid=G-XXXXXXX&amp;cid=instance_id&amp;en=page_view&amp;dl=jira_plugin&amp;dt=jira_plugin&amp;ep.cd1=bae1fd23-15c1-4109-a1ea-9508d3704992&amp;ep.cd2=gtm.historyChange&amp;ep.cd3=bXZpc2wxQGdtYWlsLmNvbQ%3D%3D" alt="" width="1" height="1" style="display:none">
 
+<script src="sortable.min.js"></script>
 <script id="oboard-dashboard-prototype-js">
 (() => {
   const FILLED = 'icon-favorite-filled';
@@ -4498,6 +4569,10 @@ img.ProseMirror-separator {
   const existingChildItems = dashboardChildren ? Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item')) : [];
   const originalSidebarOrder = existingChildItems.map(item => item.querySelector('.amni-Item_Text')?.textContent?.trim()).filter(Boolean);
   let favoriteOrder = [...originalSidebarOrder];
+  let tableSortable = null;
+  let favoriteSortable = null;
+  let activeSortableLock = null;
+  let sortableLockFrame = 0;
   const navTemplates = new Map(existingChildItems.map(item => {
     const text = item.querySelector('.amni-Item_Text')?.textContent?.trim();
     return [text, item.cloneNode(true)];
@@ -4572,6 +4647,7 @@ img.ProseMirror-separator {
     });
     attachFavoriteDragHandlers();
     attachFavoritePreview();
+    initFavoriteSortable();
   }
 
   function reorderFavoriteDom(names) {
@@ -4609,6 +4685,18 @@ img.ProseMirror-separator {
     return true;
   }
 
+  function reorderItemData(sourceName, targetName, placeAfter = false) {
+    const sourceIndex = rowOrder.findIndex(item => item.name === sourceName);
+    const targetRawIndex = rowOrder.findIndex(item => item.name === targetName);
+    if (sourceIndex < 0 || targetRawIndex < 0 || sourceIndex === targetRawIndex) return false;
+    const [sourceItem] = rowOrder.splice(sourceIndex, 1);
+    const targetIndex = rowOrder.findIndex(item => item.name === targetName);
+    rowOrder.splice(targetIndex + (placeAfter ? 1 : 0), 0, sourceItem);
+    syncSidebar();
+    saveOrder();
+    return true;
+  }
+
   function reorderFavorites(sourceName, targetName, placeAfter = false) {
     const names = sidebarNames();
     const sourceIndex = names.indexOf(sourceName);
@@ -4619,6 +4707,19 @@ img.ProseMirror-separator {
     names.splice(targetIndex + (placeAfter ? 1 : 0), 0, sourceItem);
     favoriteOrder = names;
     if (!reorderFavoriteDom(names)) syncSidebar();
+    saveFavoriteOrder();
+    return true;
+  }
+
+  function reorderFavoriteData(sourceName, targetName, placeAfter = false) {
+    const names = sidebarNames();
+    const sourceIndex = names.indexOf(sourceName);
+    const targetRawIndex = names.indexOf(targetName);
+    if (sourceIndex < 0 || targetRawIndex < 0 || sourceIndex === targetRawIndex) return false;
+    const [sourceItem] = names.splice(sourceIndex, 1);
+    const targetIndex = names.indexOf(targetName);
+    names.splice(targetIndex + (placeAfter ? 1 : 0), 0, sourceItem);
+    favoriteOrder = names;
     saveFavoriteOrder();
     return true;
   }
@@ -4684,8 +4785,6 @@ img.ProseMirror-separator {
   function layoutAnimationElements(allSelector) {
     const elements = Array.from(document.querySelectorAll(allSelector))
       .filter(node => !node.classList.contains('oboard-dragging'));
-    const createButton = document.querySelector('.atcb-Button');
-    if (createButton && allSelector.includes('.tb-Body')) elements.push(createButton);
     return elements;
   }
 
@@ -4742,6 +4841,32 @@ img.ProseMirror-separator {
     sourceElement.style.overflow = '';
   }
 
+  function settleDragSourceInSlot(sourceElement, placeholder, fallbackTarget, placeAfter) {
+    const slotRect = placeholder?.parentNode ? placeholder.getBoundingClientRect() : sourceElement.getBoundingClientRect();
+    const parent = placeholder?.parentNode || fallbackTarget?.parentNode;
+    if (!parent) {
+      restoreDragSource(sourceElement);
+      return;
+    }
+    if (!placeholder?.parentNode && fallbackTarget) {
+      const reference = placeAfter ? fallbackTarget.nextSibling : fallbackTarget;
+      parent.insertBefore(placeholder, reference);
+      placeholder.classList.add('oboard-drop-placeholder-active');
+    }
+    const height = Math.max(1, slotRect.height || sourceElement.getBoundingClientRect().height);
+    sourceElement.style.height = height + 'px';
+    sourceElement.style.minHeight = height + 'px';
+    sourceElement.style.overflow = 'hidden';
+    sourceElement.classList.remove('oboard-dragging');
+    parent.insertBefore(sourceElement, placeholder || (placeAfter ? fallbackTarget.nextSibling : fallbackTarget));
+    placeholder?.remove();
+    window.setTimeout(() => {
+      sourceElement.style.height = '';
+      sourceElement.style.minHeight = '';
+      sourceElement.style.overflow = '';
+    }, 80);
+  }
+
   function createDragGhost(sourceElement, event) {
     const rect = sourceElement.getBoundingClientRect();
     const ghost = sourceElement.cloneNode(true);
@@ -4782,6 +4907,7 @@ img.ProseMirror-separator {
   }
 
   function attachDragBehavior(handle, sourceName, itemSelector, allSelector, reorderFn) {
+    if (window.Sortable) return;
     if (handle.dataset.oboardDragReady === 'true') return;
     handle.dataset.oboardDragReady = 'true';
     handle.addEventListener('pointerdown', event => {
@@ -5047,6 +5173,156 @@ img.ProseMirror-separator {
     });
   }
 
+  function styleSortableClone(event) {
+    const clone = event.clone;
+    const item = event.item;
+    if (!clone || !item) return;
+    const rect = item.getBoundingClientRect();
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    clone.style.boxSizing = 'border-box';
+    const row = item.querySelector('.tb-Row');
+    const cloneRow = clone.querySelector('.tb-Row');
+    if (row && cloneRow) {
+      const rowRect = row.getBoundingClientRect();
+      const rowStyle = getComputedStyle(row);
+      clone.style.setProperty('--page-left-padding', rowStyle.paddingLeft);
+      clone.style.setProperty('--page-right-padding', rowStyle.paddingRight);
+      clone.style.setProperty('--padding-left', rowStyle.paddingLeft);
+      clone.style.setProperty('--padding-right', rowStyle.paddingRight);
+      cloneRow.style.height = rowRect.height + 'px';
+      cloneRow.style.minHeight = rowRect.height + 'px';
+      cloneRow.style.maxHeight = rowRect.height + 'px';
+      cloneRow.style.boxSizing = 'border-box';
+    }
+  }
+
+  function lockSortableFallback() {
+    if (!activeSortableLock) return;
+    const clone = document.querySelector('.sortable-fallback');
+    if (!clone) return;
+    const transform = getComputedStyle(clone).transform;
+    let translateY = 0;
+    if (transform && transform !== 'none') {
+      const values = transform.match(/matrix3d\(([^)]+)\)/)?.[1]?.split(',').map(Number);
+      if (values && values.length === 16) {
+        translateY = values[13] || 0;
+      } else {
+        const matrix = transform.match(/matrix\(([^)]+)\)/)?.[1]?.split(',').map(Number);
+        if (matrix && matrix.length === 6) translateY = matrix[5] || 0;
+      }
+    }
+    clone.style.left = activeSortableLock.left + 'px';
+    clone.style.width = activeSortableLock.width + 'px';
+    clone.style.maxWidth = activeSortableLock.width + 'px';
+    clone.style.transform = 'translate3d(0px, ' + translateY + 'px, 0)';
+  }
+
+  function scheduleSortableLock() {
+    if (sortableLockFrame) return;
+    sortableLockFrame = window.requestAnimationFrame(() => {
+      sortableLockFrame = 0;
+      lockSortableFallback();
+    });
+  }
+
+  function startSortableLock(event, lockRectFor) {
+    const rect = lockRectFor(event);
+    activeSortableLock = rect ? {
+      left: Math.round(rect.left),
+      width: Math.round(rect.width)
+    } : null;
+    lockSortableFallback();
+    document.addEventListener('pointermove', scheduleSortableLock, true);
+  }
+
+  function stopSortableLock() {
+    document.removeEventListener('pointermove', scheduleSortableLock, true);
+    if (sortableLockFrame) {
+      window.cancelAnimationFrame(sortableLockFrame);
+      sortableLockFrame = 0;
+    }
+    activeSortableLock = null;
+  }
+
+  function sortableBaseOptions(onEnd, lockRectFor) {
+    return {
+      animation: 180,
+      easing: 'cubic-bezier(0.2, 0, 0, 1)',
+      handle: '.oboard-drag-handle',
+      ghostClass: 'sortable-chosen',
+      chosenClass: 'original-chosen',
+      dragClass: 'oboard-sortable-drag',
+      forceFallback: true,
+      fallbackOnBody: true,
+      fallbackTolerance: 3,
+      scroll: true,
+      scrollSensitivity: 56,
+      scrollSpeed: 12,
+      onChoose: hidePreview,
+      onStart(event) {
+        hidePreview();
+        document.body.classList.add('oboard-reordering');
+        styleSortableClone(event);
+        startSortableLock(event, lockRectFor);
+      },
+      onClone: styleSortableClone,
+      onEnd(event) {
+        stopSortableLock();
+        document.body.classList.remove('oboard-reordering');
+        onEnd(event);
+      },
+      setData(dataTransfer) {
+        dataTransfer.setData('text/plain', '');
+      }
+    };
+  }
+
+  function syncTableDataFromDom() {
+    const names = Array.from(document.querySelectorAll('.tb-Body > .tb-RowWrapper'))
+      .map(row => row.dataset.dashboardName)
+      .filter(Boolean);
+    const byName = new Map(rowOrder.map(item => [item.name, item]));
+    const nextOrder = names.map(name => byName.get(name)).filter(Boolean);
+    if (nextOrder.length !== rowOrder.length) return;
+    rowOrder.splice(0, rowOrder.length, ...nextOrder);
+    saveOrder();
+    syncSidebar();
+  }
+
+  function syncFavoriteDataFromDom() {
+    if (!dashboardChildren) return;
+    favoriteOrder = Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item'))
+      .map(item => item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim())
+      .filter(Boolean);
+    saveFavoriteOrder();
+    attachFavoritePreview();
+  }
+
+  function initTableSortable() {
+    if (!window.Sortable) return;
+    const body = document.querySelector('.tb-Body');
+    if (!body) return;
+    tableSortable?.destroy();
+    tableSortable = window.Sortable.create(body, {
+      ...sortableBaseOptions(event => {
+        if (event.oldIndex !== event.newIndex) syncTableDataFromDom();
+      }, event => event.item.getBoundingClientRect()),
+      draggable: '.tb-RowWrapper'
+    });
+  }
+
+  function initFavoriteSortable() {
+    if (!window.Sortable || !dashboardChildren) return;
+    favoriteSortable?.destroy();
+    favoriteSortable = window.Sortable.create(dashboardChildren, {
+      ...sortableBaseOptions(event => {
+        if (event.oldIndex !== event.newIndex) syncFavoriteDataFromDom();
+      }, event => event.item.getBoundingClientRect()),
+      draggable: '.amnl-List_Item'
+    });
+  }
+
   window.addEventListener('scroll', hidePreview, true);
   window.addEventListener('resize', () => {
     if (previewSource) positionPreview(previewSource);
@@ -5069,6 +5345,8 @@ img.ProseMirror-separator {
   restoreOrder();
   restoreFavoriteOrder();
   syncSidebar();
+  initTableSortable();
+  initFavoriteSortable();
 })();
 </script>
 
