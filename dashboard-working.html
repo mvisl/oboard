@@ -325,13 +325,13 @@ img.ProseMirror-separator {
     box-shadow: rgba(0, 0, 0, 0.072) 0 0 18px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.144) 0 18px 42px 0;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(4px);
-    transition: opacity 160ms ease, transform 160ms ease;
+    transform: none;
+    transition: opacity 160ms ease;
   }
 
   .oboard-dashboard-preview-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 
   .oboard-dashboard-preview-small {
@@ -4897,13 +4897,7 @@ img.ProseMirror-separator {
       const itemRect = sourceElement.querySelector('.amni-Item')?.getBoundingClientRect();
       const width = panelRect ? panelRect.width : 216;
       const height = width * 0.75;
-      let top = sourceRect.bottom + 8;
-      if (panelRect && top + height > panelRect.bottom - 8) {
-        top = sourceRect.top - height - 8;
-      }
-      if (panelRect && top < panelRect.top + 48) {
-        top = Math.max(panelRect.top + 48, panelRect.bottom - height - 8);
-      }
+      const top = Math.round(itemRect ? itemRect.top : sourceRect.top);
       preview.style.width = width + 'px';
       preview.style.height = height + 'px';
       preview.style.left = ((itemRect ? itemRect.right : panelRect?.right || sourceRect.right) + 1) + 'px';
