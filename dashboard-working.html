@@ -242,10 +242,11 @@ img.ProseMirror-separator {
     height: 24px;
   }
 
-  .oboard-dashboard-collection-tag,
-  .oboard-dashboard-collection-counter {
+  .oboard-dashboard-collection-badge {
+    position: relative;
     display: inline-flex;
     align-items: center;
+    gap: 4px;
     height: 24px;
     min-width: 0;
     box-sizing: border-box;
@@ -260,16 +261,58 @@ img.ProseMirror-separator {
     white-space: nowrap;
   }
 
-  .oboard-dashboard-collection-tag {
-    overflow: hidden;
-    max-width: 82px;
-    padding: 2px 6px;
-    text-overflow: ellipsis;
+  .oboard-dashboard-collection-badge {
+    padding: 2px 6px 2px 0;
   }
 
-  .oboard-dashboard-collection-counter {
-    padding: 2px 4px;
-    background: transparent;
+  .oboard-dashboard-collection-badge .ai-Icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-dashboard-collection-tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    z-index: 30;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: rgba(23, 43, 77, 0.94);
+    color: var(--white-color, #fff);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-dashboard-collection-tooltip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color: rgba(23, 43, 77, 0.94);
+    transform: translateX(-50%);
+  }
+
+  .oboard-dashboard-collection-badge:hover .oboard-dashboard-collection-tooltip,
+  .oboard-dashboard-collection-badge:focus-within .oboard-dashboard-collection-tooltip {
+    opacity: 1;
+  }
+
+  .tb-HeaderCell-collections .cdth-HeaderCell_DefaultStateSorting {
+    width: 20px;
+    height: 20px;
+    color: var(--gray-blue-300, #c3c7d0);
+    opacity: 1;
   }
 
   .oboard-dashboard-collection-add {
@@ -5825,10 +5868,9 @@ img.ProseMirror-separator {
 
   function renderDashboardCollectionCell(cell, dashboardName) {
     const selected = dashboardCollections.get(dashboardName) || [];
-    const first = selected[0];
+    const tooltip = selected.join(', ');
     cell.innerHTML = [
-      first ? '<span class="oboard-dashboard-collection-tag" title="' + escapeHtml(first) + '">' + escapeHtml(first) + '</span>' : '',
-      selected.length > 1 ? '<span class="oboard-dashboard-collection-counter">+' + (selected.length - 1) + '</span>' : '',
+      selected.length ? '<span class="oboard-dashboard-collection-badge" tabindex="0">' + layersIcon() + '<span>+' + selected.length + '</span><span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></span>' : '',
       '<button class="oboard-dashboard-collection-add" type="button" aria-label="Add to collection" data-dashboard-name="' + escapeHtml(dashboardName) + '">' + svgIcon('icon-plus-next') + '</button>'
     ].join('');
   }
@@ -5895,8 +5937,21 @@ img.ProseMirror-separator {
     activeDashboardCollectionQuery = '';
   }
 
+  function getDashboardCollectionAnchor(dashboardName) {
+    if (!dashboardName) return null;
+    return document.querySelector('.oboard-dashboard-collection-add[data-dashboard-name="' + CSS.escape(dashboardName) + '"]');
+  }
+
   function positionDashboardCollectionPopover(popover, anchor) {
+    if (!popover || !anchor || !anchor.isConnected) {
+      closeDashboardCollectionPopover();
+      return;
+    }
     const rect = anchor.getBoundingClientRect();
+    if (!rect.width && !rect.height) {
+      closeDashboardCollectionPopover();
+      return;
+    }
     const width = 220;
     const left = Math.max(8, Math.min(window.innerWidth - width - 8, rect.left));
     const top = Math.min(window.innerHeight - 8, rect.bottom);
@@ -5920,7 +5975,15 @@ img.ProseMirror-separator {
 
   function refreshDashboardCollectionPopover() {
     if (!activeDashboardCollectionMenu) return;
-    const { anchor, dashboardName } = activeDashboardCollectionMenu;
+    const { dashboardName } = activeDashboardCollectionMenu;
+    const anchor = activeDashboardCollectionMenu.anchor?.isConnected
+      ? activeDashboardCollectionMenu.anchor
+      : getDashboardCollectionAnchor(dashboardName);
+    if (!anchor) {
+      closeDashboardCollectionPopover();
+      return;
+    }
+    activeDashboardCollectionMenu.anchor = anchor;
     const oldPopover = document.querySelector('.oboard-dashboard-collection-popover');
     oldPopover?.remove();
     document.body.insertAdjacentHTML('beforeend', dashboardCollectionPopoverHtml(dashboardName));
