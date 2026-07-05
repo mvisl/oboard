@@ -360,7 +360,18 @@ img.ProseMirror-separator {
   }
 
   .sortable-fallback.tb-RowWrapper .tb-Row {
+    height: var(--oboard-sortable-row-height, 45px) !important;
+    min-height: var(--oboard-sortable-row-height, 45px) !important;
+    max-height: var(--oboard-sortable-row-height, 45px) !important;
     background: var(--white-color, #fff);
+    overflow: hidden !important;
+  }
+
+  .sortable-fallback.tb-RowWrapper .tb-Cell {
+    height: var(--oboard-sortable-row-height, 45px) !important;
+    min-height: var(--oboard-sortable-row-height, 45px) !important;
+    max-height: var(--oboard-sortable-row-height, 45px) !important;
+    overflow: hidden !important;
   }
 
   .sortable-fallback.amnl-List_Item {
@@ -5180,7 +5191,11 @@ img.ProseMirror-separator {
     const rect = item.getBoundingClientRect();
     clone.style.width = rect.width + 'px';
     clone.style.height = rect.height + 'px';
+    clone.style.minHeight = rect.height + 'px';
+    clone.style.maxHeight = rect.height + 'px';
+    clone.style.overflow = 'hidden';
     clone.style.boxSizing = 'border-box';
+    clone.style.setProperty('--oboard-sortable-row-height', rect.height + 'px');
     const row = item.querySelector('.tb-Row');
     const cloneRow = clone.querySelector('.tb-Row');
     if (row && cloneRow) {
@@ -5193,7 +5208,15 @@ img.ProseMirror-separator {
       cloneRow.style.height = rowRect.height + 'px';
       cloneRow.style.minHeight = rowRect.height + 'px';
       cloneRow.style.maxHeight = rowRect.height + 'px';
+      cloneRow.style.overflow = 'hidden';
       cloneRow.style.boxSizing = 'border-box';
+      clone.style.setProperty('--oboard-sortable-row-height', rowRect.height + 'px');
+      clone.querySelectorAll('.tb-Cell').forEach(cell => {
+        cell.style.height = rowRect.height + 'px';
+        cell.style.minHeight = rowRect.height + 'px';
+        cell.style.maxHeight = rowRect.height + 'px';
+        cell.style.overflow = 'hidden';
+      });
     }
   }
 
@@ -5215,6 +5238,11 @@ img.ProseMirror-separator {
     clone.style.left = activeSortableLock.left + 'px';
     clone.style.width = activeSortableLock.width + 'px';
     clone.style.maxWidth = activeSortableLock.width + 'px';
+    clone.style.height = activeSortableLock.height + 'px';
+    clone.style.minHeight = activeSortableLock.height + 'px';
+    clone.style.maxHeight = activeSortableLock.height + 'px';
+    clone.style.overflow = 'hidden';
+    clone.style.setProperty('--oboard-sortable-row-height', activeSortableLock.height + 'px');
     clone.style.transform = 'translate3d(0px, ' + translateY + 'px, 0)';
   }
 
@@ -5230,7 +5258,8 @@ img.ProseMirror-separator {
     const rect = lockRectFor(event);
     activeSortableLock = rect ? {
       left: Math.round(rect.left),
-      width: Math.round(rect.width)
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
     } : null;
     lockSortableFallback();
     document.addEventListener('pointermove', scheduleSortableLock, true);
