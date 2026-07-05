@@ -1,5 +1,5 @@
 <html><head>
-<!-- Oboard prototype label: Dashboard Working Copy. Use this duplicate for changes. -->
+<!-- Oboard prototype label: Dashboard Favorites Snapshot. Preserved before the dashboard-section variant. -->
   <meta charset="utf-8">
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
   <link rel="apple-touch-icon" sizes="180x180" href="https://app.oboard.io/favicon/apple-touch-icon.png">
@@ -10,7 +10,7 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 
-  <title>Dashboard Working Copy</title>
+  <title>Dashboard Favorites Snapshot</title>
 
   <style>:root{--grade-low-color:#d1523a;--grade-medium-color:#ff991f;--grade-high-color:#00b395;--grade-low-color-next:#f64963;--grade-low-color-next-0:#fddde2;--grade-low-color-next-100:#fbacb8;--grade-low-color-next-200:#f97b8e;--grade-low-color-next-300:#f74b65;--grade-low-color-next-400:#f41a3b;--grade-low-color-next-500:#d10a28;--grade-low-color-next-600:#a1081f;--grade-low-color-next-700:#700515;--grade-medium-color-next:#ff8541;--grade-medium-color-next-0:#ffe8db;--grade-medium-color-next-100:#ffc7a8;--grade-medium-color-next-200:#ffa575;--grade-medium-color-next-300:#ff8442;--grade-medium-color-next-400:#ff630f;--grade-medium-color-next-500:#db4d00;--grade-medium-color-next-600:#a83b00;--grade-medium-color-next-700:#752900;--grade-high-color-next:#36b27e;--grade-high-color-next-0:#ebf9f3;--grade-high-color-next-100:#c4eddc;--grade-high-color-next-200:#9de1c5;--grade-high-color-next-300:#76d5ae;--grade-high-color-next-400:#4fc996;--grade-high-color-next-500:#36b07d;--grade-high-color-next-600:#2a8961;--grade-high-color-next-700:#1e6245;--grade-closed-color:#42526e;--grade-abandoned-color:#6b778c;--grade-backlog-color:#172b4d;--grade-default-color:#172b4d;--grey-1-next:#b5bbc5;--grey-1-next-rgb:181,187,197;--grey-2-next:#dfe1e6;--grey-3-next:#f5f6f7;--dark-3:#6b778c;--dark-2:#42526e;--dark-2-rgb:66,82,110;--dark-1:#172b4d;--breadcrumbs-offset:32px;--grade-default-color-rgb:23,43,77;--grade-high-color-rgb-next:54,178,126;--grade-medium-color-rgb-next:255,133,65;--grade-low-color-rgb-next:246,73,99;--grade-closed-color-rgb:66,82,110;--grade-abandoned-color-rgb:107,119,140;--grade-backlog-color-rgb-next:23,43,77;--white-rgb:255,255,255;--primary-color-next:#0052cc;--primary-color-next-0:#fff;--primary-color-next-50:#e6f0ff;--primary-color-next-100:#cce0ff;--primary-color-next-150:#b3d1ff;--primary-color-next-200:#99c2ff;--primary-color-next-250:#80b3ff;--primary-color-next-300:#66a3ff;--primary-color-next-350:#4d94ff;--primary-color-next-400:#3385ff;--primary-color-next-450:#1975ff;--primary-color-next-500:#06f;--primary-color-next-550:#005ce6;--primary-color-next-600:#0052cc;--primary-color-next-650:#0047b3;--primary-color-next-700:#003d99;--primary-color-next-750:#003380;--primary-color-next-800:#002966;--primary-color-next-850:#001f4d;--primary-color-next-900:#001433;--primary-color-next-950:#000a1a;--primary-color-rgb-next:0,82,204;--gray-blue:#42526e;--gray-blue-0:#eff1f5;--gray-blue-100:#cfd6e2;--gray-blue-200:#afbbcf;--gray-blue-300:#8fa0bc;--gray-blue-400:#7085a9;--gray-blue-500:#566b8f;--gray-blue-600:#435370;--gray-blue-700:#303c50;--gray-blue-800:#1d2430;--gray-blue-900:#0a0c10;--gray:#dfe1e6;--gray-0:#fcfcfd;--gray-100:#e0e1e6;--gray-200:#c3c7d0;--gray-300:#a6acb9;--gray-400:#8a91a3;--gray-500:#6e768c;--gray-600:#585e6f;--gray-700:#414653;--gray-800:#2b2e36;--gray-900:#14161a;--page-left-padding:32px;--page-right-padding:32px;--page-left-padding-next:40px;--page-right-padding-next:40px;--primary-color:#0052cc;--warning-color:#ff8541;--danger-color:#f64963;--white-color:#fff;--black-color:$black;--black-rgb:0,0,0;--grey-semi-medium:#6b778c;--grey-semi-medium-rgb:107,119,140;--purple:#a769f6;--okr-table-row-controls-button-width:24px;--okr-table-row-gap:8px;--okr-table-checkin-cell-width:132px;--app-dialog-my:60px;--app-dialog-mx:auto;--app-dialog-backdrop-color:rgba(23,43,77,.8)}</style>
   
@@ -807,19 +807,40 @@ img.ProseMirror-separator {
     width: 100%;
   }
 
-  .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
-    display: block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .oboard-favorites-header,
+  .oboard-nav-section .oboard-favorites-header.amni-Item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    color: var(--dark-2, #42526e);
+    font-size: 14.4px;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: none;
+    border-radius: 6px;
   }
 
-  .oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item {
-    margin: 0;
+  .oboard-favorites-header .svg-icon,
+  .oboard-favorites-header .amni-Item_Icon {
+    color: var(--dark-2, #42526e);
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-favorites-header .amni-Item_Text,
+  .oboard-favorites-header > span {
+    color: var(--dark-2, #42526e);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
   }
 
   .oboard-favorites-list.amnl-List-children {
-    margin-top: 8px;
+    margin-top: 0;
   }
 
   .oboard-favorites-list .amni-Item {
@@ -4497,9 +4518,15 @@ img.ProseMirror-separator {
     const favoritesSection = document.createElement('div');
     favoritesSection.className = 'oboard-nav-section oboard-nav-section-favorites';
 
+    const favoritesHeader = document.createElement('div');
+    favoritesHeader.className = 'amni-Item amni-Item-default oboard-favorites-header';
+    favoritesHeader.innerHTML = '<svg data-target-id="icon-favorite-filled" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon amni-Item_Icon"><use xlink:href="#icon-favorite-filled" href="#icon-favorite-filled"></use></svg><span class="amni-Item_Text">Favorites</span>';
+
     originalFavorites.classList.add('oboard-favorites-list');
+    dashboardItem.removeChild(originalFavorites);
     primarySection.appendChild(rootList);
-    favoritesSection.appendChild(dashboardItem);
+    favoritesSection.appendChild(favoritesHeader);
+    favoritesSection.appendChild(originalFavorites);
     sections.appendChild(primarySection);
     sections.appendChild(divider);
     sections.appendChild(favoritesSection);
