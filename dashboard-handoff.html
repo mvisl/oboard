@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oboard Dashboard Prototype Handoff</title>
+  <style>
+    :root {
+      --blue: #0052cc;
+      --ink: #172b4d;
+      --muted: #6b778c;
+      --line: #dfe1e6;
+      --soft: #f5f6f7;
+      --white: #fff;
+    }
+    body {
+      margin: 0;
+      background: var(--soft);
+      color: var(--ink);
+      font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 28px 72px;
+    }
+    section {
+      margin-top: 20px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+    }
+    h1, h2 {
+      margin: 0;
+      line-height: 1.2;
+    }
+    h1 {
+      font-size: 32px;
+    }
+    h2 {
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+    p {
+      margin: 8px 0;
+    }
+    ul {
+      margin: 8px 0 0;
+      padding-left: 22px;
+    }
+    li + li {
+      margin-top: 6px;
+    }
+    a {
+      color: var(--blue);
+      font-weight: 650;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    code {
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: #ebecf0;
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.92em;
+    }
+    .meta {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Oboard Dashboard Prototype Handoff</h1>
+    <p class="meta">Updated: 2026-07-05. Current working prototype for dashboard collections and favorites.</p>
+
+    <section>
+      <h2>Links</h2>
+      <ul>
+        <li>Working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
+        <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
+        <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
+        <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
+        <li>Live Oboard dashboard list: <a href="https://app.oboard.io/#/workspaces/23574/dashboard/custom-dashboard/list?ownerIds=%5B0%5D&sortBy=%22A-Z%22&sortField=%22name%22">app.oboard.io dashboard list</a></li>
+        <li>Figma working file: <a href="https://www.figma.com/design/QifE8JQBo3F3pylu8cORZq/Oboard-Slava">Oboard Slava</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Files And Branches</h2>
+      <ul>
+        <li>Local source folder: <code>/Users/viacheslavmakhankov/Desktop/Oboard</code></li>
+        <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
+        <li>Main working file: <code>dashboard-working.html</code></li>
+        <li>Current pushed commits before this handoff page: <code>main 8494072</code>, <code>gh-pages 41f4365</code></li>
+        <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Current Prototype Behavior</h2>
+      <ul>
+        <li>Left menu is split into top navigation and dashboard/favorites container. Original page remains untouched.</li>
+        <li>Dashboard list has an Ungrouped / Grouped switcher before All owners.</li>
+        <li>Ungrouped list has extra dashboards: Market Trends 2025, Customer Insights 2024, Revenue Forecasts Q3, Website Traffic Analysis 2024.</li>
+        <li>Collections column uses stack icon. One collection shows only stack icon; multiple collections show stack plus count such as <code>+1</code>; no collection shows no icon.</li>
+        <li>Grouped view is generated from the same dashboard collection membership model, not a separate static list.</li>
+        <li>Some dashboards intentionally belong to multiple collections and appear more than once in Grouped.</li>
+        <li>Dashboards without collection membership dissolve during Ungrouped to Grouped transition and do not appear in Grouped.</li>
+        <li>Grouped heart buttons toggle favorites and sync with Ungrouped rows plus the left dashboard list.</li>
+        <li>Libertex workspace dropdown opens but has no selection behavior yet.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Design Rules To Keep</h2>
+      <ul>
+        <li>Live Oboard product is the primary source of truth for spacing, icons, states, and component behavior.</li>
+        <li>Do not invent icons. Use existing Oboard SVG symbols already in the page.</li>
+        <li>Collections are labels/tags, not owners or permission containers.</li>
+        <li>A dashboard can belong to multiple collections.</li>
+        <li>Collection rows should not show collection owner or visibility as collection-level properties.</li>
+        <li>Empty heart outline appears only on row hover. Filled heart is visible in default and hover states.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Known Follow-ups</h2>
+      <ul>
+        <li>Transition from Ungrouped to Grouped may still need product-design review against live Oboard motion patterns.</li>
+        <li>Ungrouped right-side columns should be checked visually against the latest Figma/user screenshot after any future column changes.</li>
+        <li>Drag and drop in grouped empty collections needs careful target affordance if that flow continues.</li>
+        <li>Collection assignment popover should eventually match the production selector exactly, including search/create behavior.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

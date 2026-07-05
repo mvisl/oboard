@@ -237,8 +237,18 @@ img.ProseMirror-separator {
 
   .tb-HeaderCell-collections,
   .tb-Cell-collections {
-    flex: 0 0 112px !important;
+    flex: 0 0 224px !important;
     min-width: 0;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-HeaderCell-owner,
+  .dp-MainContent-CustomDashboardList .tb-Cell-owner {
+    flex: 0 0 376px !important;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibilityIcon,
+  .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
+    flex: 0 0 52px !important;
   }
 
   .tb-Cell-collections {
@@ -555,7 +565,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head,
   .oboard-grouped-row-inner {
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) 112px 274px 224px 24px;
+    grid-template-columns: minmax(320px, 1fr) 224px 376px 184px 24px;
     column-gap: 16px;
     align-items: center;
     width: 100%;
@@ -744,7 +754,11 @@ img.ProseMirror-separator {
     flex: 0 0 24px;
     width: 24px;
     height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--grey-1-next, #b5bbc5);
+    cursor: pointer;
   }
 
   .oboard-grouped-favorite .ai-Icon {
@@ -1111,7 +1125,7 @@ img.ProseMirror-separator {
   }
 
   .dp-MainContent-CustomDashboardList {
-    --oboard-dashboard-reorder-gutter: 44px;
+    --oboard-dashboard-reorder-gutter: 0px;
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header,
@@ -1121,6 +1135,7 @@ img.ProseMirror-separator {
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header {
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6) !important;
     box-shadow: none !important;
   }
 
@@ -1151,7 +1166,7 @@ img.ProseMirror-separator {
     display: flex;
     position: absolute;
     top: 50%;
-    left: calc(var(--page-left-padding, 32px) + 6px);
+    left: calc(var(--page-left-padding, 32px) - 30px);
     z-index: 2;
     transform: translateY(-50%);
   }
@@ -7278,7 +7293,7 @@ img.ProseMirror-separator {
       '<button class="oboard-drag-handle oboard-grouped-drag-handle" type="button" aria-label="Reorder dashboard">' + svgIcon(DRAG) + '</button>',
       '<div class="oboard-grouped-row-inner">',
       '<div class="oboard-grouped-name-cell">',
-      '<span class="oboard-grouped-favorite">' + svgIcon(item.favorite ? FILLED : EMPTY) + '</span>',
+      '<button class="oboard-grouped-favorite" type="button" aria-label="Toggle favorite">' + svgIcon(item.favorite ? FILLED : EMPTY) + '</button>',
       '<span class="oboard-grouped-title">' + escapeHtml(item.name) + '</span>',
       '</div>',
       '<div class="oboard-grouped-collections-cell">' + collectionBadge(item) + '</div>',
@@ -7412,6 +7427,16 @@ img.ProseMirror-separator {
     if (!groupedListEventsBound) {
       groupedListEventsBound = true;
       host.addEventListener('click', event => {
+        const favoriteButton = event.target.closest('.oboard-grouped-favorite');
+        if (favoriteButton) {
+          event.preventDefault();
+          event.stopPropagation();
+          const name = favoriteButton.closest('.oboard-grouped-dashboard')?.dataset.dashboardName;
+          const item = rowOrder.find(row => row.name === name);
+          if (!item) return;
+          updateDashboardFavorite(name, !item.favorite);
+          return;
+        }
         const copyLink = event.target.closest('.oboard-grouped-copy-link');
         if (copyLink) {
           event.preventDefault();
@@ -7467,23 +7492,25 @@ img.ProseMirror-separator {
       overlay.appendChild(clone);
       if (!target || !memberships.length) {
         return clone.animate([
-          { opacity: 1, transform: 'scale(1)' },
-          { opacity: 0, transform: 'scale(0.96)' }
+          { opacity: 1, transform: 'translateY(0)' },
+          { opacity: 0, transform: 'translateY(10px)' }
         ], {
-          duration: 360,
+          duration: 420,
           easing: 'cubic-bezier(0.2, 0, 0, 1)',
           fill: 'forwards'
         }).finished.catch(() => {});
       }
       const targetRect = target.getBoundingClientRect();
+      clone.style.left = targetRect.left + 'px';
+      clone.style.width = targetRect.width + 'px';
       return clone.animate([
-        { opacity: 1, transform: 'translate(0, 0) scale(1)' },
+        { opacity: 1, transform: 'translateY(' + (rect.top - targetRect.top) + 'px)' },
         {
           opacity: 1,
-          transform: 'translate(' + (targetRect.left - rect.left) + 'px, ' + (targetRect.top - rect.top) + 'px) scale(' + (targetRect.width / rect.width) + ', ' + (targetRect.height / rect.height) + ')'
+          transform: 'translateY(0)'
         }
       ], {
-        duration: 620,
+        duration: 560,
         easing: 'cubic-bezier(0.2, 0, 0, 1)',
         fill: 'forwards'
       }).finished.catch(() => {});
@@ -7768,16 +7795,24 @@ img.ProseMirror-separator {
     if (previewSource) positionPreview(previewSource);
   });
 
+  function updateDashboardFavorite(name, favorite) {
+    const item = rowOrder.find(row => row.name === name);
+    if (!item) return;
+    item.favorite = favorite;
+    setIcon(item.row.querySelector('.cdl-ActionFavoriteButton svg'), favorite ? FILLED : EMPTY);
+    document.querySelectorAll('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(name) + '"] .oboard-grouped-favorite svg').forEach(svg => {
+      setIcon(svg, favorite ? FILLED : EMPTY);
+    });
+    syncSidebar();
+    saveFavoriteOrder();
+  }
+
   rowOrder.forEach(item => {
     const button = item.row.querySelector('.cdl-ActionFavoriteButton');
-    const svg = button?.querySelector('svg');
     button?.addEventListener('click', event => {
       event.preventDefault();
       event.stopPropagation();
-      item.favorite = !item.favorite;
-      setIcon(svg, item.favorite ? FILLED : EMPTY);
-      syncSidebar();
-      saveFavoriteOrder();
+      updateDashboardFavorite(item.name, !item.favorite);
     });
   });
 
