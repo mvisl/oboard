@@ -258,6 +258,10 @@ img.ProseMirror-separator {
     opacity: 1;
   }
 
+  .oboard-drag-ghost .tb-Row {
+    background: var(--white-color, #fff);
+  }
+
   .oboard-dashboard-preview {
     position: fixed;
     z-index: 10000;
@@ -453,12 +457,13 @@ img.ProseMirror-separator {
   }
 
   .amws-WorkspaceSelect_Button {
+    position: relative !important;
     background: var(--gray-3-next, #f5f6f7) !important;
     height: 48px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
-    padding: 8px 8px 8px 16px !important;
+    gap: 0 !important;
+    padding: 8px !important;
     border-radius: 12px !important;
     outline: 1px solid transparent;
     outline-offset: -1px;
@@ -467,16 +472,30 @@ img.ProseMirror-separator {
   }
 
   .amws-WorkspaceSelect_Button .wi-WorkspaceIcon {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
     flex: 0 0 auto !important;
     margin: 0 !important;
   }
 
   .amws-WorkspaceSelect_Button .amws-SelectedWsName {
+    position: absolute !important;
+    left: 48px !important;
+    right: 40px !important;
+    width: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
     flex: 1 1 auto !important;
     margin: 0 !important;
   }
 
   .amws-WorkspaceSelect_Button .amws-DroplistIcon {
+    position: absolute !important;
+    right: 8px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
     flex: 0 0 auto !important;
     margin-left: auto !important;
   }
@@ -494,6 +513,10 @@ img.ProseMirror-separator {
     height: 100vh !important;
     max-height: 100vh !important;
     overflow: hidden !important;
+  }
+
+  .app-Aside {
+    box-shadow: inset -1px 0 0 var(--gray, #dfe1e6) !important;
   }
 
   .am-ContentWrapper {
@@ -519,7 +542,7 @@ img.ProseMirror-separator {
     flex: 1 1 auto !important;
     min-height: 0 !important;
     margin-bottom: 0 !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   .am-Content .am-WebAppMenuContent {
@@ -607,7 +630,7 @@ img.ProseMirror-separator {
     outline-offset: -1px;
     border-radius: 12px;
     background: var(--oboard-sidebar-panel-bg);
-    overflow: hidden;
+    overflow: visible;
     box-shadow: none;
     transition: background-color 160ms ease, box-shadow 160ms ease;
   }
@@ -616,7 +639,7 @@ img.ProseMirror-separator {
   .oboard-nav-section:focus-within {
     background: var(--white-color, #fff);
     outline-color: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
-    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
+    box-shadow: none;
   }
 
   .oboard-nav-section-primary {
@@ -4575,6 +4598,22 @@ img.ProseMirror-separator {
   function createDragGhost(sourceElement, event) {
     const rect = sourceElement.getBoundingClientRect();
     const ghost = sourceElement.cloneNode(true);
+    const row = sourceElement.querySelector('.tb-Row');
+    if (row) {
+      const rowStyle = getComputedStyle(row);
+      const rowRect = row.getBoundingClientRect();
+      const ghostRow = ghost.querySelector('.tb-Row');
+      ghost.style.setProperty('--page-left-padding', rowStyle.paddingLeft);
+      ghost.style.setProperty('--page-right-padding', rowStyle.paddingRight);
+      ghost.style.setProperty('--padding-left', rowStyle.paddingLeft);
+      ghost.style.setProperty('--padding-right', rowStyle.paddingRight);
+      if (ghostRow) {
+        ghostRow.style.boxSizing = 'border-box';
+        ghostRow.style.height = rowRect.height + 'px';
+        ghostRow.style.minHeight = rowRect.height + 'px';
+        ghostRow.style.maxHeight = rowRect.height + 'px';
+      }
+    }
     ghost.classList.add('oboard-drag-ghost');
     ghost.classList.remove('oboard-dragging', 'oboard-drop-before', 'oboard-drop-after');
     ghost.style.width = rect.width + 'px';
@@ -4704,9 +4743,8 @@ img.ProseMirror-separator {
 
     if (item.mode === 'favorite') {
       const panel = document.querySelector('.oboard-nav-section-favorites');
-      const aside = document.querySelector('.app-Aside');
       const panelRect = panel?.getBoundingClientRect();
-      const asideRect = aside?.getBoundingClientRect();
+      const itemRect = sourceElement.querySelector('.amni-Item')?.getBoundingClientRect();
       const width = panelRect ? panelRect.width : 216;
       const height = width * 0.75;
       let top = sourceRect.bottom + 8;
@@ -4718,7 +4756,7 @@ img.ProseMirror-separator {
       }
       preview.style.width = width + 'px';
       preview.style.height = height + 'px';
-      preview.style.left = ((asideRect ? asideRect.right : panelRect?.right || sourceRect.right) + 12) + 'px';
+      preview.style.left = ((itemRect ? itemRect.right : panelRect?.right || sourceRect.right) + 1) + 'px';
       preview.style.top = top + 'px';
       return;
     }
