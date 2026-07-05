@@ -259,7 +259,6 @@ img.ProseMirror-separator {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
     height: 24px;
     min-width: 0;
     box-sizing: border-box;
@@ -276,6 +275,10 @@ img.ProseMirror-separator {
 
   .oboard-dashboard-collection-badge {
     padding: 2px 6px 2px 0;
+  }
+
+  .oboard-dashboard-collection-badge:not(.has-count) {
+    padding-right: 0;
   }
 
   .oboard-dashboard-collection-badge .ai-Icon {
@@ -512,10 +515,41 @@ img.ProseMirror-separator {
     margin-top: 30px;
     color: var(--dark-blue, #172b4d);
     font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    opacity: 1;
   }
 
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-grouped-list {
     display: block;
+  }
+
+  .oboard-mode-transitioning .tb-Header,
+  .oboard-mode-transitioning .tb-Body,
+  .oboard-mode-transitioning .atcb-Button,
+  .oboard-mode-transitioning .tb-EndBlock {
+    opacity: 0.14;
+    transition: opacity 180ms ease;
+  }
+
+  .oboard-mode-transitioning .oboard-grouped-list {
+    display: block;
+    opacity: 0;
+  }
+
+  .oboard-mode-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    pointer-events: none;
+  }
+
+  .oboard-mode-transition-row {
+    position: fixed;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+    transform-origin: left top;
+    will-change: transform, opacity;
   }
 
   .oboard-grouped-head,
@@ -815,7 +849,7 @@ img.ProseMirror-separator {
   .oboard-grouped-copy-link.is-expanded {
     width: 102px;
     padding: 2px 6px 2px 4px;
-    background: var(--gray-blue-300, #c3c7d0);
+    background: var(--gray-blue-250, #dde2ea);
     gap: 4px;
   }
 
@@ -868,6 +902,85 @@ img.ProseMirror-separator {
   .oboard-grouped-collection-more .ai-Icon {
     width: 24px;
     height: 24px;
+  }
+
+  .oboard-workspace-popover {
+    position: fixed;
+    z-index: 1000000;
+    width: 244px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: var(--white-color, #fff);
+    box-shadow: 0 8px 24px rgba(23, 43, 77, 0.18), 0 0 1px rgba(23, 43, 77, 0.24);
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 120ms ease, transform 120ms ease;
+  }
+
+  .oboard-workspace-popover.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .oboard-workspace-popover-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 56px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border: 0;
+    background: var(--white-color, #fff);
+    color: var(--dark-blue, #172b4d);
+    font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+    cursor: default;
+    white-space: nowrap;
+  }
+
+  .oboard-workspace-popover-row.is-selected {
+    background: var(--primary-100, #deebff);
+  }
+
+  .oboard-workspace-popover-row .wi-WorkspaceIcon,
+  .oboard-workspace-popover-icon {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .oboard-workspace-popover-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-workspace-popover-icon .ai-Icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-WorkspaceSelect_Button {
+    background: var(--dark-2, #42526e) !important;
+    color: var(--white-color, #fff) !important;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .as-AppSelect {
+    background: var(--dark-2, #42526e) !important;
+    border-radius: 12px !important;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-SelectedWsName,
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-DroplistIcon {
+    color: var(--white-color, #fff) !important;
   }
 
   .oboard-collection-menu {
@@ -1008,7 +1121,7 @@ img.ProseMirror-separator {
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header {
-    box-shadow: inset 0 -1px 0 var(--grey-2-next, #dfe1e6) !important;
+    box-shadow: none !important;
   }
 
   .oboard-drag-handle {
@@ -1478,6 +1591,18 @@ img.ProseMirror-separator {
     box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-WorkspaceSelect_Button,
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-WorkspaceSelect_Button:hover,
+  .amws-WorkspaceSelect.oboard-workspace-open:focus-within .amws-WorkspaceSelect_Button {
+    background: var(--dark-2, #42526e) !important;
+    color: var(--white-color, #fff) !important;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-SelectedWsName,
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-DroplistIcon {
+    color: var(--white-color, #fff) !important;
+  }
+
   .app-Aside,
   .am-Wrapper,
   .am-ContentWrapper {
@@ -1626,9 +1751,9 @@ img.ProseMirror-separator {
   }
 
   .oboard-nav-section-primary > .amnl-List {
-    height: 100%;
-    max-height: 100%;
-    overflow: hidden;
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .oboard-nav-section-favorites {
@@ -5806,6 +5931,103 @@ img.ProseMirror-separator {
 
   const sidebar = buildSidebarSections();
 
+  function closeWorkspacePopover() {
+    document.querySelector('.oboard-workspace-popover')?.remove();
+    document.querySelector('.amws-WorkspaceSelect.oboard-workspace-open')?.classList.remove('oboard-workspace-open');
+  }
+
+  function workspacePopoverHtml(iconHtml) {
+    return [
+      '<div class="oboard-workspace-popover" role="dialog" aria-label="Workspace menu">',
+      '<button class="oboard-workspace-popover-row is-selected" type="button">' + iconHtml + '<span>Libertex</span></button>',
+      '<button class="oboard-workspace-popover-row" type="button"><span class="oboard-workspace-popover-icon">' + svgIcon('icon-plus-next') + '</span><span>Create workspace</span></button>',
+      '<button class="oboard-workspace-popover-row" type="button"><span class="oboard-workspace-popover-icon">' + svgIcon('icon-rename-currentColor') + '</span><span>Manage workspaces</span></button>',
+      '</div>'
+    ].join('');
+  }
+
+  function positionWorkspacePopover(popover, button) {
+    const rect = button.getBoundingClientRect();
+    popover.style.left = rect.left + 'px';
+    popover.style.top = rect.bottom + 2 + 'px';
+    popover.style.width = rect.width + 'px';
+  }
+
+  function initWorkspacePopover() {
+    const workspace = document.querySelector('.amws-WorkspaceSelect');
+    const button = workspace?.querySelector('.amws-WorkspaceSelect_Button');
+    if (!workspace || !button || button.dataset.oboardWorkspaceReady === 'true') return;
+    button.dataset.oboardWorkspaceReady = 'true';
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const existing = document.querySelector('.oboard-workspace-popover');
+      if (existing) {
+        closeWorkspacePopover();
+        return;
+      }
+      const icon = button.querySelector('.wi-WorkspaceIcon')?.cloneNode(true);
+      document.body.insertAdjacentHTML('beforeend', workspacePopoverHtml(icon ? icon.outerHTML : ''));
+      const popover = document.querySelector('.oboard-workspace-popover');
+      positionWorkspacePopover(popover, button);
+      workspace.classList.add('oboard-workspace-open');
+      requestAnimationFrame(() => popover.classList.add('is-open'));
+    });
+    document.addEventListener('click', event => {
+      if (event.target.closest('.oboard-workspace-popover') || event.target.closest('.amws-WorkspaceSelect_Button')) return;
+      closeWorkspacePopover();
+    });
+    window.addEventListener('resize', closeWorkspacePopover);
+    window.addEventListener('scroll', closeWorkspacePopover, true);
+  }
+
+  function setSvgIcon(svg, iconId) {
+    if (!svg) return;
+    svg.setAttribute('data-target-id', iconId);
+    const use = svg.querySelector('use');
+    if (use) {
+      use.setAttribute('href', '#' + iconId);
+      use.setAttribute('xlink:href', '#' + iconId);
+    }
+  }
+
+  function seedExtraDashboardRows() {
+    const body = document.querySelector('.tb-Body');
+    if (!body) return;
+    const existingNames = new Set(Array.from(body.querySelectorAll('.cdl-TableCellText')).map(node => node.textContent.trim()));
+    const privateTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Private'));
+    const publicTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Public')) || privateTemplate;
+    const extraDashboards = [
+      { name: 'Market Trends 2025', favorite: true, visibility: 'Public' },
+      { name: 'Customer Insights 2024', favorite: true, visibility: 'Private' },
+      { name: 'Revenue Forecasts Q3', favorite: false, visibility: 'Private' },
+      { name: 'Website Traffic Analysis 2024', favorite: false, visibility: 'Private' }
+    ];
+    extraDashboards.forEach((dashboard, index) => {
+      if (existingNames.has(dashboard.name)) return;
+      const source = dashboard.visibility === 'Public' ? publicTemplate : privateTemplate;
+      if (!source) return;
+      const clone = source.cloneNode(true);
+      clone.dataset.seededDashboard = 'true';
+      const name = clone.querySelector('.cdl-TableCellText');
+      if (name) name.textContent = dashboard.name;
+      setSvgIcon(clone.querySelector('.cdl-ActionFavoriteButton svg'), dashboard.favorite ? FILLED : EMPTY);
+      const visibilityText = clone.querySelector('.tb-Cell-visibility span');
+      if (visibilityText) visibilityText.textContent = dashboard.visibility;
+      const visibilityIcon = clone.querySelector('.tb-Cell-visibilityIcon .cdl-VisibilityIconCell');
+      if (visibilityIcon) {
+        visibilityIcon.innerHTML = dashboard.visibility === 'Private' ? svgIcon('icon-lock-next') : '<!---->';
+      }
+      clone.querySelectorAll('[class*="-favorites-"], [class*="-name-"], [class*="-owner-"], [class*="-visibility-"], [class*="-action-"]').forEach(node => {
+        node.className = node.className.replace(/-\d+/g, '-' + (20 + index));
+      });
+      body.appendChild(clone);
+      existingNames.add(dashboard.name);
+    });
+  }
+
+  seedExtraDashboardRows();
+
   const rowOrder = Array.from(document.querySelectorAll('.tb-Body .tb-RowWrapper')).map(row => {
     const name = row.querySelector('.cdl-TableCellText')?.textContent?.trim();
     const icon = row.querySelector('.cdl-ActionFavoriteButton svg');
@@ -5829,7 +6051,16 @@ img.ProseMirror-separator {
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   const collectionOptions = ['Collection 1', 'Collection 2', 'Collection 3', 'Collection 4'];
-  const dashboardCollections = new Map(rowOrder.map(item => [item.name, []]));
+  const defaultDashboardCollections = new Map([
+    ['Team’s KPIs', ['Collection 1', 'Collection 4']],
+    ['Some new Dashboard', ['Collection 2']],
+    ['Company focus 2026', ['Collection 3']],
+    ['2026 Trial dashboard', ['Collection 1']],
+    ['Market Trends 2025', ['Collection 1', 'Collection 3']],
+    ['Customer Insights 2024', ['Collection 2']],
+    ['Revenue Forecasts Q3', ['Collection 4']]
+  ]);
+  const dashboardCollections = new Map(rowOrder.map(item => [item.name, [...(defaultDashboardCollections.get(item.name) || [])]]));
   const navTemplates = new Map(existingChildItems.map(item => {
     const text = item.querySelector('.amni-Item_Text')?.textContent?.trim();
     return [text, item.cloneNode(true)];
@@ -5892,8 +6123,9 @@ img.ProseMirror-separator {
   function renderDashboardCollectionCell(cell, dashboardName) {
     const selected = dashboardCollections.get(dashboardName) || [];
     const tooltip = selected.join(', ');
+    const count = selected.length > 1 ? selected.length - 1 : 0;
     cell.innerHTML = [
-      selected.length ? '<span class="oboard-dashboard-collection-badge" tabindex="0">' + layersIcon() + '<span>+' + selected.length + '</span><span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></span>' : '',
+      selected.length ? '<span class="oboard-dashboard-collection-badge' + (count ? ' has-count' : '') + '" tabindex="0">' + layersIcon() + (count ? '<span>+' + count + '</span>' : '') + '<span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></span>' : '',
       '<button class="oboard-dashboard-collection-add" type="button" aria-label="Add to collection" data-dashboard-name="' + escapeHtml(dashboardName) + '">' + svgIcon('icon-plus-next') + '</button>'
     ].join('');
   }
@@ -5909,10 +6141,13 @@ img.ProseMirror-separator {
     const header = document.querySelector('.tb-Header');
     const ownerHeader = header?.querySelector('.tb-HeaderCell-owner');
     if (header && ownerHeader && !header.querySelector('.tb-HeaderCell-collections')) {
-      const headerCell = document.createElement('div');
+      const headerCell = ownerHeader.cloneNode(true);
       headerCell.className = 'tb-HeaderCell-collections tb-HeaderCell';
       headerCell.style.flex = '0 0 112px';
-      headerCell.innerHTML = '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell"><span>Collections</span>' + svgIcon('icon-sort-two-ways-next', 'cdth-HeaderCell_DefaultStateSorting') + '</div>';
+      const label = headerCell.querySelector('span');
+      if (label) label.textContent = 'Collections';
+      const svg = headerCell.querySelector('svg');
+      setIcon(svg, 'icon-sort-two-ways-next');
       header.insertBefore(headerCell, ownerHeader);
     }
 
@@ -6967,38 +7202,42 @@ img.ProseMirror-separator {
     ].join('');
   }
 
-  const groupedCollections = [
-    {
-      name: 'Collection 4',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'Social Media Trends 2024', owner: 'Sofia Chen', favorite: false, private: true },
-        { name: 'Website Conversion Analysis 2024', owner: 'Sofia Chen', favorite: false, private: true },
-        { name: 'Revenue Forecasts Q3', owner: 'Sofia Chen', favorite: false, private: true }
-      ]
-    },
-    {
-      name: 'Collection 3',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'Financial Projections Q4', owner: 'Angelina Baker', badge: '+1', badgeTitle: 'Collection 1', private: true }
-      ]
-    },
-    {
-      name: 'Collection 2',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'User Behavior Analysis 2024', owner: 'Evelyn Hayes', private: true }
-      ]
-    },
-    {
-      name: 'Collection 1',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'Financial Projections Q4', owner: 'Angelina Baker', badge: '+1', badgeTitle: 'Collection 3', private: true }
-      ]
-    }
+  const groupedCollectionDefinitions = [
+    { name: 'Collection 4', owner: 'Sofia Chen' },
+    { name: 'Collection 3', owner: 'Sofia Chen' },
+    { name: 'Collection 2', owner: 'Sofia Chen' },
+    { name: 'Collection 1', owner: 'Sofia Chen' }
   ];
+
+  function dashboardOwner(item) {
+    return item.row.querySelector('.unc-Name')?.textContent?.trim() || 'Viacheslav Makhankov';
+  }
+
+  function dashboardIsPrivate(item) {
+    return item.row.querySelector('.tb-Cell-visibility')?.textContent?.trim() === 'Private';
+  }
+
+  function groupedDashboardData(item, collectionName) {
+    const collections = dashboardCollections.get(item.name) || [];
+    const otherCollections = collections.filter(collection => collection !== collectionName);
+    return {
+      name: item.name,
+      owner: dashboardOwner(item),
+      favorite: item.favorite,
+      private: dashboardIsPrivate(item),
+      badge: otherCollections.length ? '+' + otherCollections.length : '',
+      badgeTitle: otherCollections.join(', ')
+    };
+  }
+
+  function buildGroupedCollections() {
+    return groupedCollectionDefinitions.map(collection => ({
+      ...collection,
+      items: rowOrder
+        .filter(item => (dashboardCollections.get(item.name) || []).includes(collection.name))
+        .map(item => groupedDashboardData(item, collection.name))
+    }));
+  }
 
   function ownerCell(name) {
     return [
@@ -7131,6 +7370,7 @@ img.ProseMirror-separator {
   }
 
   function groupedListHtml() {
+    const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
       '<div class="oboard-grouped-head-name">',
@@ -7190,6 +7430,76 @@ img.ProseMirror-separator {
     return host;
   }
 
+  function transitionCloneForRow(item) {
+    const rect = item.row.getBoundingClientRect();
+    const clone = item.row.cloneNode(true);
+    clone.classList.add('oboard-mode-transition-row');
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    return { clone, rect };
+  }
+
+  function groupedTargetForDashboard(name, collectionName) {
+    if (!collectionName) return null;
+    return document.querySelector(
+      '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(name) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
+    );
+  }
+
+  function animateUngroupedToGrouped() {
+    const page = document.querySelector('.dp-MainContent-CustomDashboardList');
+    if (!page || page.classList.contains('oboard-grouped-mode')) return Promise.resolve();
+    const host = initGroupedList();
+    if (!host) return Promise.resolve();
+
+    page.classList.add('oboard-mode-transitioning');
+    const overlay = document.createElement('div');
+    overlay.className = 'oboard-mode-transition-overlay';
+    document.body.appendChild(overlay);
+
+    const animations = rowOrder.map(item => {
+      const memberships = dashboardCollections.get(item.name) || [];
+      const primaryMembership = groupedCollectionDefinitions.find(collection => memberships.includes(collection.name))?.name || memberships[0];
+      const target = groupedTargetForDashboard(item.name, primaryMembership);
+      const { clone, rect } = transitionCloneForRow(item);
+      overlay.appendChild(clone);
+      if (!target || !memberships.length) {
+        return clone.animate([
+          { opacity: 1, transform: 'scale(1)' },
+          { opacity: 0, transform: 'scale(0.96)' }
+        ], {
+          duration: 360,
+          easing: 'cubic-bezier(0.2, 0, 0, 1)',
+          fill: 'forwards'
+        }).finished.catch(() => {});
+      }
+      const targetRect = target.getBoundingClientRect();
+      return clone.animate([
+        { opacity: 1, transform: 'translate(0, 0) scale(1)' },
+        {
+          opacity: 1,
+          transform: 'translate(' + (targetRect.left - rect.left) + 'px, ' + (targetRect.top - rect.top) + 'px) scale(' + (targetRect.width / rect.width) + ', ' + (targetRect.height / rect.height) + ')'
+        }
+      ], {
+        duration: 620,
+        easing: 'cubic-bezier(0.2, 0, 0, 1)',
+        fill: 'forwards'
+      }).finished.catch(() => {});
+    });
+
+    return Promise.all(animations).then(() => {
+      page.classList.add('oboard-grouped-mode');
+      page.classList.remove('oboard-mode-transitioning');
+      overlay.remove();
+      host.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 160,
+        easing: 'ease-out'
+      });
+    });
+  }
+
   function setButtonText(button, text) {
     if (!button) return;
     Array.from(button.childNodes).forEach(node => {
@@ -7199,18 +7509,23 @@ img.ProseMirror-separator {
     });
   }
 
-  function applyDashboardMode(mode) {
+  function applyDashboardMode(mode, options = {}) {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
     const createButton = document.querySelector('.cdl-DashboardHeader_NewReport');
     const grouped = mode === 'grouped';
-    page?.classList.toggle('oboard-grouped-mode', grouped);
     setButtonText(createButton, grouped ? 'Create collection' : 'Create dashboard');
     if (grouped) {
       hidePreview();
       closeDashboardCollectionPopover();
+      if (options.animate) {
+        animateUngroupedToGrouped();
+        return;
+      }
       initGroupedList();
+      page?.classList.add('oboard-grouped-mode');
     } else {
       closeCollectionMenu();
+      page?.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
       initDashboardCollectionColumn();
     }
   }
@@ -7230,6 +7545,7 @@ img.ProseMirror-separator {
 
     function setMode(mode) {
       const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
+      const previousMode = switcher.dataset.mode || '';
       switcher.dataset.mode = normalizedMode;
       switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
         const active = option.dataset.mode === normalizedMode;
@@ -7237,7 +7553,7 @@ img.ProseMirror-separator {
         option.setAttribute('aria-checked', active ? 'true' : 'false');
       });
       window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
-      applyDashboardMode(normalizedMode);
+      applyDashboardMode(normalizedMode, { animate: previousMode === 'ungrouped' && normalizedMode === 'grouped' });
     }
 
     switcher.addEventListener('click', event => {
@@ -7468,6 +7784,7 @@ img.ProseMirror-separator {
   restoreOrder();
   restoreFavoriteOrder();
   restoreDashboardCollections();
+  initWorkspacePopover();
   initDashboardCollectionColumn();
   attachTableDragHandlers();
   syncSidebar();
