@@ -215,8 +215,14 @@ img.ProseMirror-separator {
     opacity: 1;
   }
 
-  .tb-Body .tb-RowWrapper.oboard-dragging {
-    opacity: 0.38;
+  .tb-Body .tb-RowWrapper.oboard-dragging,
+  .oboard-favorites-list .amnl-List_Item.oboard-dragging {
+    height: 0 !important;
+    min-height: 0 !important;
+    opacity: 0;
+    overflow: hidden !important;
+    pointer-events: none;
+    transition: height 320ms cubic-bezier(0.2, 0, 0, 1), min-height 320ms cubic-bezier(0.2, 0, 0, 1), opacity 120ms ease;
   }
 
   .oboard-drop-placeholder {
@@ -230,7 +236,7 @@ img.ProseMirror-separator {
     opacity: 0;
     overflow: hidden;
     pointer-events: none;
-    transition: height 220ms ease, min-height 220ms ease, opacity 160ms ease;
+    transition: height 320ms cubic-bezier(0.2, 0, 0, 1), min-height 320ms cubic-bezier(0.2, 0, 0, 1), opacity 160ms ease;
   }
 
   .oboard-drop-placeholder-active {
@@ -777,10 +783,6 @@ img.ProseMirror-separator {
   .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorites-drag-handle,
   .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorites-drag-handle {
     opacity: 1;
-  }
-
-  .oboard-favorites-list .amnl-List_Item.oboard-dragging {
-    opacity: 0.38;
   }
 
   .oboard-favorites-list:empty::after {
@@ -4572,6 +4574,16 @@ img.ProseMirror-separator {
     attachFavoritePreview();
   }
 
+  function reorderFavoriteDom(names) {
+    if (!dashboardChildren) return false;
+    const currentItems = new Map(Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item')).map(item => [item.dataset.dashboardName, item]));
+    if (!names.every(name => currentItems.has(name))) return false;
+    names.forEach(name => dashboardChildren.appendChild(currentItems.get(name)));
+    attachFavoriteDragHandlers();
+    attachFavoritePreview();
+    return true;
+  }
+
   function orderNames() {
     return rowOrder.map(item => item.name);
   }
@@ -4606,7 +4618,7 @@ img.ProseMirror-separator {
     const targetIndex = names.indexOf(targetName);
     names.splice(targetIndex + (placeAfter ? 1 : 0), 0, sourceItem);
     favoriteOrder = names;
-    syncSidebar();
+    if (!reorderFavoriteDom(names)) syncSidebar();
     saveFavoriteOrder();
     return true;
   }
@@ -4666,7 +4678,68 @@ img.ProseMirror-separator {
   function removeDropPlaceholder(placeholder) {
     if (!placeholder) return;
     placeholder.classList.remove('oboard-drop-placeholder-active');
-    window.setTimeout(() => placeholder.remove(), 220);
+    window.setTimeout(() => placeholder.remove(), 340);
+  }
+
+  function layoutAnimationElements(allSelector) {
+    const elements = Array.from(document.querySelectorAll(allSelector))
+      .filter(node => !node.classList.contains('oboard-dragging'));
+    const createButton = document.querySelector('.atcb-Button');
+    if (createButton && allSelector.includes('.tb-Body')) elements.push(createButton);
+    return elements;
+  }
+
+  function snapshotLayout(allSelector) {
+    return new Map(layoutAnimationElements(allSelector).map(node => [node, node.getBoundingClientRect()]));
+  }
+
+  function animateLayoutFrom(snapshot, allSelector, duration = 320) {
+    layoutAnimationElements(allSelector).forEach(node => {
+      const before = snapshot.get(node);
+      if (!before) return;
+      if (node._oboardLayoutAnimation) {
+        node._oboardLayoutAnimation.cancel();
+        node._oboardLayoutAnimation = null;
+      }
+      const after = node.getBoundingClientRect();
+      const dx = before.left - after.left;
+      const dy = before.top - after.top;
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
+      const animation = node.animate([
+        { transform: 'translate(' + dx + 'px, ' + dy + 'px)' },
+        { transform: 'translate(0, 0)' }
+      ], {
+        duration,
+        easing: 'cubic-bezier(0.2, 0, 0, 1)',
+        fill: 'both'
+      });
+      node._oboardLayoutAnimation = animation;
+      animation.addEventListener('finish', () => {
+        if (node._oboardLayoutAnimation === animation) node._oboardLayoutAnimation = null;
+        animation.cancel();
+      });
+      animation.addEventListener('cancel', () => {
+        if (node._oboardLayoutAnimation === animation) node._oboardLayoutAnimation = null;
+      });
+    });
+  }
+
+  function collapseDragSource(sourceElement, allSelector) {
+    const rect = sourceElement.getBoundingClientRect();
+    const beforeLayout = snapshotLayout(allSelector);
+    sourceElement.style.height = rect.height + 'px';
+    sourceElement.style.minHeight = rect.height + 'px';
+    sourceElement.style.overflow = 'hidden';
+    sourceElement.getBoundingClientRect();
+    sourceElement.classList.add('oboard-dragging');
+    window.requestAnimationFrame(() => animateLayoutFrom(beforeLayout, allSelector));
+  }
+
+  function restoreDragSource(sourceElement) {
+    sourceElement.classList.remove('oboard-dragging');
+    sourceElement.style.height = '';
+    sourceElement.style.minHeight = '';
+    sourceElement.style.overflow = '';
   }
 
   function createDragGhost(sourceElement, event) {
@@ -4724,7 +4797,7 @@ img.ProseMirror-separator {
       const placeholder = createDropPlaceholder(sourceElement);
       const dragGhost = createDragGhost(sourceElement, event);
 
-      sourceElement.classList.add('oboard-dragging');
+      collapseDragSource(sourceElement, allSelector);
       document.body.classList.add('oboard-reordering');
       handle.setPointerCapture?.(event.pointerId);
 
@@ -4739,10 +4812,12 @@ img.ProseMirror-separator {
         const parent = target.parentNode;
         if (!parent) return;
         const reference = after ? target.nextSibling : target;
+        const beforeLayout = snapshotLayout(allSelector);
         if (placeholder.parentNode !== parent || placeholder.nextSibling !== reference) {
           parent.insertBefore(placeholder, reference);
         }
         activateDropPlaceholder(placeholder);
+        window.requestAnimationFrame(() => animateLayoutFrom(beforeLayout, allSelector));
       }
 
       function schedulePlaceholder(target, after) {
@@ -4789,7 +4864,7 @@ img.ProseMirror-separator {
         document.removeEventListener('pointermove', onMove);
         document.removeEventListener('pointerup', onUp);
         if (!currentTarget) {
-          sourceElement.classList.remove('oboard-dragging');
+          restoreDragSource(sourceElement);
           document.body.classList.remove('oboard-reordering');
           dragGhost.ghost?.remove();
           removeDropPlaceholder(placeholder);
@@ -4811,15 +4886,17 @@ img.ProseMirror-separator {
             });
           }
           window.setTimeout(() => {
-            sourceElement.classList.remove('oboard-dragging');
+            const beforeLayout = snapshotLayout(allSelector);
+            restoreDragSource(sourceElement);
             document.body.classList.remove('oboard-reordering');
             placeholder.remove();
             reorderFn(sourceName, targetName, placeAfter);
             dragGhost.ghost?.remove();
+            window.requestAnimationFrame(() => animateLayoutFrom(beforeLayout, allSelector, 220));
           }, 220);
           return;
         }
-        sourceElement.classList.remove('oboard-dragging');
+        restoreDragSource(sourceElement);
         document.body.classList.remove('oboard-reordering');
         dragGhost.ghost?.remove();
         removeDropPlaceholder(placeholder);
