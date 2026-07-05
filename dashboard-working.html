@@ -173,6 +173,55 @@ img.ProseMirror-separator {
   .cdl-ActionFavoriteButton { cursor: pointer; }
   .cdl-ActionFavoriteButton svg { pointer-events: none; }
 
+  .tb-Body .tb-RowWrapper {
+    position: relative;
+  }
+
+  .oboard-drag-handle {
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--grey-1-next, #b5bbc5);
+    cursor: grab;
+    opacity: 0;
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-drag-handle:active {
+    cursor: grabbing;
+  }
+
+  .oboard-table-drag-handle {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: calc(var(--page-left-padding, 24px) - 36px);
+    z-index: 2;
+    transform: translateY(-50%);
+  }
+
+  .tb-Body .tb-RowWrapper:hover .oboard-table-drag-handle,
+  .tb-Body .tb-RowWrapper:focus-within .oboard-table-drag-handle,
+  .tb-Body .tb-RowWrapper.oboard-dragging .oboard-table-drag-handle {
+    opacity: 1;
+  }
+
+  .tb-Body .tb-RowWrapper.oboard-dragging {
+    opacity: 0.72;
+  }
+
+  .tb-Body .tb-RowWrapper.oboard-drop-before .tb-Row {
+    box-shadow: inset 0 2px 0 var(--primary, #0052cc);
+  }
+
+  .tb-Body .tb-RowWrapper.oboard-drop-after .tb-Row {
+    box-shadow: inset 0 -2px 0 var(--primary, #0052cc);
+  }
+
   .amws-WorkspaceSelect {
     border: 0 !important;
     box-shadow: none !important;
@@ -253,6 +302,8 @@ img.ProseMirror-separator {
     padding: 8px;
     width: calc(100% + 16px);
     border: 0;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
     border-radius: 12px;
     background: var(--oboard-sidebar-panel-bg);
     overflow: hidden;
@@ -263,6 +314,7 @@ img.ProseMirror-separator {
   .oboard-nav-section:hover,
   .oboard-nav-section:focus-within {
     background: var(--white-color, #fff);
+    outline-color: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
     box-shadow: rgba(0, 0, 0, 0.035) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.08) 0 12px 28px 0;
   }
 
@@ -320,7 +372,34 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-list .amni-Item {
+    position: relative;
     padding-left: 36px;
+  }
+
+  .oboard-favorites-drag-handle {
+    display: flex;
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .oboard-favorites-list .amnl-List_Item:hover .oboard-favorites-drag-handle,
+  .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorites-drag-handle,
+  .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorites-drag-handle {
+    opacity: 1;
+  }
+
+  .oboard-favorites-list .amnl-List_Item.oboard-dragging {
+    opacity: 0.72;
+  }
+
+  .oboard-favorites-list .amnl-List_Item.oboard-drop-before > .amni-Item {
+    box-shadow: inset 0 2px 0 var(--primary, #0052cc);
+  }
+
+  .oboard-favorites-list .amnl-List_Item.oboard-drop-after > .amni-Item {
+    box-shadow: inset 0 -2px 0 var(--primary, #0052cc);
   }
 
   .oboard-favorites-list:empty::after {
@@ -3943,6 +4022,9 @@ img.ProseMirror-separator {
 (() => {
   const FILLED = 'icon-favorite-filled';
   const EMPTY = 'icon-add-to-favorites-black';
+  const DRAG = 'icon-drag-next';
+  const ORDER_STORAGE_KEY = 'oboard-dashboard-row-order';
+  const FAVORITE_ORDER_STORAGE_KEY = 'oboard-dashboard-favorite-order';
 
   const activeInput = document.querySelector('input[value="CustomDashboardList"]');
   if (activeInput) activeInput.checked = true;
@@ -4033,6 +4115,7 @@ img.ProseMirror-separator {
   const dashboardChildren = sidebar.dashboardChildren || document.querySelector('.amnl-List_Item-dashboard > .amnl-List-children');
   const existingChildItems = dashboardChildren ? Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item')) : [];
   const originalSidebarOrder = existingChildItems.map(item => item.querySelector('.amni-Item_Text')?.textContent?.trim()).filter(Boolean);
+  let favoriteOrder = [...originalSidebarOrder];
   const navTemplates = new Map(existingChildItems.map(item => {
     const text = item.querySelector('.amni-Item_Text')?.textContent?.trim();
     return [text, item.cloneNode(true)];
@@ -4054,14 +4137,28 @@ img.ProseMirror-separator {
     }
   }
 
+  function createDragHandle(className, label) {
+    const handle = document.createElement('button');
+    handle.type = 'button';
+    handle.className = 'oboard-drag-handle ' + className;
+    handle.setAttribute('aria-label', label);
+    handle.innerHTML = '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>';
+    return handle;
+  }
+
   function buildNavItem(name) {
     const item = (navTemplates.get(name) || fallbackTemplate)?.cloneNode(true);
     if (!item) return null;
+    item.dataset.dashboardName = name;
     item.className = 'amnl-List_Item amnl-List_Item-' + slug(name);
     const text = item.querySelector('.amni-Item_Text');
     if (text) {
       text.textContent = name;
       text.setAttribute('title', name);
+    }
+    const content = item.querySelector('.amni-Item');
+    if (content && !content.querySelector('.oboard-favorites-drag-handle')) {
+      content.prepend(createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite dashboard'));
     }
     return item;
   }
@@ -4069,7 +4166,7 @@ img.ProseMirror-separator {
   function sidebarNames() {
     const favorites = new Set(rowOrder.filter(item => item.favorite).map(item => item.name));
     const names = [];
-    originalSidebarOrder.forEach(name => {
+    favoriteOrder.forEach(name => {
       if (favorites.has(name)) {
         names.push(name);
         favorites.delete(name);
@@ -4091,6 +4188,153 @@ img.ProseMirror-separator {
       const navItem = buildNavItem(name);
       if (navItem) dashboardChildren.appendChild(navItem);
     });
+    attachFavoriteDragHandlers();
+  }
+
+  function orderNames() {
+    return rowOrder.map(item => item.name);
+  }
+
+  function saveOrder() {
+    window.localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orderNames()));
+  }
+
+  function saveFavoriteOrder() {
+    window.localStorage.setItem(FAVORITE_ORDER_STORAGE_KEY, JSON.stringify(favoriteOrder));
+  }
+
+  function reorderItems(sourceName, targetName, placeAfter = false) {
+    const sourceIndex = rowOrder.findIndex(item => item.name === sourceName);
+    const targetRawIndex = rowOrder.findIndex(item => item.name === targetName);
+    if (sourceIndex < 0 || targetRawIndex < 0 || sourceIndex === targetRawIndex) return false;
+    const [sourceItem] = rowOrder.splice(sourceIndex, 1);
+    const targetIndex = rowOrder.findIndex(item => item.name === targetName);
+    rowOrder.splice(targetIndex + (placeAfter ? 1 : 0), 0, sourceItem);
+    renderTableOrder();
+    syncSidebar();
+    saveOrder();
+    return true;
+  }
+
+  function reorderFavorites(sourceName, targetName, placeAfter = false) {
+    const names = sidebarNames();
+    const sourceIndex = names.indexOf(sourceName);
+    const targetRawIndex = names.indexOf(targetName);
+    if (sourceIndex < 0 || targetRawIndex < 0 || sourceIndex === targetRawIndex) return false;
+    const [sourceItem] = names.splice(sourceIndex, 1);
+    const targetIndex = names.indexOf(targetName);
+    names.splice(targetIndex + (placeAfter ? 1 : 0), 0, sourceItem);
+    favoriteOrder = names;
+    syncSidebar();
+    saveFavoriteOrder();
+    return true;
+  }
+
+  function renderTableOrder() {
+    const body = document.querySelector('.tb-Body');
+    if (!body) return;
+    const endBlock = body.querySelector(':scope > .tb-EndBlock');
+    rowOrder.forEach(item => {
+      body.insertBefore(item.row, endBlock || null);
+    });
+  }
+
+  function restoreOrder() {
+    let names = [];
+    try {
+      names = JSON.parse(window.localStorage.getItem(ORDER_STORAGE_KEY) || '[]');
+    } catch {
+      names = [];
+    }
+    if (!Array.isArray(names) || !names.length) return;
+    const ranked = new Map(names.map((name, index) => [name, index]));
+    rowOrder.sort((a, b) => {
+      const aRank = ranked.has(a.name) ? ranked.get(a.name) : Number.MAX_SAFE_INTEGER;
+      const bRank = ranked.has(b.name) ? ranked.get(b.name) : Number.MAX_SAFE_INTEGER;
+      return aRank - bRank;
+    });
+    renderTableOrder();
+  }
+
+  function restoreFavoriteOrder() {
+    let names = [];
+    try {
+      names = JSON.parse(window.localStorage.getItem(FAVORITE_ORDER_STORAGE_KEY) || '[]');
+    } catch {
+      names = [];
+    }
+    if (Array.isArray(names) && names.length) {
+      favoriteOrder = names;
+    }
+  }
+
+  function clearDropState(selector) {
+    document.querySelectorAll(selector).forEach(node => {
+      node.classList.remove('oboard-drop-before', 'oboard-drop-after');
+    });
+  }
+
+  function attachDragBehavior(handle, sourceName, itemSelector, allSelector, reorderFn) {
+    if (handle.dataset.oboardDragReady === 'true') return;
+    handle.dataset.oboardDragReady = 'true';
+    handle.addEventListener('pointerdown', event => {
+      if (event.button !== 0) return;
+      const sourceElement = handle.closest(itemSelector);
+      if (!sourceElement) return;
+      let currentTarget = null;
+      let placeAfter = false;
+
+      sourceElement.classList.add('oboard-dragging');
+      handle.setPointerCapture?.(event.pointerId);
+
+      function onMove(moveEvent) {
+        const element = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY)?.closest(itemSelector);
+        clearDropState(allSelector);
+        if (!element || element === sourceElement) {
+          currentTarget = null;
+          return;
+        }
+        const rect = element.getBoundingClientRect();
+        placeAfter = moveEvent.clientY > rect.top + rect.height / 2;
+        currentTarget = element;
+        element.classList.add(placeAfter ? 'oboard-drop-after' : 'oboard-drop-before');
+      }
+
+      function onUp() {
+        sourceElement.classList.remove('oboard-dragging');
+        clearDropState(allSelector);
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        if (!currentTarget) return;
+        const targetName = currentTarget.dataset.dashboardName;
+        if (targetName) reorderFn(sourceName, targetName, placeAfter);
+      }
+
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+      event.preventDefault();
+      event.stopPropagation();
+    });
+  }
+
+  function attachTableDragHandlers() {
+    rowOrder.forEach(item => {
+      item.row.dataset.dashboardName = item.name;
+      const row = item.row.querySelector('.tb-Row');
+      if (!row || item.row.querySelector('.oboard-table-drag-handle')) return;
+      const handle = createDragHandle('oboard-table-drag-handle', 'Reorder dashboard');
+      item.row.prepend(handle);
+      attachDragBehavior(handle, item.name, '.tb-Body .tb-RowWrapper', '.tb-Body .tb-RowWrapper', reorderItems);
+    });
+  }
+
+  function attachFavoriteDragHandlers() {
+    if (!dashboardChildren) return;
+    dashboardChildren.querySelectorAll(':scope > .amnl-List_Item').forEach(item => {
+      const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
+      const handle = item.querySelector('.oboard-favorites-drag-handle');
+      if (name && handle) attachDragBehavior(handle, name, '.oboard-favorites-list > .amnl-List_Item', '.oboard-favorites-list > .amnl-List_Item', reorderFavorites);
+    });
   }
 
   rowOrder.forEach(item => {
@@ -4102,9 +4346,13 @@ img.ProseMirror-separator {
       item.favorite = !item.favorite;
       setIcon(svg, item.favorite ? FILLED : EMPTY);
       syncSidebar();
+      saveFavoriteOrder();
     });
   });
 
+  attachTableDragHandlers();
+  restoreOrder();
+  restoreFavoriteOrder();
   syncSidebar();
 })();
 </script>
