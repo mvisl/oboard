@@ -262,6 +262,49 @@ img.ProseMirror-separator {
     background: var(--white-color, #fff);
   }
 
+  .oboard-drag-ghost.amnl-List_Item {
+    list-style: none;
+  }
+
+  .oboard-drag-ghost .amni-Item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
+    box-sizing: border-box;
+    padding: 8px 28px 8px 36px;
+    border-radius: 6px;
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-drag-ghost .amni-Item_Text {
+    overflow: hidden;
+    min-width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .oboard-drag-ghost .amni-Item_Actions {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transform: translateY(-50%);
+  }
+
+  .oboard-drag-ghost .amni-Item_Actions .o-droplist,
+  .oboard-drag-ghost .amni-Item_Actions .mia-Trigger {
+    display: flex;
+    width: 24px;
+    height: 24px;
+  }
+
   .oboard-dashboard-preview {
     position: fixed;
     z-index: 10000;
@@ -4392,11 +4435,12 @@ img.ProseMirror-separator {
 
     let startY = 0;
     let startHeight = 0;
+    let startMinHeight = 0;
     let dragging = false;
 
     function onMove(event) {
       if (!dragging) return;
-      const nextHeight = Math.max(224, Math.min(380, startHeight + event.clientY - startY));
+      const nextHeight = Math.max(startMinHeight, Math.min(380, startHeight + event.clientY - startY));
       nav.style.setProperty('--oboard-top-section-height', nextHeight + 'px');
     }
 
@@ -4414,6 +4458,7 @@ img.ProseMirror-separator {
       dragging = true;
       startY = event.clientY;
       startHeight = primarySection.getBoundingClientRect().height;
+      startMinHeight = primarySection.scrollHeight;
       divider.classList.add('oboard-section-resizer-active');
       document.addEventListener('pointermove', onMove);
       document.addEventListener('pointerup', onUp);
@@ -4638,6 +4683,7 @@ img.ProseMirror-separator {
     handle.dataset.oboardDragReady = 'true';
     handle.addEventListener('pointerdown', event => {
       if (event.button !== 0) return;
+      if (typeof hidePreview === 'function') hidePreview();
       const sourceElement = handle.closest(itemSelector);
       if (!sourceElement) return;
       let currentTarget = null;
