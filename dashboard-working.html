@@ -195,6 +195,11 @@ img.ProseMirror-separator {
     cursor: grabbing;
   }
 
+  body.oboard-reordering,
+  body.oboard-reordering * {
+    user-select: none !important;
+  }
+
   .oboard-table-drag-handle {
     display: flex;
     position: absolute;
@@ -215,11 +220,138 @@ img.ProseMirror-separator {
   }
 
   .tb-Body .tb-RowWrapper.oboard-drop-before .tb-Row {
-    box-shadow: inset 0 2px 0 var(--primary, #0052cc);
+    box-shadow: none;
   }
 
   .tb-Body .tb-RowWrapper.oboard-drop-after .tb-Row {
-    box-shadow: inset 0 -2px 0 var(--primary, #0052cc);
+    box-shadow: none;
+  }
+
+  .oboard-dashboard-preview {
+    position: fixed;
+    z-index: 10000;
+    width: 390px;
+    aspect-ratio: 4 / 3;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 12px;
+    border: 1px solid rgba(var(--dark-2-rgb, 66,82,110), 0.12);
+    border-radius: 12px;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.072) 0 0 18px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.144) 0 18px 42px 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .oboard-dashboard-preview-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .oboard-dashboard-preview-path {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--grey-semi-medium, #6b778c);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 14px;
+  }
+
+  .oboard-dashboard-preview-title {
+    margin-top: 10px;
+    color: var(--dark-blue, #172b4d);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+
+  .oboard-dashboard-preview-module {
+    margin-top: 14px;
+    overflow: hidden;
+    border: 1px solid var(--gray, #dfe1e6);
+    border-radius: 10px;
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-dashboard-preview-module-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--gray, #dfe1e6);
+    color: var(--dark-blue, #172b4d);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .oboard-dashboard-preview-segment {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 6px;
+    background: var(--gray-3-next, #f5f6f7);
+    color: var(--dark-2, #42526e);
+    font-size: 9px;
+    font-weight: 700;
+  }
+
+  .oboard-dashboard-preview-segment span {
+    padding: 3px 6px;
+    border-radius: 4px;
+  }
+
+  .oboard-dashboard-preview-segment .is-active {
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.08) 0 1px 3px;
+  }
+
+  .oboard-dashboard-preview-grid {
+    display: grid;
+    grid-template-columns: 1.35fr repeat(3, 1fr);
+    color: var(--dark-blue, #172b4d);
+    font-size: 10px;
+    line-height: 14px;
+  }
+
+  .oboard-dashboard-preview-cell {
+    min-height: 42px;
+    padding: 9px;
+    border-right: 1px solid var(--gray, #dfe1e6);
+    border-bottom: 1px solid var(--gray, #dfe1e6);
+  }
+
+  .oboard-dashboard-preview-cell:nth-child(4n) {
+    border-right: 0;
+  }
+
+  .oboard-dashboard-preview-cell.is-head {
+    min-height: 32px;
+    color: var(--grey-semi-medium, #6b778c);
+    font-weight: 700;
+  }
+
+  .oboard-dashboard-preview-kpi {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    border-radius: 5px;
+    background: #f64963;
+    color: var(--white-color, #fff);
+    font-size: 8px;
+    font-weight: 700;
+  }
+
+  .oboard-dashboard-preview-bad {
+    background: rgba(246, 73, 99, 0.18);
+    color: #bf1831;
+    font-weight: 700;
   }
 
   .amws-WorkspaceSelect {
@@ -237,6 +369,20 @@ img.ProseMirror-separator {
 
   .amws-WorkspaceSelect_Button {
     background: var(--gray-3-next, #f5f6f7) !important;
+    height: 48px !important;
+    padding: 8px !important;
+    border-radius: 12px !important;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    box-shadow: none;
+    transition: background-color 160ms ease, outline-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .amws-WorkspaceSelect_Button:hover,
+  .amws-WorkspaceSelect:focus-within .amws-WorkspaceSelect_Button {
+    background: var(--white-color, #fff) !important;
+    outline-color: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
+    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
   .am-Content_Body {
@@ -256,25 +402,41 @@ img.ProseMirror-separator {
 
   .am-Content_Footer {
     width: calc(100% - 24px) !important;
-    height: 64px !important;
+    height: 72px !important;
     margin: 0 12px !important;
     padding: 8px 0 16px !important;
-    border-top: 1px solid var(--gray, #dfe1e6) !important;
+    border-top: 0 !important;
     box-sizing: border-box !important;
     overflow: visible !important;
   }
 
   .am-Content_Footer .amn-Nav {
     width: 100% !important;
-    height: 40px !important;
+    height: 48px !important;
     padding-top: 0 !important;
     border-top: 0 !important;
+    border-radius: 12px !important;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    background: var(--gray-3-next, #f5f6f7);
+    box-shadow: none;
     box-sizing: border-box !important;
     overflow: visible !important;
+    transition: background-color 160ms ease, outline-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .am-Content_Footer .amn-Nav:hover,
+  .am-Content_Footer .amn-Nav:focus-within {
+    background: var(--white-color, #fff);
+    outline-color: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
+    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
   .am-Content_Footer .amnl-List {
     width: 100% !important;
+    height: 48px !important;
+    padding: 4px 8px !important;
+    justify-content: space-between !important;
     overflow: visible !important;
   }
 
@@ -315,7 +477,7 @@ img.ProseMirror-separator {
   .oboard-nav-section:focus-within {
     background: var(--white-color, #fff);
     outline-color: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
-    box-shadow: rgba(0, 0, 0, 0.035) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.08) 0 12px 28px 0;
+    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
   .oboard-nav-section-primary {
@@ -395,11 +557,11 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-list .amnl-List_Item.oboard-drop-before > .amni-Item {
-    box-shadow: inset 0 2px 0 var(--primary, #0052cc);
+    box-shadow: none;
   }
 
   .oboard-favorites-list .amnl-List_Item.oboard-drop-after > .amni-Item {
-    box-shadow: inset 0 -2px 0 var(--primary, #0052cc);
+    box-shadow: none;
   }
 
   .oboard-favorites-list:empty::after {
@@ -4285,6 +4447,7 @@ img.ProseMirror-separator {
       let placeAfter = false;
 
       sourceElement.classList.add('oboard-dragging');
+      document.body.classList.add('oboard-reordering');
       handle.setPointerCapture?.(event.pointerId);
 
       function onMove(moveEvent) {
@@ -4302,6 +4465,7 @@ img.ProseMirror-separator {
 
       function onUp() {
         sourceElement.classList.remove('oboard-dragging');
+        document.body.classList.remove('oboard-reordering');
         clearDropState(allSelector);
         document.removeEventListener('pointermove', onMove);
         document.removeEventListener('pointerup', onUp);
@@ -4337,6 +4501,93 @@ img.ProseMirror-separator {
     });
   }
 
+  function escapeHtml(value) {
+    return value.replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[char]);
+  }
+
+  const preview = document.createElement('div');
+  preview.className = 'oboard-dashboard-preview';
+  preview.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(preview);
+
+  let previewTimer = null;
+  let previewSource = null;
+
+  function previewHtml(name) {
+    const safeName = escapeHtml(name);
+    return [
+      '<div class="oboard-dashboard-preview-path">Custom dashboards <span>/</span> <strong>' + safeName + '</strong></div>',
+      '<div class="oboard-dashboard-preview-title">' + safeName + '</div>',
+      '<div class="oboard-dashboard-preview-module">',
+      '<div class="oboard-dashboard-preview-module-header"><span>' + safeName + '</span><div class="oboard-dashboard-preview-segment"><span>Weeks</span><span class="is-active">Months</span><span>Quarters</span></div></div>',
+      '<div class="oboard-dashboard-preview-grid">',
+      '<div class="oboard-dashboard-preview-cell is-head">Elements</div><div class="oboard-dashboard-preview-cell is-head">Apr 2026</div><div class="oboard-dashboard-preview-cell is-head">May 2026</div><div class="oboard-dashboard-preview-cell is-head">Jun 2026</div>',
+      '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KPI</span>Keep MRR over 100k USD</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">0 USD<br>&ge; 100 000</div><div class="oboard-dashboard-preview-cell">+<br>&ge; 100 000</div><div class="oboard-dashboard-preview-cell">+<br>&ge; 100 000</div>',
+      '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KPI</span>Less than 4 incidents</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">4%<br>&lt; 4</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">4%<br>&lt; 4</div><div class="oboard-dashboard-preview-cell">+<br>&lt; 4</div>',
+      '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KPI</span>Conversion rate over 3.4%</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">0%<br>&ge; 3.4</div><div class="oboard-dashboard-preview-cell">+<br>&ge; 3.4</div><div class="oboard-dashboard-preview-cell">+<br>&ge; 3.4</div>',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function positionPreview(row) {
+    const owner = document.querySelector('.tb-HeaderCell-owner');
+    const action = document.querySelector('.tb-HeaderCell-action');
+    const ownerRect = owner?.getBoundingClientRect();
+    const actionRect = action?.getBoundingClientRect();
+    const rowRect = row.getBoundingClientRect();
+    const left = ownerRect ? ownerRect.left : Math.max(320, window.innerWidth - 440);
+    const right = actionRect ? actionRect.right : window.innerWidth - 32;
+    const width = Math.max(320, Math.min(440, right - left));
+    const height = width * 0.75;
+    const top = Math.min(Math.max(rowRect.top - 8, 120), window.innerHeight - height - 24);
+
+    preview.style.width = width + 'px';
+    preview.style.height = height + 'px';
+    preview.style.left = left + 'px';
+    preview.style.top = top + 'px';
+  }
+
+  function showPreview(item) {
+    previewSource = item;
+    preview.innerHTML = previewHtml(item.name);
+    positionPreview(item.row);
+    preview.classList.add('oboard-dashboard-preview-visible');
+  }
+
+  function hidePreview() {
+    window.clearTimeout(previewTimer);
+    previewTimer = null;
+    previewSource = null;
+    preview.classList.remove('oboard-dashboard-preview-visible');
+  }
+
+  function attachDashboardPreview() {
+    rowOrder.forEach(item => {
+      if (item.row.dataset.oboardPreviewReady === 'true') return;
+      item.row.dataset.oboardPreviewReady = 'true';
+      item.row.addEventListener('mouseenter', () => {
+        window.clearTimeout(previewTimer);
+        previewTimer = window.setTimeout(() => showPreview(item), 1000);
+      });
+      item.row.addEventListener('mouseleave', hidePreview);
+      item.row.addEventListener('pointerdown', event => {
+        if (event.target.closest('.oboard-drag-handle')) hidePreview();
+      });
+    });
+  }
+
+  window.addEventListener('scroll', hidePreview, true);
+  window.addEventListener('resize', () => {
+    if (previewSource) positionPreview(previewSource.row);
+  });
+
   rowOrder.forEach(item => {
     const button = item.row.querySelector('.cdl-ActionFavoriteButton');
     const svg = button?.querySelector('svg');
@@ -4351,6 +4602,7 @@ img.ProseMirror-separator {
   });
 
   attachTableDragHandlers();
+  attachDashboardPreview();
   restoreOrder();
   restoreFavoriteOrder();
   syncSidebar();
