@@ -216,15 +216,46 @@ img.ProseMirror-separator {
   }
 
   .tb-Body .tb-RowWrapper.oboard-dragging {
-    opacity: 0.72;
+    opacity: 0.38;
   }
 
-  .tb-Body .tb-RowWrapper.oboard-drop-before .tb-Row {
-    box-shadow: none;
+  .tb-Body .tb-RowWrapper.oboard-drop-before::before,
+  .tb-Body .tb-RowWrapper.oboard-drop-after::after,
+  .oboard-favorites-list .amnl-List_Item.oboard-drop-before::before,
+  .oboard-favorites-list .amnl-List_Item.oboard-drop-after::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
+    pointer-events: none;
   }
 
-  .tb-Body .tb-RowWrapper.oboard-drop-after .tb-Row {
-    box-shadow: none;
+  .tb-Body .tb-RowWrapper.oboard-drop-before::before,
+  .oboard-favorites-list .amnl-List_Item.oboard-drop-before::before {
+    top: -1px;
+  }
+
+  .tb-Body .tb-RowWrapper.oboard-drop-after::after,
+  .oboard-favorites-list .amnl-List_Item.oboard-drop-after::after {
+    bottom: -1px;
+  }
+
+  .oboard-drag-ghost {
+    position: fixed !important;
+    z-index: 10001 !important;
+    pointer-events: none !important;
+    opacity: 0.96;
+    border-radius: 8px;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
+  }
+
+  .oboard-drag-ghost .oboard-drag-handle {
+    opacity: 1;
   }
 
   .oboard-dashboard-preview {
@@ -250,6 +281,10 @@ img.ProseMirror-separator {
     transform: translateY(0);
   }
 
+  .oboard-dashboard-preview-small {
+    padding: 8px;
+  }
+
   .oboard-dashboard-preview-path {
     display: flex;
     align-items: center;
@@ -260,6 +295,10 @@ img.ProseMirror-separator {
     line-height: 14px;
   }
 
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-path {
+    display: none;
+  }
+
   .oboard-dashboard-preview-title {
     margin-top: 10px;
     color: var(--dark-blue, #172b4d);
@@ -268,12 +307,23 @@ img.ProseMirror-separator {
     line-height: 24px;
   }
 
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-title {
+    margin-top: 0;
+    font-size: 13px;
+    line-height: 16px;
+  }
+
   .oboard-dashboard-preview-module {
     margin-top: 14px;
     overflow: hidden;
     border: 1px solid var(--gray, #dfe1e6);
     border-radius: 10px;
     background: var(--white-color, #fff);
+  }
+
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-module {
+    margin-top: 6px;
+    border-radius: 8px;
   }
 
   .oboard-dashboard-preview-module-header {
@@ -288,6 +338,12 @@ img.ProseMirror-separator {
     font-weight: 700;
   }
 
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-module-header {
+    height: 24px;
+    padding: 0 6px;
+    font-size: 9px;
+  }
+
   .oboard-dashboard-preview-segment {
     display: flex;
     gap: 2px;
@@ -299,9 +355,20 @@ img.ProseMirror-separator {
     font-weight: 700;
   }
 
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-segment {
+    gap: 1px;
+    padding: 2px;
+    font-size: 6px;
+  }
+
   .oboard-dashboard-preview-segment span {
     padding: 3px 6px;
     border-radius: 4px;
+  }
+
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-segment span {
+    padding: 2px 3px;
+    border-radius: 3px;
   }
 
   .oboard-dashboard-preview-segment .is-active {
@@ -317,11 +384,21 @@ img.ProseMirror-separator {
     line-height: 14px;
   }
 
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-grid {
+    font-size: 7px;
+    line-height: 9px;
+  }
+
   .oboard-dashboard-preview-cell {
     min-height: 42px;
     padding: 9px;
     border-right: 1px solid var(--gray, #dfe1e6);
     border-bottom: 1px solid var(--gray, #dfe1e6);
+  }
+
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-cell {
+    min-height: 25px;
+    padding: 4px;
   }
 
   .oboard-dashboard-preview-cell:nth-child(4n) {
@@ -348,6 +425,14 @@ img.ProseMirror-separator {
     font-weight: 700;
   }
 
+  .oboard-dashboard-preview-small .oboard-dashboard-preview-kpi {
+    width: 14px;
+    height: 14px;
+    margin-right: 3px;
+    border-radius: 4px;
+    font-size: 6px;
+  }
+
   .oboard-dashboard-preview-bad {
     background: rgba(246, 73, 99, 0.18);
     color: #bf1831;
@@ -370,12 +455,30 @@ img.ProseMirror-separator {
   .amws-WorkspaceSelect_Button {
     background: var(--gray-3-next, #f5f6f7) !important;
     height: 48px !important;
-    padding: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 8px 8px 16px !important;
     border-radius: 12px !important;
     outline: 1px solid transparent;
     outline-offset: -1px;
     box-shadow: none;
     transition: background-color 160ms ease, outline-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .amws-WorkspaceSelect_Button .wi-WorkspaceIcon {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  .amws-WorkspaceSelect_Button .amws-SelectedWsName {
+    flex: 1 1 auto !important;
+    margin: 0 !important;
+  }
+
+  .amws-WorkspaceSelect_Button .amws-DroplistIcon {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
   }
 
   .amws-WorkspaceSelect_Button:hover,
@@ -385,15 +488,44 @@ img.ProseMirror-separator {
     box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
+  .app-Aside,
+  .am-Wrapper,
+  .am-ContentWrapper {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  .am-ContentWrapper {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .am-Content {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  .am-Content_Head {
+    flex: 0 0 auto !important;
+  }
+
   .am-Content_Body {
     flex: 1 1 auto !important;
     min-height: 0 !important;
     margin-bottom: 0 !important;
+    overflow: hidden !important;
   }
 
   .am-Content .am-WebAppMenuContent {
     width: calc(100% + 16px) !important;
     margin: 12px -8px 0 !important;
+    flex: 0 0 auto !important;
   }
 
   .am-InviteUsersTrigger {
@@ -402,9 +534,10 @@ img.ProseMirror-separator {
 
   .am-Content_Footer {
     width: calc(100% - 24px) !important;
-    height: 72px !important;
+    height: 64px !important;
+    flex: 0 0 64px !important;
     margin: 0 12px !important;
-    padding: 8px 0 16px !important;
+    padding: 4px 0 12px !important;
     border-top: 0 !important;
     box-sizing: border-box !important;
     overflow: visible !important;
@@ -442,6 +575,12 @@ img.ProseMirror-separator {
 
   .avs-Gradient-bottom::after {
     display: none !important;
+  }
+
+  .avs-Gradient-bottom {
+    height: 8px !important;
+    min-height: 8px !important;
+    flex: 0 0 8px !important;
   }
 
   .am-Content_Body .amn-Nav.oboard-sidebar-sectioned {
@@ -538,6 +677,10 @@ img.ProseMirror-separator {
     padding-left: 36px;
   }
 
+  .oboard-favorites-list .amnl-List_Item {
+    position: relative;
+  }
+
   .oboard-favorites-drag-handle {
     display: flex;
     position: absolute;
@@ -553,15 +696,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-list .amnl-List_Item.oboard-dragging {
-    opacity: 0.72;
-  }
-
-  .oboard-favorites-list .amnl-List_Item.oboard-drop-before > .amni-Item {
-    box-shadow: none;
-  }
-
-  .oboard-favorites-list .amnl-List_Item.oboard-drop-after > .amni-Item {
-    box-shadow: none;
+    opacity: 0.38;
   }
 
   .oboard-favorites-list:empty::after {
@@ -4316,7 +4451,7 @@ img.ProseMirror-separator {
     const text = item.querySelector('.amni-Item_Text');
     if (text) {
       text.textContent = name;
-      text.setAttribute('title', name);
+      text.removeAttribute('title');
     }
     const content = item.querySelector('.amni-Item');
     if (content && !content.querySelector('.oboard-favorites-drag-handle')) {
@@ -4351,6 +4486,7 @@ img.ProseMirror-separator {
       if (navItem) dashboardChildren.appendChild(navItem);
     });
     attachFavoriteDragHandlers();
+    attachFavoritePreview();
   }
 
   function orderNames() {
@@ -4436,6 +4572,29 @@ img.ProseMirror-separator {
     });
   }
 
+  function createDragGhost(sourceElement, event) {
+    const rect = sourceElement.getBoundingClientRect();
+    const ghost = sourceElement.cloneNode(true);
+    ghost.classList.add('oboard-drag-ghost');
+    ghost.classList.remove('oboard-dragging', 'oboard-drop-before', 'oboard-drop-after');
+    ghost.style.width = rect.width + 'px';
+    ghost.style.height = rect.height + 'px';
+    ghost.style.left = (event.clientX - (event.clientX - rect.left)) + 'px';
+    ghost.style.top = (event.clientY - (event.clientY - rect.top)) + 'px';
+    document.body.appendChild(ghost);
+    return {
+      ghost,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top
+    };
+  }
+
+  function moveDragGhost(dragGhost, event) {
+    if (!dragGhost?.ghost) return;
+    dragGhost.ghost.style.left = (event.clientX - dragGhost.offsetX) + 'px';
+    dragGhost.ghost.style.top = (event.clientY - dragGhost.offsetY) + 'px';
+  }
+
   function attachDragBehavior(handle, sourceName, itemSelector, allSelector, reorderFn) {
     if (handle.dataset.oboardDragReady === 'true') return;
     handle.dataset.oboardDragReady = 'true';
@@ -4445,12 +4604,14 @@ img.ProseMirror-separator {
       if (!sourceElement) return;
       let currentTarget = null;
       let placeAfter = false;
+      const dragGhost = createDragGhost(sourceElement, event);
 
       sourceElement.classList.add('oboard-dragging');
       document.body.classList.add('oboard-reordering');
       handle.setPointerCapture?.(event.pointerId);
 
       function onMove(moveEvent) {
+        moveDragGhost(dragGhost, moveEvent);
         const element = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY)?.closest(itemSelector);
         clearDropState(allSelector);
         if (!element || element === sourceElement) {
@@ -4466,6 +4627,7 @@ img.ProseMirror-separator {
       function onUp() {
         sourceElement.classList.remove('oboard-dragging');
         document.body.classList.remove('oboard-reordering');
+        dragGhost.ghost?.remove();
         clearDropState(allSelector);
         document.removeEventListener('pointermove', onMove);
         document.removeEventListener('pointerup', onUp);
@@ -4536,17 +4698,38 @@ img.ProseMirror-separator {
     ].join('');
   }
 
-  function positionPreview(row) {
+  function positionPreview(item) {
+    const sourceElement = item.sourceElement || item.row;
+    const sourceRect = sourceElement.getBoundingClientRect();
+
+    if (item.mode === 'favorite') {
+      const panel = document.querySelector('.oboard-nav-section-favorites');
+      const panelRect = panel?.getBoundingClientRect();
+      const width = panelRect ? panelRect.width : 216;
+      const height = width * 0.75;
+      let top = sourceRect.bottom + 8;
+      if (panelRect && top + height > panelRect.bottom - 8) {
+        top = sourceRect.top - height - 8;
+      }
+      if (panelRect && top < panelRect.top + 48) {
+        top = Math.max(panelRect.top + 48, panelRect.bottom - height - 8);
+      }
+      preview.style.width = width + 'px';
+      preview.style.height = height + 'px';
+      preview.style.left = (panelRect ? panelRect.left : sourceRect.left) + 'px';
+      preview.style.top = top + 'px';
+      return;
+    }
+
     const owner = document.querySelector('.tb-HeaderCell-owner');
     const action = document.querySelector('.tb-HeaderCell-action');
     const ownerRect = owner?.getBoundingClientRect();
     const actionRect = action?.getBoundingClientRect();
-    const rowRect = row.getBoundingClientRect();
     const left = ownerRect ? ownerRect.left : Math.max(320, window.innerWidth - 440);
     const right = actionRect ? actionRect.right : window.innerWidth - 32;
     const width = Math.max(320, Math.min(440, right - left));
     const height = width * 0.75;
-    const top = Math.min(Math.max(rowRect.top - 8, 120), window.innerHeight - height - 24);
+    const top = Math.min(Math.max(sourceRect.top - 8, 120), window.innerHeight - height - 24);
 
     preview.style.width = width + 'px';
     preview.style.height = height + 'px';
@@ -4557,7 +4740,8 @@ img.ProseMirror-separator {
   function showPreview(item) {
     previewSource = item;
     preview.innerHTML = previewHtml(item.name);
-    positionPreview(item.row);
+    preview.classList.toggle('oboard-dashboard-preview-small', item.mode === 'favorite');
+    positionPreview(item);
     preview.classList.add('oboard-dashboard-preview-visible');
   }
 
@@ -4566,6 +4750,7 @@ img.ProseMirror-separator {
     previewTimer = null;
     previewSource = null;
     preview.classList.remove('oboard-dashboard-preview-visible');
+    preview.classList.remove('oboard-dashboard-preview-small');
   }
 
   function attachDashboardPreview() {
@@ -4583,9 +4768,27 @@ img.ProseMirror-separator {
     });
   }
 
+  function attachFavoritePreview() {
+    if (!dashboardChildren) return;
+    dashboardChildren.querySelectorAll(':scope > .amnl-List_Item').forEach(item => {
+      if (item.dataset.oboardPreviewReady === 'true') return;
+      const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
+      if (!name) return;
+      item.dataset.oboardPreviewReady = 'true';
+      item.addEventListener('mouseenter', () => {
+        window.clearTimeout(previewTimer);
+        previewTimer = window.setTimeout(() => showPreview({ name, row: item, sourceElement: item, mode: 'favorite' }), 1000);
+      });
+      item.addEventListener('mouseleave', hidePreview);
+      item.addEventListener('pointerdown', event => {
+        if (event.target.closest('.oboard-drag-handle')) hidePreview();
+      });
+    });
+  }
+
   window.addEventListener('scroll', hidePreview, true);
   window.addEventListener('resize', () => {
-    if (previewSource) positionPreview(previewSource.row);
+    if (previewSource) positionPreview(previewSource);
   });
 
   rowOrder.forEach(item => {
@@ -4602,7 +4805,6 @@ img.ProseMirror-separator {
   });
 
   attachTableDragHandlers();
-  attachDashboardPreview();
   restoreOrder();
   restoreFavoriteOrder();
   syncSidebar();
