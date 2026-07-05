@@ -173,6 +173,55 @@ img.ProseMirror-separator {
   .cdl-ActionFavoriteButton { cursor: pointer; }
   .cdl-ActionFavoriteButton svg { pointer-events: none; }
 
+  .oboard-dashboard-mode-switcher {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 200px;
+    height: 32px;
+    box-sizing: border-box;
+    gap: 8px;
+    padding: 4px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--grey-3-next, #f5f6f7);
+  }
+
+  .oboard-dashboard-mode-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    min-width: 0;
+    box-sizing: border-box;
+    gap: 0;
+    padding: 0 8px 0 0;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--dark-2, #42526e);
+    font-family: var(--font-family, "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .oboard-dashboard-mode-option .ai-Icon,
+  .oboard-dashboard-mode-option .oboard-dashboard-mode-layers-icon {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-dashboard-mode-option.is-active {
+    border-radius: 4px;
+    background: var(--white-color, #fff);
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.15), 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  }
+
   .tb-Body .tb-RowWrapper {
     position: relative;
   }
@@ -4910,6 +4959,7 @@ img.ProseMirror-separator {
   const DRAG = 'icon-drag-next';
   const ORDER_STORAGE_KEY = 'oboard-dashboard-row-order';
   const FAVORITE_ORDER_STORAGE_KEY = 'oboard-dashboard-favorite-order';
+  const DASHBOARD_MODE_STORAGE_KEY = 'oboard-dashboard-group-mode';
 
   const activeInput = document.querySelector('input[value="CustomDashboardList"]');
   if (activeInput) activeInput.checked = true;
@@ -5770,6 +5820,50 @@ img.ProseMirror-separator {
     return '<svg data-target-id="' + id + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon ' + className + '"><use xlink:href="#' + id + '" href="#' + id + '"></use></svg>';
   }
 
+  function layersIcon(className = '') {
+    return [
+      '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="svg-icon ai-Icon oboard-dashboard-mode-layers-icon ' + className + '">',
+      '<path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>',
+      '<path d="M4 12L12 16L20 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>',
+      '<path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>',
+      '</svg>'
+    ].join('');
+  }
+
+  function initDashboardGroupSwitcher() {
+    const headerLeft = document.querySelector('.cdl-DashboardHeader_LeftSide');
+    if (!headerLeft || headerLeft.querySelector('.oboard-dashboard-mode-switcher')) return;
+
+    const switcher = document.createElement('div');
+    switcher.className = 'oboard-dashboard-mode-switcher';
+    switcher.setAttribute('role', 'radiogroup');
+    switcher.setAttribute('aria-label', 'Dashboard view mode');
+    switcher.innerHTML = [
+      '<button type="button" class="oboard-dashboard-mode-option" role="radio" data-mode="ungrouped" aria-checked="false">' + svgIcon('icon-menu-dashboard') + '<span>Ungrouped</span></button>',
+      '<button type="button" class="oboard-dashboard-mode-option" role="radio" data-mode="grouped" aria-checked="false">' + layersIcon() + '<span>Grouped</span></button>'
+    ].join('');
+
+    function setMode(mode) {
+      const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
+      switcher.dataset.mode = normalizedMode;
+      switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
+        const active = option.dataset.mode === normalizedMode;
+        option.classList.toggle('is-active', active);
+        option.setAttribute('aria-checked', active ? 'true' : 'false');
+      });
+      window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
+    }
+
+    switcher.addEventListener('click', event => {
+      const option = event.target.closest('.oboard-dashboard-mode-option');
+      if (!option || !switcher.contains(option)) return;
+      setMode(option.dataset.mode);
+    });
+
+    headerLeft.insertBefore(switcher, headerLeft.firstElementChild);
+    setMode(window.localStorage.getItem(DASHBOARD_MODE_STORAGE_KEY) || 'ungrouped');
+  }
+
   function homeViewTemplate() {
     return [
       '<section class="oboard-static-view-inner oboard-static-home">',
@@ -5991,6 +6085,7 @@ img.ProseMirror-separator {
   syncSidebar();
   initTableSortable();
   initFavoriteSortable();
+  initDashboardGroupSwitcher();
   initStaticPages();
 })();
 </script>
