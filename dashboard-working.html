@@ -307,6 +307,9 @@ img.ProseMirror-separator {
     padding-left: 52px;
   }
 
+  .oboard-grouped-collection.is-hover-demo,
+  .oboard-grouped-collection:hover,
+  .oboard-grouped-collection:focus-within,
   .oboard-grouped-dashboard.is-hover-demo,
   .oboard-grouped-dashboard:hover,
   .oboard-grouped-dashboard:focus-within {
@@ -481,6 +484,164 @@ img.ProseMirror-separator {
   .oboard-grouped-more .ai-Icon {
     width: 24px;
     height: 24px;
+  }
+
+  .oboard-grouped-collection-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .oboard-grouped-collection:hover .oboard-grouped-collection-actions,
+  .oboard-grouped-collection:focus-within .oboard-grouped-collection-actions,
+  .oboard-grouped-collection.is-hover-demo .oboard-grouped-collection-actions,
+  .oboard-grouped-collection.is-menu-open .oboard-grouped-collection-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .oboard-grouped-copy-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: var(--gray-blue-250, #dde2ea);
+    color: var(--dark-2, #42526e);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: width 140ms ease, padding 140ms ease, background-color 140ms ease;
+  }
+
+  .oboard-grouped-copy-link:hover,
+  .oboard-grouped-copy-link:focus-visible,
+  .oboard-grouped-copy-link.is-expanded {
+    width: 102px;
+    padding: 2px 6px 2px 4px;
+    background: var(--gray-blue-300, #c3c7d0);
+    gap: 4px;
+  }
+
+  .oboard-grouped-copy-link .ai-Icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-grouped-copy-link-text {
+    overflow: hidden;
+    max-width: 0;
+    color: var(--dark-2, #42526e);
+    font-family: var(--font-ui, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    font-size: 14px;
+    font-weight: 590;
+    line-height: 20px;
+    opacity: 0;
+    transition: max-width 140ms ease, opacity 120ms ease;
+  }
+
+  .oboard-grouped-copy-link:hover .oboard-grouped-copy-link-text,
+  .oboard-grouped-copy-link:focus-visible .oboard-grouped-copy-link-text,
+  .oboard-grouped-copy-link.is-expanded .oboard-grouped-copy-link-text {
+    max-width: 68px;
+    opacity: 1;
+  }
+
+  .oboard-grouped-collection-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: var(--gray-blue-250, #dde2ea);
+    color: var(--dark-2, #42526e);
+    cursor: pointer;
+  }
+
+  .oboard-grouped-collection-more.is-active,
+  .oboard-grouped-collection.is-menu-open .oboard-grouped-collection-more {
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-grouped-collection-more .ai-Icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-collection-menu {
+    position: fixed;
+    z-index: 10000;
+    width: 240px;
+    padding: 8px 12px;
+    border: 1px solid var(--gray-blue-250, #dde2ea);
+    border-radius: 8px;
+    background: var(--white-color, #fff);
+    box-shadow: 0 14px 34px rgba(23, 43, 77, 0.22), 0 0 1px rgba(23, 43, 77, 0.24);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 120ms ease, transform 120ms ease;
+  }
+
+  .oboard-collection-menu.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .oboard-collection-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--dark-blue, #172b4d);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+  }
+
+  .oboard-collection-menu-item:hover,
+  .oboard-collection-menu-item:focus-visible {
+    background: var(--surface-subtle, #f4f7fc);
+    outline: none;
+  }
+
+  .oboard-collection-menu-item .ai-Icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    margin-right: 20px;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-collection-menu-item-danger .ai-Icon {
+    color: var(--dark-blue, #172b4d);
+  }
+
+  .oboard-collection-menu-divider {
+    height: 1px;
+    margin: 8px 0;
+    background: var(--gray-blue-250, #dde2ea);
   }
 
   .oboard-grouped-collection-badge {
@@ -5369,6 +5530,8 @@ img.ProseMirror-separator {
   let tableSortable = null;
   let favoriteSortable = null;
   let groupedSortable = null;
+  let groupedListEventsBound = false;
+  let collectionMenuEventsBound = false;
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   const navTemplates = new Map(existingChildItems.map(item => {
@@ -6181,7 +6344,9 @@ img.ProseMirror-separator {
       name: 'Collection 4',
       owner: 'Sofia Chen',
       items: [
-        { name: 'Social Media Trends 2024', owner: 'Sofia Chen', favorite: false, hover: true, private: true }
+        { name: 'Social Media Trends 2024', owner: 'Sofia Chen', favorite: false, private: true },
+        { name: 'Website Conversion Analysis 2024', owner: 'Sofia Chen', favorite: false, private: true },
+        { name: 'Revenue Forecasts Q3', owner: 'Sofia Chen', favorite: false, private: true }
       ]
     },
     {
@@ -6231,6 +6396,15 @@ img.ProseMirror-separator {
     ].join('');
   }
 
+  function groupedCollectionActions(collection) {
+    return [
+      '<div class="oboard-grouped-collection-actions">',
+      '<button class="oboard-grouped-copy-link" type="button" aria-label="Copy link">' + svgIcon('icon-link') + '<span class="oboard-grouped-copy-link-text">Copy link</span></button>',
+      '<button class="oboard-grouped-collection-more" type="button" aria-label="Collection actions" aria-haspopup="menu" aria-expanded="false">' + svgIcon('icon-more-next') + '</button>',
+      '</div>'
+    ].join('');
+  }
+
   function groupedDashboardRow(item, collectionName) {
     return [
       '<div class="oboard-grouped-row oboard-grouped-dashboard' + (item.hover ? ' is-hover-demo' : '') + '" data-dashboard-name="' + escapeHtml(item.name) + '" data-collection="' + escapeHtml(collectionName) + '">',
@@ -6251,7 +6425,7 @@ img.ProseMirror-separator {
 
   function groupedCollectionRow(collection) {
     return [
-      '<div class="oboard-grouped-row oboard-grouped-collection" data-collection="' + escapeHtml(collection.name) + '">',
+      '<div class="oboard-grouped-row oboard-grouped-collection' + (collection.hover ? ' is-hover-demo' : '') + '" data-collection="' + escapeHtml(collection.name) + '">',
       '<div class="oboard-grouped-row-inner">',
       '<div class="oboard-grouped-name-cell">',
       '<button class="oboard-grouped-chevrons" type="button" aria-label="Collapse collection">' + svgIcon('icon-chevron-down-sm') + '</button>',
@@ -6260,11 +6434,72 @@ img.ProseMirror-separator {
       '</div>',
       '<div class="oboard-grouped-collections-cell"></div>',
       ownerCell(collection.owner),
-      '<div class="oboard-grouped-visibility-cell"></div>',
+      '<div class="oboard-grouped-visibility-cell">' + groupedCollectionActions(collection) + '</div>',
       '<span></span>',
       '</div>',
       '</div>'
     ].join('');
+  }
+
+  function collectionMenuHtml(collectionName) {
+    const items = [
+      ['icon-duplicate-next', 'Duplicate'],
+      ['icon-share', 'Share'],
+      ['icon-link', 'Copy link'],
+      [EMPTY, 'Add to favorites'],
+      ['icon-rename-currentColor', 'Rename']
+    ];
+    return [
+      '<div class="oboard-collection-menu" role="menu" aria-label="Collection actions" data-collection="' + escapeHtml(collectionName) + '">',
+      items.map(item => '<button class="oboard-collection-menu-item" type="button" role="menuitem">' + svgIcon(item[0]) + '<span>' + item[1] + '</span></button>').join(''),
+      '<div class="oboard-collection-menu-divider"></div>',
+      '<button class="oboard-collection-menu-item oboard-collection-menu-item-danger" type="button" role="menuitem">' + svgIcon('icon-trash') + '<span>Delete</span></button>',
+      '</div>'
+    ].join('');
+  }
+
+  function closeCollectionMenu() {
+    const menu = document.querySelector('.oboard-collection-menu');
+    if (menu) menu.remove();
+    document.querySelectorAll('.oboard-grouped-collection.is-menu-open').forEach(row => row.classList.remove('is-menu-open'));
+    document.querySelectorAll('.oboard-grouped-collection-more.is-active').forEach(button => {
+      button.classList.remove('is-active');
+      button.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function openCollectionMenu(button, collectionName) {
+    const row = button.closest('.oboard-grouped-collection');
+    const alreadyOpen = button.classList.contains('is-active');
+    closeCollectionMenu();
+    if (alreadyOpen) return;
+
+    document.body.insertAdjacentHTML('beforeend', collectionMenuHtml(collectionName));
+    const menu = document.querySelector('.oboard-collection-menu');
+    const rect = button.getBoundingClientRect();
+    const menuWidth = 240;
+    const left = Math.max(8, Math.min(window.innerWidth - menuWidth - 8, rect.right - menuWidth));
+    const top = Math.min(window.innerHeight - 8, rect.bottom + 6);
+    menu.style.left = left + 'px';
+    menu.style.top = top + 'px';
+    requestAnimationFrame(() => menu.classList.add('is-open'));
+    row?.classList.add('is-menu-open');
+    button.classList.add('is-active');
+    button.setAttribute('aria-expanded', 'true');
+  }
+
+  function bindCollectionMenuEvents() {
+    if (collectionMenuEventsBound) return;
+    collectionMenuEventsBound = true;
+    document.addEventListener('click', event => {
+      if (event.target.closest('.oboard-collection-menu') || event.target.closest('.oboard-grouped-collection-more')) return;
+      closeCollectionMenu();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeCollectionMenu();
+    });
+    window.addEventListener('resize', closeCollectionMenu);
+    window.addEventListener('scroll', closeCollectionMenu, true);
   }
 
   function groupedListHtml() {
@@ -6306,6 +6541,23 @@ img.ProseMirror-separator {
         });
       });
     });
+    if (!groupedListEventsBound) {
+      groupedListEventsBound = true;
+      host.addEventListener('click', event => {
+        const copyLink = event.target.closest('.oboard-grouped-copy-link');
+        if (copyLink) {
+          event.preventDefault();
+          return;
+        }
+        const menuButton = event.target.closest('.oboard-grouped-collection-more');
+        if (!menuButton) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const collectionName = menuButton.closest('.oboard-grouped-collection')?.dataset.collection || 'Collection';
+        openCollectionMenu(menuButton, collectionName);
+      });
+    }
+    bindCollectionMenuEvents();
     initGroupedSortable();
     return host;
   }
@@ -6328,6 +6580,8 @@ img.ProseMirror-separator {
     if (grouped) {
       hidePreview();
       initGroupedList();
+    } else {
+      closeCollectionMenu();
     }
   }
 
