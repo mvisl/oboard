@@ -219,29 +219,35 @@ img.ProseMirror-separator {
     opacity: 0.38;
   }
 
-  .tb-Body .tb-RowWrapper.oboard-drop-before::before,
-  .tb-Body .tb-RowWrapper.oboard-drop-after::after,
-  .oboard-favorites-list .amnl-List_Item.oboard-drop-before::before,
-  .oboard-favorites-list .amnl-List_Item.oboard-drop-after::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    z-index: 4;
-    height: 2px;
-    border-radius: 999px;
-    background: rgba(var(--dark-2-rgb, 66,82,110), 0.16);
+  .oboard-drop-placeholder {
+    display: block;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
     pointer-events: none;
+    transition: height 220ms ease, min-height 220ms ease, opacity 160ms ease;
   }
 
-  .tb-Body .tb-RowWrapper.oboard-drop-before::before,
-  .oboard-favorites-list .amnl-List_Item.oboard-drop-before::before {
-    top: -1px;
+  .oboard-drop-placeholder-active {
+    height: var(--oboard-drop-height, 44px);
+    min-height: var(--oboard-drop-height, 44px);
+    opacity: 1;
   }
 
-  .tb-Body .tb-RowWrapper.oboard-drop-after::after,
-  .oboard-favorites-list .amnl-List_Item.oboard-drop-after::after {
-    bottom: -1px;
+  .tb-Body > .oboard-drop-placeholder {
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .oboard-favorites-list > .oboard-drop-placeholder {
+    list-style: none;
+    background: transparent;
+    border-radius: 6px;
   }
 
   .oboard-drag-ghost {
@@ -4643,10 +4649,24 @@ img.ProseMirror-separator {
     }
   }
 
-  function clearDropState(selector) {
-    document.querySelectorAll(selector).forEach(node => {
-      node.classList.remove('oboard-drop-before', 'oboard-drop-after');
+  function createDropPlaceholder(sourceElement) {
+    const placeholder = document.createElement(sourceElement.matches('.amnl-List_Item') ? 'li' : 'div');
+    const rect = sourceElement.getBoundingClientRect();
+    placeholder.className = 'oboard-drop-placeholder';
+    placeholder.style.setProperty('--oboard-drop-height', rect.height + 'px');
+    return placeholder;
+  }
+
+  function activateDropPlaceholder(placeholder) {
+    window.requestAnimationFrame(() => {
+      placeholder.classList.add('oboard-drop-placeholder-active');
     });
+  }
+
+  function removeDropPlaceholder(placeholder) {
+    if (!placeholder) return;
+    placeholder.classList.remove('oboard-drop-placeholder-active');
+    window.setTimeout(() => placeholder.remove(), 220);
   }
 
   function createDragGhost(sourceElement, event) {
@@ -4698,36 +4718,111 @@ img.ProseMirror-separator {
       if (!sourceElement) return;
       let currentTarget = null;
       let placeAfter = false;
+      let placeholderTarget = null;
+      let placeholderPlaceAfter = false;
+      let placeholderTimer = null;
+      const placeholder = createDropPlaceholder(sourceElement);
       const dragGhost = createDragGhost(sourceElement, event);
 
       sourceElement.classList.add('oboard-dragging');
       document.body.classList.add('oboard-reordering');
       handle.setPointerCapture?.(event.pointerId);
 
+      function clearPlaceholderTimer() {
+        if (!placeholderTimer) return;
+        window.clearTimeout(placeholderTimer);
+        placeholderTimer = null;
+      }
+
+      function commitPlaceholder(target, after) {
+        if (!target || target === sourceElement) return;
+        const parent = target.parentNode;
+        if (!parent) return;
+        const reference = after ? target.nextSibling : target;
+        if (placeholder.parentNode !== parent || placeholder.nextSibling !== reference) {
+          parent.insertBefore(placeholder, reference);
+        }
+        activateDropPlaceholder(placeholder);
+      }
+
+      function schedulePlaceholder(target, after) {
+        if (target === placeholderTarget && after === placeholderPlaceAfter) return;
+        placeholderTarget = target;
+        placeholderPlaceAfter = after;
+        clearPlaceholderTimer();
+        placeholderTimer = window.setTimeout(() => {
+          commitPlaceholder(placeholderTarget, placeholderPlaceAfter);
+        }, 500);
+      }
+
       function onMove(moveEvent) {
         moveDragGhost(dragGhost, moveEvent);
         const element = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY)?.closest(itemSelector);
-        clearDropState(allSelector);
         if (!element || element === sourceElement) {
+          const items = Array.from(document.querySelectorAll(allSelector)).filter(node => node !== sourceElement && node !== placeholder);
+          const first = items[0];
+          const last = items[items.length - 1];
+          if (first && moveEvent.clientY < first.getBoundingClientRect().top) {
+            currentTarget = first;
+            placeAfter = false;
+            schedulePlaceholder(currentTarget, placeAfter);
+            return;
+          }
+          if (last && moveEvent.clientY > last.getBoundingClientRect().bottom) {
+            currentTarget = last;
+            placeAfter = true;
+            schedulePlaceholder(currentTarget, placeAfter);
+            return;
+          }
           currentTarget = null;
+          clearPlaceholderTimer();
           return;
         }
         const rect = element.getBoundingClientRect();
         placeAfter = moveEvent.clientY > rect.top + rect.height / 2;
         currentTarget = element;
-        element.classList.add(placeAfter ? 'oboard-drop-after' : 'oboard-drop-before');
+        schedulePlaceholder(currentTarget, placeAfter);
       }
 
       function onUp() {
+        clearPlaceholderTimer();
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        if (!currentTarget) {
+          sourceElement.classList.remove('oboard-dragging');
+          document.body.classList.remove('oboard-reordering');
+          dragGhost.ghost?.remove();
+          removeDropPlaceholder(placeholder);
+          return;
+        }
+        const targetName = currentTarget.dataset.dashboardName;
+        if (targetName) {
+          const landingRect = placeholder.parentNode
+            ? placeholder.getBoundingClientRect()
+            : currentTarget.getBoundingClientRect();
+          const ghost = dragGhost.ghost;
+          if (ghost && landingRect) {
+            ghost.style.transition = 'left 220ms ease-out, top 220ms ease-out, width 220ms ease-out, height 220ms ease-out';
+            window.requestAnimationFrame(() => {
+              ghost.style.left = landingRect.left + 'px';
+              ghost.style.top = landingRect.top + 'px';
+              ghost.style.width = landingRect.width + 'px';
+              ghost.style.height = landingRect.height + 'px';
+            });
+          }
+          window.setTimeout(() => {
+            sourceElement.classList.remove('oboard-dragging');
+            document.body.classList.remove('oboard-reordering');
+            placeholder.remove();
+            reorderFn(sourceName, targetName, placeAfter);
+            dragGhost.ghost?.remove();
+          }, 220);
+          return;
+        }
         sourceElement.classList.remove('oboard-dragging');
         document.body.classList.remove('oboard-reordering');
         dragGhost.ghost?.remove();
-        clearDropState(allSelector);
-        document.removeEventListener('pointermove', onMove);
-        document.removeEventListener('pointerup', onUp);
-        if (!currentTarget) return;
-        const targetName = currentTarget.dataset.dashboardName;
-        if (targetName) reorderFn(sourceName, targetName, placeAfter);
+        removeDropPlaceholder(placeholder);
       }
 
       document.addEventListener('pointermove', onMove);
