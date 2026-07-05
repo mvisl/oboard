@@ -485,6 +485,7 @@ img.ProseMirror-separator {
     left: 48px !important;
     right: 40px !important;
     width: auto !important;
+    padding: 0 !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     flex: 1 1 auto !important;
@@ -609,7 +610,6 @@ img.ProseMirror-separator {
   .am-Content_Body .amn-Nav.oboard-sidebar-sectioned {
     --oboard-sidebar-panel-bg: var(--gray-3-next, #f5f6f7);
     --oboard-sidebar-handle: var(--grey-1-next, #b5bbc5);
-    --oboard-top-section-height: 280px;
     height: 100%;
   }
 
@@ -644,9 +644,11 @@ img.ProseMirror-separator {
 
   .oboard-nav-section-primary {
     margin-top: -16px;
-    height: var(--oboard-top-section-height);
-    min-height: 224px;
+    height: var(--oboard-top-section-height, auto);
+    min-height: 0;
     max-height: 380px;
+    flex: 0 0 auto;
+    padding-bottom: 12px;
   }
 
   .oboard-nav-section-favorites {
@@ -4387,9 +4389,6 @@ img.ProseMirror-separator {
     sections.appendChild(favoritesSection);
     nav.appendChild(sections);
     nav.classList.add('oboard-sidebar-sectioned');
-
-    const savedHeight = window.localStorage.getItem('oboard-sidebar-primary-height');
-    if (savedHeight) nav.style.setProperty('--oboard-top-section-height', savedHeight + 'px');
 
     let startY = 0;
     let startHeight = 0;
