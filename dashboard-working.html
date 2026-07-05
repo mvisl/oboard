@@ -4704,7 +4704,9 @@ img.ProseMirror-separator {
 
     if (item.mode === 'favorite') {
       const panel = document.querySelector('.oboard-nav-section-favorites');
+      const aside = document.querySelector('.app-Aside');
       const panelRect = panel?.getBoundingClientRect();
+      const asideRect = aside?.getBoundingClientRect();
       const width = panelRect ? panelRect.width : 216;
       const height = width * 0.75;
       let top = sourceRect.bottom + 8;
@@ -4716,7 +4718,7 @@ img.ProseMirror-separator {
       }
       preview.style.width = width + 'px';
       preview.style.height = height + 'px';
-      preview.style.left = (panelRect ? panelRect.left : sourceRect.left) + 'px';
+      preview.style.left = ((asideRect ? asideRect.right : panelRect?.right || sourceRect.right) + 12) + 'px';
       preview.style.top = top + 'px';
       return;
     }
