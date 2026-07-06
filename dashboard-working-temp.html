@@ -198,6 +198,7 @@ img.ProseMirror-separator {
     border: 0;
     border-radius: 6px;
     background: var(--grey-3-next, #f5f6f7);
+    margin-right: 16px;
   }
 
   html {
@@ -650,6 +651,16 @@ img.ProseMirror-separator {
     min-width: 0;
   }
 
+  .oboard-grouped-head-service {
+    min-width: 0;
+  }
+
+  .oboard-grouped-head-name .oboard-grouped-head-favorite {
+    flex: 0 0 24px;
+    justify-content: center;
+    width: 24px;
+  }
+
   .oboard-grouped-head-favorite,
   .oboard-grouped-head-label {
     display: inline-flex;
@@ -685,6 +696,7 @@ img.ProseMirror-separator {
     flex: 0 0 20px;
     width: 20px;
     height: 20px;
+    opacity: 0;
   }
 
   .oboard-grouped-head .cdth-HeaderCell_DefaultStateSorting {
@@ -7427,6 +7439,15 @@ img.ProseMirror-separator {
     ].join('');
   }
 
+  function groupedNameHeaderLabel() {
+    return [
+      '<div class="oboard-grouped-head-name">',
+      '<div class="cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '</div>',
+      groupedHeaderLabel('Name', true),
+      '</div>'
+    ].join('');
+  }
+
   function layersIcon(className = '') {
     return [
       '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="svg-icon ai-Icon oboard-dashboard-mode-layers-icon ' + className + '">',
@@ -7814,8 +7835,8 @@ img.ProseMirror-separator {
     const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
-      '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-favorite">' + svgIcon(EMPTY) + tableHeaderSortIcon('icon-sort-two-ways-next', 'cdth-HeaderCell_DefaultStateSorting') + '</div>',
-      groupedHeaderLabel('Name', true),
+      '<div class="oboard-grouped-head-service"></div>',
+      groupedNameHeaderLabel(),
       groupedHeaderLabel('Collections'),
       groupedHeaderLabel('Owner'),
       '<div class="oboard-grouped-visibility-cell">' + groupedHeaderLabel('Visibility') + '</div>',
