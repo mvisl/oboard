@@ -564,13 +564,14 @@ img.ProseMirror-separator {
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-Header,
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-Body,
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .atcb-Button,
-  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-EndBlock {
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-EndBlock,
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-dashboard-footer {
     display: none !important;
   }
 
   .oboard-grouped-list {
     display: none;
-    width: calc(100% + var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)));
+    width: calc(100% + var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)) + var(--page-right-padding, 32px));
     margin-left: calc(-1 * var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)));
     margin-top: 30px;
     color: var(--dark-blue, #172b4d);
@@ -585,7 +586,8 @@ img.ProseMirror-separator {
   .oboard-mode-transitioning .tb-Header,
   .oboard-mode-transitioning .tb-Body,
   .oboard-mode-transitioning .atcb-Button,
-  .oboard-mode-transitioning .tb-EndBlock {
+  .oboard-mode-transitioning .tb-EndBlock,
+  .oboard-mode-transitioning .oboard-dashboard-footer {
     display: none !important;
   }
 
@@ -628,7 +630,7 @@ img.ProseMirror-separator {
     grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 224px 376px 184px 24px);
     column-gap: 0;
     align-items: center;
-    width: 100%;
+    width: calc(100% - var(--page-right-padding, 32px));
     box-sizing: border-box;
   }
 
@@ -707,8 +709,8 @@ img.ProseMirror-separator {
     0% {
       background-color: transparent;
     }
-    33.333%,
-    66.666% {
+    25%,
+    50% {
       background-color: var(--bg-brand-primary_alt, #e5f0ff);
     }
     100% {
@@ -758,7 +760,7 @@ img.ProseMirror-separator {
 
   .oboard-grouped-dashboard.is-navigation-highlight {
     background: var(--bg-brand-primary_alt, #e5f0ff);
-    animation: oboardGroupedNavigationHighlight 900ms ease-in-out both;
+    animation: oboardGroupedNavigationHighlight 1200ms ease-in-out both;
   }
 
   .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):hover,
@@ -975,11 +977,6 @@ img.ProseMirror-separator {
     color: var(--dark-2, #42526e);
     cursor: pointer;
     opacity: 0;
-  }
-
-  .oboard-grouped-dashboard .oboard-grouped-more {
-    justify-self: start;
-    transform: translateX(-24px);
   }
 
   .oboard-grouped-dashboard:hover .oboard-grouped-more,
@@ -1308,13 +1305,16 @@ img.ProseMirror-separator {
     transform: translateX(-50%);
   }
 
-  .oboard-grouped-collection-badge:not(.is-tooltip-open):not(:focus-within) .oboard-grouped-tooltip {
+  .oboard-grouped-collection-badge:not(:hover) .oboard-grouped-tooltip {
     transition-duration: 0ms;
   }
 
-  .oboard-grouped-collection-badge.is-tooltip-open .oboard-grouped-tooltip,
-  .oboard-grouped-collection-badge:focus-within .oboard-grouped-tooltip {
+  .oboard-grouped-collection-badge:hover:not(.is-click-suppressed) .oboard-grouped-tooltip {
     opacity: 1;
+  }
+
+  .oboard-grouped-collection-badge.is-click-suppressed .oboard-grouped-tooltip {
+    opacity: 0 !important;
   }
 
   .oboard-grouped-dashboard[hidden] {
@@ -1528,6 +1528,9 @@ img.ProseMirror-separator {
 
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row {
     position: relative;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     width: 100%;
     height: var(--oboard-dashboard-row-height, 44px);
     background: var(--white-color, #fff);
@@ -1535,6 +1538,12 @@ img.ProseMirror-separator {
 
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row-inner {
     height: var(--oboard-dashboard-row-height, 44px);
+  }
+
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-bundle-cloned-child {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-collection-actions,
@@ -1612,6 +1621,95 @@ img.ProseMirror-separator {
     min-width: 0;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .oboard-dashboard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 28px var(--page-right-padding, 32px) 0 var(--page-left-padding, 32px);
+    color: var(--gray-blue-700, #6b778c);
+    font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  }
+
+  .oboard-dashboard-page-size {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 105px;
+    height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--gray-blue-100, #f4f5f7);
+    color: var(--dark-2, #42526e);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 18px;
+    cursor: pointer;
+  }
+
+  .oboard-dashboard-page-size[aria-expanded="true"] {
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-dashboard-page-size .ai-Icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 120ms ease;
+  }
+
+  .oboard-dashboard-page-size[aria-expanded="true"] .ai-Icon {
+    transform: rotate(180deg);
+  }
+
+  .oboard-dashboard-page-count {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 18px;
+  }
+
+  .oboard-dashboard-page-size-menu {
+    position: fixed;
+    z-index: 10020;
+    width: 160px;
+    padding: 0;
+    border: 1px solid var(--gray-blue-250, #dde2ea);
+    border-radius: 0 0 8px 8px;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(9, 30, 66, 0.08) 0 0 1px, rgba(9, 30, 66, 0.18) 0 8px 18px;
+    overflow: hidden;
+  }
+
+  .oboard-dashboard-page-size-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 0;
+    background: var(--white-color, #fff);
+    color: var(--dark-blue, #172b4d);
+    font: inherit;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .oboard-dashboard-page-size-option:hover,
+  .oboard-dashboard-page-size-option:focus-visible {
+    background: var(--gray-blue-100, #f4f5f7);
+    outline: 0;
+  }
+
+  .oboard-dashboard-page-size-option.is-selected {
+    background: var(--gray-blue-200, #dfe8f8);
   }
 
   .oboard-dashboard-preview {
@@ -6315,6 +6413,13 @@ img.ProseMirror-separator {
     }
   }
 
+  function setDashboardRowOwner(row, owner) {
+    if (!row || !owner) return;
+    row.dataset.dashboardOwner = owner;
+    const ownerName = row.querySelector('.unc-Name');
+    if (ownerName) ownerName.textContent = owner;
+  }
+
   function seedExtraDashboardRows() {
     const body = document.querySelector('.tb-Body');
     if (!body) return;
@@ -6322,10 +6427,10 @@ img.ProseMirror-separator {
     const privateTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Private'));
     const publicTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Public')) || privateTemplate;
     const extraDashboards = [
-      { name: 'Market Trends 2025', favorite: true, visibility: 'Public' },
-      { name: 'Customer Insights 2024', favorite: true, visibility: 'Private' },
-      { name: 'Revenue Forecasts Q3', favorite: false, visibility: 'Private' },
-      { name: 'Website Traffic Analysis 2024', favorite: false, visibility: 'Private' }
+      { name: 'Market Trends 2025', favorite: true, visibility: 'Public', owner: 'Sofia Chen' },
+      { name: 'Customer Insights 2024', favorite: true, visibility: 'Private', owner: 'Sofia Chen' },
+      { name: 'Revenue Forecasts Q3', favorite: false, visibility: 'Private', owner: 'Marcus Holloway' },
+      { name: 'Website Traffic Analysis 2024', favorite: false, visibility: 'Private', owner: 'Isabella Rossi' }
     ];
     extraDashboards.forEach((dashboard, index) => {
       if (existingNames.has(dashboard.name)) return;
@@ -6342,6 +6447,7 @@ img.ProseMirror-separator {
       if (visibilityIcon) {
         visibilityIcon.innerHTML = dashboard.visibility === 'Private' ? svgIcon('icon-lock-next') : '<!---->';
       }
+      setDashboardRowOwner(clone, dashboard.owner);
       clone.querySelectorAll('[class*="-favorites-"], [class*="-name-"], [class*="-owner-"], [class*="-visibility-"], [class*="-action-"]').forEach(node => {
         node.className = node.className.replace(/-\d+/g, '-' + (20 + index));
       });
@@ -6357,6 +6463,27 @@ img.ProseMirror-separator {
     const icon = row.querySelector('.cdl-ActionFavoriteButton svg');
     return { name, row, favorite: icon?.getAttribute('data-target-id') === FILLED };
   }).filter(item => item.name);
+
+  const dashboardOwners = new Map([
+    ['7 Days deposit', 'Viacheslav Makhankov'],
+    ['Team’s KPIs', 'Viacheslav Makhankov'],
+    ['Some new Dashboard', 'Viacheslav Makhankov'],
+    ['2026 Trial dashboard', 'Viacheslav Makhankov'],
+    ['Company focus 2026', 'Viacheslav Makhankov'],
+    ['Market Trends 2025', 'Sofia Chen'],
+    ['Customer Insights 2024', 'Sofia Chen'],
+    ['Revenue Forecasts Q3', 'Marcus Holloway'],
+    ['Website Traffic Analysis 2024', 'Isabella Rossi']
+  ]);
+
+  rowOrder.forEach(item => {
+    const owner = dashboardOwners.get(item.name)
+      || item.row.dataset.dashboardOwner
+      || item.row.querySelector('.unc-Name')?.textContent?.trim()
+      || 'Viacheslav Makhankov';
+    dashboardOwners.set(item.name, owner);
+    setDashboardRowOwner(item.row, owner);
+  });
 
   const dashboardChildren = sidebar.dashboardChildren || document.querySelector('.amnl-List_Item-dashboard > .amnl-List-children');
   const existingChildItems = dashboardChildren ? Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item')) : [];
@@ -6379,8 +6506,11 @@ img.ProseMirror-separator {
   let groupedNavigationHighlightTimer = null;
   let groupedNavigationHoverUnlock = null;
   const GROUPED_NAVIGATION_OPEN_MS = 300;
-  const GROUPED_NAVIGATION_HIGHLIGHT_MS = 900;
+  const GROUPED_NAVIGATION_HIGHLIGHT_MS = 1200;
   const groupedCopyLinkResetTimers = new WeakMap();
+  let dashboardPageSize = 50;
+  let dashboardPageSizeMenu = null;
+  let dashboardPageSizeEventsBound = false;
   let groupedDragClientX = 0;
   let groupedDragClientY = 0;
   let activeSortableLock = null;
@@ -6845,6 +6975,95 @@ img.ProseMirror-separator {
     rowOrder.forEach(item => {
       body.insertBefore(item.row, endBlock || null);
     });
+    renderDashboardFooter();
+  }
+
+  function dashboardVisibleRowCount() {
+    return rowOrder.length;
+  }
+
+  function closeDashboardPageSizeMenu() {
+    document.querySelector('.oboard-dashboard-page-size')?.setAttribute('aria-expanded', 'false');
+    dashboardPageSizeMenu?.remove();
+    dashboardPageSizeMenu = null;
+  }
+
+  function positionDashboardPageSizeMenu(menu, button) {
+    const rect = button.getBoundingClientRect();
+    menu.style.left = Math.round(rect.left) + 'px';
+    menu.style.top = Math.round(rect.bottom) + 'px';
+    menu.style.width = Math.max(160, Math.round(rect.width) + 56) + 'px';
+  }
+
+  function openDashboardPageSizeMenu(button) {
+    closeDashboardPageSizeMenu();
+    button.setAttribute('aria-expanded', 'true');
+    const menu = document.createElement('div');
+    menu.className = 'oboard-dashboard-page-size-menu';
+    menu.setAttribute('role', 'listbox');
+    menu.innerHTML = [10, 20, 50].map(size => (
+      '<button type="button" class="oboard-dashboard-page-size-option' + (size === dashboardPageSize ? ' is-selected' : '') + '" role="option" aria-selected="' + (size === dashboardPageSize ? 'true' : 'false') + '" data-page-size="' + size + '">' + size + '</button>'
+    )).join('');
+    document.body.appendChild(menu);
+    dashboardPageSizeMenu = menu;
+    positionDashboardPageSizeMenu(menu, button);
+  }
+
+  function bindDashboardFooterEvents() {
+    if (dashboardPageSizeEventsBound) return;
+    dashboardPageSizeEventsBound = true;
+    document.addEventListener('click', event => {
+      const sizeButton = event.target.closest('.oboard-dashboard-page-size');
+      if (sizeButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (dashboardPageSizeMenu) {
+          closeDashboardPageSizeMenu();
+        } else {
+          openDashboardPageSizeMenu(sizeButton);
+        }
+        return;
+      }
+
+      const option = event.target.closest('.oboard-dashboard-page-size-option');
+      if (option) {
+        event.preventDefault();
+        dashboardPageSize = Number(option.dataset.pageSize) || 50;
+        closeDashboardPageSizeMenu();
+        renderDashboardFooter();
+        return;
+      }
+
+      if (!event.target.closest('.oboard-dashboard-page-size-menu')) {
+        closeDashboardPageSizeMenu();
+      }
+    });
+    window.addEventListener('resize', closeDashboardPageSizeMenu);
+    window.addEventListener('scroll', closeDashboardPageSizeMenu, true);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeDashboardPageSizeMenu();
+    });
+  }
+
+  function renderDashboardFooter() {
+    const createButton = document.querySelector('.atcb-Button');
+    if (!createButton) return;
+    let footer = document.querySelector('.oboard-dashboard-footer');
+    if (!footer) {
+      footer = document.createElement('div');
+      footer.className = 'oboard-dashboard-footer';
+      createButton.insertAdjacentElement('afterend', footer);
+    }
+    const total = dashboardVisibleRowCount();
+    const shown = Math.min(dashboardPageSize, total);
+    footer.innerHTML = [
+      '<button type="button" class="oboard-dashboard-page-size" aria-haspopup="listbox" aria-expanded="false">',
+      '<span>' + dashboardPageSize + ' entries</span>',
+      svgIcon('icon-arrow-down-black-next'),
+      '</button>',
+      '<div class="oboard-dashboard-page-count">1 - ' + shown + ' of ' + total + '</div>'
+    ].join('');
+    bindDashboardFooterEvents();
   }
 
   function restoreOrder() {
@@ -7401,12 +7620,25 @@ img.ProseMirror-separator {
     bundle.childRows.forEach(row => {
       const rowClone = row.cloneNode(true);
       rowClone.hidden = false;
-      rowClone.classList.remove('oboard-grouped-bundle-child-dragging', 'sortable-chosen', 'original-chosen', 'oboard-sortable-drag', 'oboard-dragging');
+      rowClone.removeAttribute('hidden');
+      rowClone.classList.remove(
+        'oboard-grouped-bundle-child-dragging',
+        'sortable-chosen',
+        'original-chosen',
+        'oboard-sortable-drag',
+        'oboard-dragging',
+        'is-related-hover',
+        'is-navigation-highlight',
+        'is-hover-demo'
+      );
       rowClone.classList.add('oboard-grouped-bundle-cloned-child');
       rowClone.style.height = '';
       rowClone.style.minHeight = '';
       rowClone.style.maxHeight = '';
       rowClone.style.overflow = '';
+      rowClone.style.opacity = '1';
+      rowClone.style.visibility = 'visible';
+      rowClone.style.display = 'block';
       clone.appendChild(rowClone);
     });
   }
@@ -7432,6 +7664,9 @@ img.ProseMirror-separator {
     if (!activeSortableLock) return;
     const clone = document.querySelector('.sortable-fallback');
     if (!clone) return;
+    if (activeGroupedCollectionBundleDrag?.collectionRow) {
+      styleGroupedCollectionBundleClone(clone, activeGroupedCollectionBundleDrag.collectionRow);
+    }
     const transform = getComputedStyle(clone).transform;
     let translateY = 0;
     if (transform && transform !== 'none') {
@@ -7754,7 +7989,10 @@ img.ProseMirror-separator {
   ];
 
   function dashboardOwner(item) {
-    return item.row.querySelector('.unc-Name')?.textContent?.trim() || 'Viacheslav Makhankov';
+    return dashboardOwners.get(item.name)
+      || item.row.dataset.dashboardOwner
+      || item.row.querySelector('.unc-Name')?.textContent?.trim()
+      || 'Viacheslav Makhankov';
   }
 
   function dashboardIsPrivate(item) {
@@ -7853,6 +8091,30 @@ img.ProseMirror-separator {
     });
   }
 
+  function hoveredGroupedCollectionBadge() {
+    return document.querySelector('.oboard-grouped-collection-badge:hover');
+  }
+
+  function syncGroupedRelatedHover() {
+    const badge = hoveredGroupedCollectionBadge();
+    if (!badge) {
+      clearAllGroupedRelatedHover();
+      return;
+    }
+    if (badge.classList.contains('is-click-suppressed')) {
+      clearGroupedRelatedHover(badge.closest('.oboard-grouped-list'));
+      return;
+    }
+    if (!badge.classList.contains('is-tooltip-open')) {
+      applyGroupedRelatedHover(badge);
+    }
+    document.querySelectorAll('.oboard-grouped-collection-badge.is-tooltip-open').forEach(openBadge => {
+      if (openBadge !== badge) {
+        clearGroupedRelatedHover(openBadge.closest('.oboard-grouped-list'));
+      }
+    });
+  }
+
   function bindGroupedRelatedHoverCleanup(host) {
     if (!host) return;
 
@@ -7871,6 +8133,8 @@ img.ProseMirror-separator {
 
     if (groupedRelatedHoverCleanupBound) return;
     groupedRelatedHoverCleanupBound = true;
+    document.addEventListener('pointermove', syncGroupedRelatedHover, true);
+    document.addEventListener('mousemove', syncGroupedRelatedHover, true);
     document.addEventListener('pointerdown', clearIfOutsideBadge, true);
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') clearAllGroupedRelatedHover();
@@ -7887,15 +8151,30 @@ img.ProseMirror-separator {
     host.querySelectorAll('.oboard-grouped-collection-badge').forEach(badge => {
       const clearIfLeavingBadge = event => {
         if (badge.contains(event.relatedTarget)) return;
+        badge.classList.remove('is-click-suppressed');
         clearGroupedRelatedHover(host);
       };
-      badge.addEventListener('pointerenter', () => applyGroupedRelatedHover(badge));
-      badge.addEventListener('mouseenter', () => applyGroupedRelatedHover(badge));
-      badge.addEventListener('mouseover', () => applyGroupedRelatedHover(badge));
+      const applyIfNotSuppressed = () => {
+        if (!badge.classList.contains('is-click-suppressed')) applyGroupedRelatedHover(badge);
+      };
+      badge.addEventListener('pointerenter', applyIfNotSuppressed);
+      badge.addEventListener('mouseenter', applyIfNotSuppressed);
+      badge.addEventListener('mouseover', applyIfNotSuppressed);
+      badge.addEventListener('pointerdown', () => {
+        badge.classList.add('is-click-suppressed');
+        badge.blur();
+        clearGroupedRelatedHover(host);
+      });
+      badge.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        badge.classList.add('is-click-suppressed');
+        badge.blur();
+        clearGroupedRelatedHover(host);
+      });
       badge.addEventListener('pointerleave', clearIfLeavingBadge);
       badge.addEventListener('mouseleave', clearIfLeavingBadge);
       badge.addEventListener('mouseout', clearIfLeavingBadge);
-      badge.addEventListener('focus', () => applyGroupedRelatedHover(badge));
       badge.addEventListener('blur', () => clearGroupedRelatedHover(host));
     });
   }
@@ -8246,6 +8525,7 @@ img.ProseMirror-separator {
   const MODE_TRANSITION_DURATION = 520;
   const MODE_BRANCH_DURATION = 360;
   const MODE_TRANSITION_EASING = 'cubic-bezier(0.2, 0, 0, 1)';
+  let dashboardModeTransitioning = false;
 
   function transitionCloneForRow(item, rect) {
     const clone = item.row.cloneNode(true);
@@ -8257,6 +8537,29 @@ img.ProseMirror-separator {
     clone.style.width = rect.width + 'px';
     clone.style.height = rect.height + 'px';
     return { clone, rect };
+  }
+
+  function transitionCloneForNode(node, rect) {
+    const clone = node.cloneNode(true);
+    clone.classList.add('oboard-mode-transition-row');
+    clone.style.margin = '0';
+    clone.style.pointerEvents = 'none';
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    return { clone, rect };
+  }
+
+  function rectLike(rect, overrides = {}) {
+    return {
+      left: overrides.left ?? rect.left,
+      top: overrides.top ?? rect.top,
+      width: overrides.width ?? rect.width,
+      height: overrides.height ?? rect.height,
+      right: overrides.right ?? (overrides.left ?? rect.left) + (overrides.width ?? rect.width),
+      bottom: overrides.bottom ?? (overrides.top ?? rect.top) + (overrides.height ?? rect.height)
+    };
   }
 
   function groupedTargetForDashboard(name, collectionName) {
@@ -8306,15 +8609,17 @@ img.ProseMirror-separator {
   function animateCloneToTarget(clone, sourceRect, targetRect, options = {}) {
     const x = targetRect.left - sourceRect.left;
     const y = targetRect.top - sourceRect.top;
+    const fromOpacity = options.fromOpacity ?? 1;
+    const toOpacity = options.toOpacity ?? 1;
     return clone.animate([
       {
-        opacity: 1,
+        opacity: fromOpacity,
         transform: 'translate3d(0, 0, 0)',
         width: sourceRect.width + 'px',
         height: sourceRect.height + 'px'
       },
       {
-        opacity: 1,
+        opacity: toOpacity,
         transform: 'translate3d(' + x + 'px, ' + y + 'px, 0)',
         width: targetRect.width + 'px',
         height: targetRect.height + 'px'
@@ -8348,9 +8653,39 @@ img.ProseMirror-separator {
     }).finished.catch(() => {});
   }
 
+  function animateCloneOutRight(clone, distance = 72, options = {}) {
+    return clone.animate([
+      { opacity: options.fromOpacity ?? 1, transform: 'translate3d(0, 0, 0)' },
+      { opacity: 0, transform: 'translate3d(' + distance + 'px, 0, 0)' }
+    ], {
+      duration: options.duration || 300,
+      delay: options.delay || 0,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {});
+  }
+
+  function groupedDashboardSourceRows(host) {
+    const map = new Map();
+    host.querySelectorAll('.oboard-grouped-dashboard').forEach(row => {
+      const name = row.dataset.dashboardName;
+      if (!name) return;
+      if (!map.has(name)) map.set(name, []);
+      map.get(name).push(row);
+    });
+    return map;
+  }
+
+  function tableTargetRectsForUngrouped(page) {
+    page.classList.remove('oboard-grouped-mode');
+    const rects = new Map(rowOrder.map(item => [item.name, item.row.getBoundingClientRect()]));
+    page.classList.add('oboard-grouped-mode');
+    return rects;
+  }
+
   function animateUngroupedToGrouped() {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
-    if (!page || page.classList.contains('oboard-grouped-mode')) return Promise.resolve();
+    if (!page || page.classList.contains('oboard-grouped-mode') || dashboardModeTransitioning) return Promise.resolve();
     const host = initGroupedList();
     if (!host) return Promise.resolve();
 
@@ -8365,6 +8700,7 @@ img.ProseMirror-separator {
       return Promise.resolve();
     }
 
+    dashboardModeTransitioning = true;
     page.classList.add('oboard-mode-transitioning');
     host.getBoundingClientRect();
 
@@ -8372,44 +8708,147 @@ img.ProseMirror-separator {
     overlay.className = 'oboard-mode-transition-overlay';
     document.body.appendChild(overlay);
 
-    const settledClones = [];
-    const rowAnimations = sourceStates.map(state => {
+    const visibleTargetRects = sourceStates.flatMap(state => groupedTargetsForDashboard(state.item.name, state.memberships).map(target => target.node.getBoundingClientRect()));
+    const lastTargetBottom = visibleTargetRects.length
+      ? Math.max(...visibleTargetRects.map(rect => rect.bottom))
+      : (host.getBoundingClientRect().top + 44);
+    const hostRect = host.getBoundingClientRect();
+    let orphanIndex = 0;
+
+    const stackAnimations = sourceStates.flatMap(state => {
       const targets = groupedTargetsForDashboard(state.item.name, state.memberships);
-      const target = targets[0]?.node || groupedTargetForDashboard(state.item.name, state.primaryMembership);
-      const { clone, rect } = transitionCloneForRow(state.item, state.rect);
-      overlay.appendChild(clone);
-      if (!target || !state.memberships.length) {
-        return animateCloneOut(clone);
+      if (!targets.length) {
+        const { clone, rect } = transitionCloneForRow(state.item, state.rect);
+        const targetRect = rectLike(rect, {
+          left: hostRect.left,
+          top: lastTargetBottom + 16 + orphanIndex * rect.height,
+          width: hostRect.width,
+          height: rect.height
+        });
+        orphanIndex += 1;
+        overlay.appendChild(clone);
+        return [animateCloneToTarget(clone, rect, targetRect, { toOpacity: 0.28, duration: 420 }).then(() => {
+          clone.dataset.oboardTransitionOrphan = 'true';
+        })];
       }
-      const targetRect = target.getBoundingClientRect();
-      return animateCloneToTarget(clone, rect, targetRect).then(() => {
-        settleCloneAtRect(clone, targetRect);
-        settledClones.push({ state, clone, primaryRect: targetRect, targets: targets.slice(1) });
+
+      return targets.map((target, index) => {
+        const targetRect = target.node.getBoundingClientRect();
+        const { clone, rect } = transitionCloneForRow(state.item, state.rect);
+        overlay.appendChild(clone);
+        return animateCloneToTarget(clone, rect, targetRect, {
+          duration: MODE_TRANSITION_DURATION,
+          delay: index * 48
+        }).then(() => settleCloneAtRect(clone, targetRect));
       });
     });
 
-    return Promise.all(rowAnimations).then(() => {
-      const branchAnimations = settledClones.flatMap(entry => entry.targets.map((target, index) => {
-        const targetRect = target.node.getBoundingClientRect();
-        const duplicate = entry.state.item.row.cloneNode(true);
-        duplicate.classList.add('oboard-mode-transition-row');
-        duplicate.style.margin = '0';
-        duplicate.style.pointerEvents = 'none';
-        duplicate.style.left = entry.primaryRect.left + 'px';
-        duplicate.style.top = entry.primaryRect.top + 'px';
-        duplicate.style.width = entry.primaryRect.width + 'px';
-        duplicate.style.height = entry.primaryRect.height + 'px';
-        overlay.appendChild(duplicate);
-        return animateCloneToTarget(duplicate, entry.primaryRect, targetRect, {
-          duration: MODE_BRANCH_DURATION,
-          delay: index * 48
-        }).then(() => settleCloneAtRect(duplicate, targetRect));
-      }));
-      return Promise.all(branchAnimations);
-    }).then(() => Promise.all(animateGroupedScaffold(host, 40))).then(() => {
+    return Promise.all(stackAnimations)
+      .then(() => Promise.all(Array.from(overlay.querySelectorAll('[data-oboard-transition-orphan="true"]')).map(clone => animateCloneOut(clone))))
+      .then(() => Promise.all(animateGroupedScaffold(host, 20)))
+      .then(() => {
       page.classList.add('oboard-grouped-mode');
       page.classList.remove('oboard-mode-transitioning');
       overlay.remove();
+      dashboardModeTransitioning = false;
+    }).catch(error => {
+      page.classList.add('oboard-grouped-mode');
+      page.classList.remove('oboard-mode-transitioning');
+      overlay.remove();
+      dashboardModeTransitioning = false;
+      throw error;
+    });
+  }
+
+  function animateGroupedToUngrouped() {
+    const page = document.querySelector('.dp-MainContent-CustomDashboardList');
+    const host = page?.querySelector('.oboard-grouped-list');
+    if (!page || !host || !page.classList.contains('oboard-grouped-mode') || dashboardModeTransitioning) return Promise.resolve();
+
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+      page.classList.remove('oboard-grouped-mode');
+      initDashboardCollectionColumn();
+      return Promise.resolve();
+    }
+
+    dashboardModeTransitioning = true;
+    const targetRects = tableTargetRectsForUngrouped(page);
+    const groupedRowsByName = groupedDashboardSourceRows(host);
+    const groupedContentRect = host.getBoundingClientRect();
+    const collectionSources = Array.from(host.querySelectorAll('.oboard-grouped-head, .oboard-grouped-collection')).map(node => ({
+      node,
+      rect: node.getBoundingClientRect()
+    }));
+
+    const overlay = document.createElement('div');
+    overlay.className = 'oboard-mode-transition-overlay';
+    document.body.appendChild(overlay);
+
+    const dashboardAnimations = [];
+    rowOrder.forEach((item, index) => {
+      const targetRect = targetRects.get(item.name);
+      if (!targetRect) return;
+      const sourceRows = groupedRowsByName.get(item.name) || [];
+      if (!sourceRows.length) {
+        const orphanSourceRect = rectLike(targetRect, {
+          left: groupedContentRect.left,
+          top: groupedContentRect.bottom + 16 + index * targetRect.height,
+          width: groupedContentRect.width,
+          height: targetRect.height
+        });
+        const { clone } = transitionCloneForRow(item, orphanSourceRect);
+        clone.style.opacity = '0.28';
+        overlay.appendChild(clone);
+        dashboardAnimations.push(animateCloneToTarget(clone, orphanSourceRect, targetRect, {
+          fromOpacity: 0.28,
+          toOpacity: 1,
+          duration: MODE_TRANSITION_DURATION,
+          delay: 220
+        }));
+        return;
+      }
+
+      sourceRows.forEach((row, rowIndex) => {
+        const sourceRect = row.getBoundingClientRect();
+        const { clone } = transitionCloneForNode(row, sourceRect);
+        overlay.appendChild(clone);
+        if (rowIndex === 0) {
+          dashboardAnimations.push(animateCloneToTarget(clone, sourceRect, targetRect, {
+            duration: MODE_TRANSITION_DURATION,
+            delay: 160
+          }));
+        } else {
+          dashboardAnimations.push(animateCloneToTarget(clone, sourceRect, targetRect, {
+            toOpacity: 0,
+            duration: MODE_BRANCH_DURATION,
+            delay: rowIndex * 36
+          }));
+        }
+      });
+    });
+
+    const collectionAnimations = collectionSources.map((entry, index) => {
+      const { clone } = transitionCloneForNode(entry.node, entry.rect);
+      overlay.appendChild(clone);
+      return animateCloneOutRight(clone, 80, {
+        duration: 300,
+        delay: index ? 40 + index * 24 : 0
+      });
+    });
+
+    page.classList.add('oboard-mode-transitioning');
+
+    return Promise.all([...collectionAnimations, ...dashboardAnimations]).then(() => {
+      page.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
+      initDashboardCollectionColumn();
+      overlay.remove();
+      dashboardModeTransitioning = false;
+    }).catch(error => {
+      page.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
+      initDashboardCollectionColumn();
+      overlay.remove();
+      dashboardModeTransitioning = false;
+      throw error;
     });
   }
 
@@ -8430,6 +8869,7 @@ img.ProseMirror-separator {
     if (grouped) {
       hidePreview();
       closeDashboardCollectionPopover();
+      closeDashboardPageSizeMenu();
       releaseGroupedNavigationHoverLock(document.querySelector('.oboard-grouped-list'));
       if (options.animate) {
         animateUngroupedToGrouped();
@@ -8440,6 +8880,10 @@ img.ProseMirror-separator {
     } else {
       closeCollectionMenu();
       clearGroupedNavigationHighlight(document.querySelector('.oboard-grouped-list'));
+      if (options.animate) {
+        animateGroupedToUngrouped();
+        return;
+      }
       page?.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
       initDashboardCollectionColumn();
     }
@@ -8473,18 +8917,18 @@ img.ProseMirror-separator {
       '<button type="button" class="oboard-dashboard-mode-option" role="radio" data-mode="grouped" aria-checked="false">' + layersIcon() + '<span>Grouped</span></button>'
     ].join('');
 
-    function setMode(mode) {
-      selectDashboardMode(mode, { animate: false });
+    function setMode(mode, animate = true) {
+      selectDashboardMode(mode, { animate });
     }
 
     switcher.addEventListener('click', event => {
       const option = event.target.closest('.oboard-dashboard-mode-option');
       if (!option || !switcher.contains(option)) return;
-      setMode(option.dataset.mode);
+      setMode(option.dataset.mode, true);
     });
 
     headerLeft.insertBefore(switcher, headerLeft.firstElementChild);
-    setMode(window.localStorage.getItem(DASHBOARD_MODE_STORAGE_KEY) || 'ungrouped');
+    setMode(window.localStorage.getItem(DASHBOARD_MODE_STORAGE_KEY) || 'ungrouped', false);
   }
 
   function homeViewTemplate() {
@@ -8715,6 +9159,7 @@ img.ProseMirror-separator {
   restoreDashboardCollections();
   initWorkspacePopover();
   initDashboardCollectionColumn();
+  renderDashboardFooter();
   attachTableDragHandlers();
   syncSidebar();
   initTableSortable();
