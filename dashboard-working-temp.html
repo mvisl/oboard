@@ -709,7 +709,7 @@ img.ProseMirror-separator {
     }
     33.333%,
     66.666% {
-      background-color: var(--surface-subtle, #f4f7fc);
+      background-color: var(--bg-brand-primary_alt, #e5f0ff);
     }
     100% {
       background-color: transparent;
@@ -750,7 +750,6 @@ img.ProseMirror-separator {
   .oboard-grouped-collection:hover,
   .oboard-grouped-collection:focus-within,
   .oboard-grouped-dashboard.is-hover-demo,
-  .oboard-grouped-dashboard.is-navigation-highlight,
   .oboard-grouped-dashboard.is-related-hover,
   .oboard-grouped-dashboard:hover,
   .oboard-grouped-dashboard:focus-within {
@@ -758,6 +757,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-dashboard.is-navigation-highlight {
+    background: var(--bg-brand-primary_alt, #e5f0ff);
     animation: oboardGroupedNavigationHighlight 900ms ease-in-out both;
   }
 
