@@ -7590,11 +7590,15 @@ img.ProseMirror-separator {
       button?.addEventListener('click', () => {
         const collection = collectionRow.dataset.collection;
         const collapsed = !collectionRow.classList.contains('is-collapsed');
+        clearGroupedRelatedHover(host);
+        collectionRow.classList.remove('is-related-hover');
         collectionRow.classList.toggle('is-collapsed', collapsed);
         button.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
         host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
+          row.classList.remove('is-related-hover');
           row.hidden = collapsed;
         });
+        button.blur();
       });
     });
     bindGroupedRelatedHoverBadges(host);
