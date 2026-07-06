@@ -171,7 +171,20 @@ img.ProseMirror-separator {
   .tb-Cell-favorites,
   .cdl-ActionFavoriteButton { height: 27px !important; }
   .cdl-ActionFavoriteButton { cursor: pointer; }
-  .cdl-ActionFavoriteButton svg { pointer-events: none; }
+  .cdl-ActionFavoriteButton svg {
+    pointer-events: none;
+    transition: opacity 120ms ease;
+  }
+
+  .tb-Body .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 0;
+  }
+
+  .tb-Body .tb-RowWrapper:hover .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"],
+  .tb-Body .tb-RowWrapper:focus-within .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"],
+  .tb-Body .tb-RowWrapper.oboard-dragging .cdl-ActionFavoriteButton svg[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 1;
+  }
 
   .oboard-dashboard-mode-switcher {
     display: inline-flex;
@@ -224,8 +237,41 @@ img.ProseMirror-separator {
 
   .tb-HeaderCell-collections,
   .tb-Cell-collections {
-    flex: 0 0 112px !important;
+    flex: 0 0 224px !important;
     min-width: 0;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-HeaderCell-owner,
+  .dp-MainContent-CustomDashboardList .tb-Cell-owner {
+    flex: 0 0 376px !important;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibilityIcon,
+  .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
+    flex: 0 0 32px !important;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibility,
+  .dp-MainContent-CustomDashboardList .tb-Cell-visibility {
+    flex: 0 0 152px !important;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
+    display: flex;
+    align-items: center;
+  }
+
+  .dp-MainContent-CustomDashboardList .cdl-VisibilityIconCell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 32px;
+    height: 24px;
+  }
+
+  .dp-MainContent-CustomDashboardList .cdl-VisibilityIconCell .ai-Icon {
+    width: 24px;
+    height: 24px;
   }
 
   .tb-Cell-collections {
@@ -242,8 +288,8 @@ img.ProseMirror-separator {
     height: 24px;
   }
 
-  .oboard-dashboard-collection-tag,
-  .oboard-dashboard-collection-counter {
+  .oboard-dashboard-collection-badge {
+    position: relative;
     display: inline-flex;
     align-items: center;
     height: 24px;
@@ -260,16 +306,61 @@ img.ProseMirror-separator {
     white-space: nowrap;
   }
 
-  .oboard-dashboard-collection-tag {
-    overflow: hidden;
-    max-width: 82px;
-    padding: 2px 6px;
-    text-overflow: ellipsis;
+  .oboard-dashboard-collection-badge {
+    padding: 2px 6px 2px 0;
   }
 
-  .oboard-dashboard-collection-counter {
-    padding: 2px 4px;
-    background: transparent;
+  .oboard-dashboard-collection-badge:not(.has-count) {
+    padding-right: 0;
+  }
+
+  .oboard-dashboard-collection-badge .ai-Icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-dashboard-collection-tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    z-index: 30;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: rgba(23, 43, 77, 0.94);
+    color: var(--white-color, #fff);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-dashboard-collection-tooltip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color: rgba(23, 43, 77, 0.94);
+    transform: translateX(-50%);
+  }
+
+  .oboard-dashboard-collection-badge:hover .oboard-dashboard-collection-tooltip,
+  .oboard-dashboard-collection-badge:focus-within .oboard-dashboard-collection-tooltip {
+    opacity: 1;
+  }
+
+  .tb-HeaderCell-collections .cdth-HeaderCell_DefaultStateSorting {
+    width: 20px;
+    height: 20px;
+    color: var(--grey-2-next, #dfe1e6);
   }
 
   .oboard-dashboard-collection-add {
@@ -457,17 +548,58 @@ img.ProseMirror-separator {
     margin-top: 30px;
     color: var(--dark-blue, #172b4d);
     font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    opacity: 1;
   }
 
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-grouped-list {
     display: block;
   }
 
+  .oboard-mode-transitioning .tb-Header,
+  .oboard-mode-transitioning .tb-Body,
+  .oboard-mode-transitioning .atcb-Button,
+  .oboard-mode-transitioning .tb-EndBlock {
+    display: none !important;
+  }
+
+  .oboard-mode-transitioning .oboard-grouped-list {
+    display: block;
+    opacity: 1;
+  }
+
+  .oboard-mode-transitioning .oboard-grouped-head,
+  .oboard-mode-transitioning .oboard-grouped-collection {
+    opacity: 0;
+    transform: translateX(24px);
+    will-change: opacity, transform;
+  }
+
+  .oboard-mode-transitioning .oboard-grouped-dashboard {
+    visibility: hidden;
+  }
+
+  .oboard-mode-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    pointer-events: none;
+  }
+
+  .oboard-mode-transition-row {
+    position: fixed;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--white-color, #fff);
+    box-shadow: none;
+    transform-origin: left top;
+    will-change: transform, width, height, opacity;
+  }
+
   .oboard-grouped-head,
   .oboard-grouped-row-inner {
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) 112px 274px 224px 24px;
-    column-gap: 16px;
+    grid-template-columns: minmax(320px, 1fr) 224px 376px 184px 24px;
+    column-gap: 0;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
@@ -475,7 +607,7 @@ img.ProseMirror-separator {
 
   .oboard-grouped-head {
     height: 33px;
-    padding: 0 32px 8px 56px;
+    padding: 0 0 8px 120px;
     border-bottom: 1px solid var(--gray, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
     font-size: 12px;
@@ -518,15 +650,15 @@ img.ProseMirror-separator {
 
   .oboard-grouped-row-inner {
     height: 48px;
-    padding-right: 32px;
+    padding-right: 0;
   }
 
   .oboard-grouped-collection .oboard-grouped-row-inner {
-    padding-left: 12px;
+    padding-left: 76px;
   }
 
   .oboard-grouped-dashboard .oboard-grouped-row-inner {
-    padding-left: 52px;
+    padding-left: 116px;
   }
 
   .oboard-grouped-collection.is-hover-demo,
@@ -540,11 +672,28 @@ img.ProseMirror-separator {
 
   .oboard-grouped-name-cell,
   .oboard-grouped-owner-cell,
-  .oboard-grouped-visibility-cell,
   .oboard-grouped-collections-cell {
     display: flex;
     align-items: center;
     min-width: 0;
+  }
+
+  .oboard-grouped-visibility-cell {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .oboard-grouped-head .oboard-grouped-visibility-cell,
+  .oboard-grouped-dashboard .oboard-grouped-visibility-cell {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 152px);
+    align-items: center;
+  }
+
+  .oboard-grouped-head .oboard-grouped-visibility-cell .oboard-grouped-head-label,
+  .oboard-grouped-visibility-text {
+    grid-column: 2;
   }
 
   .oboard-grouped-name-cell {
@@ -625,7 +774,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-owner-name,
-  .oboard-grouped-private {
+  .oboard-grouped-visibility-text {
     overflow: hidden;
     min-width: 0;
     color: var(--dark-blue, #172b4d);
@@ -636,13 +785,16 @@ img.ProseMirror-separator {
     text-overflow: ellipsis;
   }
 
-  .oboard-grouped-private {
+  .oboard-grouped-visibility-icon {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: flex-start;
+    grid-column: 1;
+    width: 32px;
+    height: 24px;
   }
 
-  .oboard-grouped-private .ai-Icon {
+  .oboard-grouped-visibility-icon .ai-Icon {
     width: 24px;
     height: 24px;
     color: var(--dark-2, #42526e);
@@ -655,12 +807,27 @@ img.ProseMirror-separator {
     flex: 0 0 24px;
     width: 24px;
     height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--grey-1-next, #b5bbc5);
+    cursor: pointer;
   }
 
   .oboard-grouped-favorite .ai-Icon {
     width: 24px;
     height: 24px;
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-grouped-dashboard .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 0;
+  }
+
+  .oboard-grouped-dashboard:hover .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"],
+  .oboard-grouped-dashboard:focus-within .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"],
+  .oboard-grouped-dashboard.oboard-dragging .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 1;
   }
 
   .oboard-grouped-drag-handle {
@@ -749,7 +916,7 @@ img.ProseMirror-separator {
   .oboard-grouped-copy-link.is-expanded {
     width: 102px;
     padding: 2px 6px 2px 4px;
-    background: var(--gray-blue-300, #c3c7d0);
+    background: var(--gray-blue-250, #dde2ea);
     gap: 4px;
   }
 
@@ -802,6 +969,85 @@ img.ProseMirror-separator {
   .oboard-grouped-collection-more .ai-Icon {
     width: 24px;
     height: 24px;
+  }
+
+  .oboard-workspace-popover {
+    position: fixed;
+    z-index: 1000000;
+    width: 244px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: var(--white-color, #fff);
+    box-shadow: 0 8px 24px rgba(23, 43, 77, 0.18), 0 0 1px rgba(23, 43, 77, 0.24);
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 120ms ease, transform 120ms ease;
+  }
+
+  .oboard-workspace-popover.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .oboard-workspace-popover-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 56px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border: 0;
+    background: var(--white-color, #fff);
+    color: var(--dark-blue, #172b4d);
+    font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+    cursor: default;
+    white-space: nowrap;
+  }
+
+  .oboard-workspace-popover-row.is-selected {
+    background: var(--primary-100, #deebff);
+  }
+
+  .oboard-workspace-popover-row .wi-WorkspaceIcon,
+  .oboard-workspace-popover-icon {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .oboard-workspace-popover-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-workspace-popover-icon .ai-Icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-WorkspaceSelect_Button {
+    background: var(--dark-2, #42526e) !important;
+    color: var(--white-color, #fff) !important;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .as-AppSelect {
+    background: var(--dark-2, #42526e) !important;
+    border-radius: 12px !important;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-SelectedWsName,
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-DroplistIcon {
+    color: var(--white-color, #fff) !important;
   }
 
   .oboard-collection-menu {
@@ -932,7 +1178,7 @@ img.ProseMirror-separator {
   }
 
   .dp-MainContent-CustomDashboardList {
-    --oboard-dashboard-reorder-gutter: 44px;
+    --oboard-dashboard-reorder-gutter: 0px;
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header,
@@ -942,7 +1188,8 @@ img.ProseMirror-separator {
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header {
-    box-shadow: inset 0 -1px 0 var(--grey-2-next, #dfe1e6) !important;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6) !important;
+    box-shadow: none !important;
   }
 
   .oboard-drag-handle {
@@ -972,7 +1219,7 @@ img.ProseMirror-separator {
     display: flex;
     position: absolute;
     top: 50%;
-    left: calc(var(--page-left-padding, 32px) + 6px);
+    left: calc(var(--page-left-padding, 32px) - 30px);
     z-index: 2;
     transform: translateY(-50%);
   }
@@ -1412,6 +1659,18 @@ img.ProseMirror-separator {
     box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-WorkspaceSelect_Button,
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-WorkspaceSelect_Button:hover,
+  .amws-WorkspaceSelect.oboard-workspace-open:focus-within .amws-WorkspaceSelect_Button {
+    background: var(--dark-2, #42526e) !important;
+    color: var(--white-color, #fff) !important;
+  }
+
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-SelectedWsName,
+  .amws-WorkspaceSelect.oboard-workspace-open .amws-DroplistIcon {
+    color: var(--white-color, #fff) !important;
+  }
+
   .app-Aside,
   .am-Wrapper,
   .am-ContentWrapper {
@@ -1520,9 +1779,10 @@ img.ProseMirror-separator {
   .oboard-sidebar-sections {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 12px;
     width: 100%;
     height: 100%;
+    overflow: visible;
   }
 
   .oboard-nav-section {
@@ -1551,23 +1811,29 @@ img.ProseMirror-separator {
 
   .oboard-nav-section-primary {
     margin-top: -16px;
-    height: var(--oboard-top-section-height, auto);
+    height: auto;
     min-height: 0;
-    max-height: 380px;
+    max-height: none;
     flex: 0 0 auto;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
     overflow: visible;
   }
 
   .oboard-nav-section-primary > .amnl-List {
-    height: 100%;
-    max-height: 100%;
-    overflow: hidden;
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .oboard-nav-section-favorites {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
+    max-height: 100%;
     min-height: 118px;
+    overflow: visible;
   }
 
   .oboard-nav-section .amnl-List_Item > .amni-Item,
@@ -1575,19 +1841,43 @@ img.ProseMirror-separator {
     width: 100%;
   }
 
-  .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
-    display: block;
+  .oboard-favorites-title-row {
+    flex: 0 0 auto;
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item {
+  .oboard-favorites-title-row > .amni-Item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    padding: 8px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    list-style: none;
+    min-height: 0;
+    height: 100%;
     margin: 0;
+    padding: 0;
+    overflow: visible;
   }
 
   .oboard-favorites-list.amnl-List-children {
+    flex: 1 1 auto;
+    min-height: 0;
     margin-top: 8px;
+    overflow: hidden;
   }
 
   .oboard-favorites-list .amni-Item {
@@ -1659,7 +1949,8 @@ img.ProseMirror-separator {
   }
 
   .oboard-sidebar-sectioned .oboard-nav-section-favorites .amnl-List-children {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 
   .oboard-nav-section-primary .oboard-prototype-active {
@@ -5675,6 +5966,7 @@ img.ProseMirror-separator {
     const rootList = nav?.querySelector(':scope > .amnl-List');
     const dashboardItem = rootList?.querySelector(':scope > .amnl-List_Item-dashboard');
     const originalFavorites = dashboardItem?.querySelector(':scope > .amnl-List-children');
+    const objectivesChildren = rootList?.querySelector(':scope > .amnl-List_Item-objectives > .amnl-List-children');
     if (!nav || !rootList || !dashboardItem || !originalFavorites || nav.querySelector('.oboard-sidebar-sections')) {
       return { nav, dashboardChildren: originalFavorites };
     }
@@ -5685,60 +5977,124 @@ img.ProseMirror-separator {
     const primarySection = document.createElement('div');
     primarySection.className = 'oboard-nav-section oboard-nav-section-primary';
 
-    const divider = document.createElement('div');
-    divider.className = 'oboard-section-resizer';
-    divider.setAttribute('role', 'separator');
-    divider.setAttribute('aria-orientation', 'horizontal');
-    divider.setAttribute('aria-label', 'Resize navigation sections');
-
     const favoritesSection = document.createElement('div');
     favoritesSection.className = 'oboard-nav-section oboard-nav-section-favorites';
 
+    const favoritesTitle = document.createElement('li');
+    favoritesTitle.className = 'amnl-List_Item oboard-favorites-title-row';
+    favoritesTitle.innerHTML = '<span class="amni-Item amni-Item-default">' + svgIcon(FILLED, 'amni-Item_Icon') + '<span class="amni-Item_Text">Favorites</span></span>';
+
+    objectivesChildren?.remove();
     originalFavorites.classList.add('oboard-favorites-list');
     primarySection.appendChild(rootList);
-    favoritesSection.appendChild(dashboardItem);
+    favoritesSection.appendChild(favoritesTitle);
+    favoritesSection.appendChild(originalFavorites);
     sections.appendChild(primarySection);
-    sections.appendChild(divider);
     sections.appendChild(favoritesSection);
     nav.appendChild(sections);
     nav.classList.add('oboard-sidebar-sectioned');
-
-    let startY = 0;
-    let startHeight = 0;
-    let startMinHeight = 0;
-    let dragging = false;
-
-    function onMove(event) {
-      if (!dragging) return;
-      const nextHeight = Math.max(startMinHeight, Math.min(380, startHeight + event.clientY - startY));
-      nav.style.setProperty('--oboard-top-section-height', nextHeight + 'px');
-    }
-
-    function onUp() {
-      if (!dragging) return;
-      dragging = false;
-      divider.classList.remove('oboard-section-resizer-active');
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
-      const value = parseInt(getComputedStyle(primarySection).height, 10);
-      if (Number.isFinite(value)) window.localStorage.setItem('oboard-sidebar-primary-height', String(value));
-    }
-
-    divider.addEventListener('pointerdown', event => {
-      dragging = true;
-      startY = event.clientY;
-      startHeight = primarySection.getBoundingClientRect().height;
-      startMinHeight = 96;
-      divider.classList.add('oboard-section-resizer-active');
-      document.addEventListener('pointermove', onMove);
-      document.addEventListener('pointerup', onUp);
-      event.preventDefault();
-    });
 
     return { nav, dashboardChildren: originalFavorites };
   }
 
   const sidebar = buildSidebarSections();
+
+  function closeWorkspacePopover() {
+    document.querySelector('.oboard-workspace-popover')?.remove();
+    document.querySelector('.amws-WorkspaceSelect.oboard-workspace-open')?.classList.remove('oboard-workspace-open');
+  }
+
+  function workspacePopoverHtml(iconHtml) {
+    return [
+      '<div class="oboard-workspace-popover" role="dialog" aria-label="Workspace menu">',
+      '<button class="oboard-workspace-popover-row is-selected" type="button">' + iconHtml + '<span>Libertex</span></button>',
+      '<button class="oboard-workspace-popover-row" type="button"><span class="oboard-workspace-popover-icon">' + svgIcon('icon-plus-next') + '</span><span>Create workspace</span></button>',
+      '<button class="oboard-workspace-popover-row" type="button"><span class="oboard-workspace-popover-icon">' + svgIcon('icon-rename-currentColor') + '</span><span>Manage workspaces</span></button>',
+      '</div>'
+    ].join('');
+  }
+
+  function positionWorkspacePopover(popover, button) {
+    const rect = button.getBoundingClientRect();
+    popover.style.left = rect.left + 'px';
+    popover.style.top = rect.bottom + 2 + 'px';
+    popover.style.width = rect.width + 'px';
+  }
+
+  function initWorkspacePopover() {
+    const workspace = document.querySelector('.amws-WorkspaceSelect');
+    const button = workspace?.querySelector('.amws-WorkspaceSelect_Button');
+    if (!workspace || !button || button.dataset.oboardWorkspaceReady === 'true') return;
+    button.dataset.oboardWorkspaceReady = 'true';
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const existing = document.querySelector('.oboard-workspace-popover');
+      if (existing) {
+        closeWorkspacePopover();
+        return;
+      }
+      const icon = button.querySelector('.wi-WorkspaceIcon')?.cloneNode(true);
+      document.body.insertAdjacentHTML('beforeend', workspacePopoverHtml(icon ? icon.outerHTML : ''));
+      const popover = document.querySelector('.oboard-workspace-popover');
+      positionWorkspacePopover(popover, button);
+      workspace.classList.add('oboard-workspace-open');
+      requestAnimationFrame(() => popover.classList.add('is-open'));
+    });
+    document.addEventListener('click', event => {
+      if (event.target.closest('.oboard-workspace-popover') || event.target.closest('.amws-WorkspaceSelect_Button')) return;
+      closeWorkspacePopover();
+    });
+    window.addEventListener('resize', closeWorkspacePopover);
+    window.addEventListener('scroll', closeWorkspacePopover, true);
+  }
+
+  function setSvgIcon(svg, iconId) {
+    if (!svg) return;
+    svg.setAttribute('data-target-id', iconId);
+    const use = svg.querySelector('use');
+    if (use) {
+      use.setAttribute('href', '#' + iconId);
+      use.setAttribute('xlink:href', '#' + iconId);
+    }
+  }
+
+  function seedExtraDashboardRows() {
+    const body = document.querySelector('.tb-Body');
+    if (!body) return;
+    const existingNames = new Set(Array.from(body.querySelectorAll('.cdl-TableCellText')).map(node => node.textContent.trim()));
+    const privateTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Private'));
+    const publicTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Public')) || privateTemplate;
+    const extraDashboards = [
+      { name: 'Market Trends 2025', favorite: true, visibility: 'Public' },
+      { name: 'Customer Insights 2024', favorite: true, visibility: 'Private' },
+      { name: 'Revenue Forecasts Q3', favorite: false, visibility: 'Private' },
+      { name: 'Website Traffic Analysis 2024', favorite: false, visibility: 'Private' }
+    ];
+    extraDashboards.forEach((dashboard, index) => {
+      if (existingNames.has(dashboard.name)) return;
+      const source = dashboard.visibility === 'Public' ? publicTemplate : privateTemplate;
+      if (!source) return;
+      const clone = source.cloneNode(true);
+      clone.dataset.seededDashboard = 'true';
+      const name = clone.querySelector('.cdl-TableCellText');
+      if (name) name.textContent = dashboard.name;
+      setSvgIcon(clone.querySelector('.cdl-ActionFavoriteButton svg'), dashboard.favorite ? FILLED : EMPTY);
+      const visibilityText = clone.querySelector('.tb-Cell-visibility span');
+      if (visibilityText) visibilityText.textContent = dashboard.visibility;
+      const visibilityIcon = clone.querySelector('.tb-Cell-visibilityIcon .cdl-VisibilityIconCell');
+      if (visibilityIcon) {
+        visibilityIcon.innerHTML = dashboard.visibility === 'Private' ? svgIcon('icon-lock-next') : '<!---->';
+      }
+      clone.querySelectorAll('[class*="-favorites-"], [class*="-name-"], [class*="-owner-"], [class*="-visibility-"], [class*="-action-"]').forEach(node => {
+        node.className = node.className.replace(/-\d+/g, '-' + (20 + index));
+      });
+      body.appendChild(clone);
+      existingNames.add(dashboard.name);
+    });
+  }
+
+  seedExtraDashboardRows();
 
   const rowOrder = Array.from(document.querySelectorAll('.tb-Body .tb-RowWrapper')).map(row => {
     const name = row.querySelector('.cdl-TableCellText')?.textContent?.trim();
@@ -5763,7 +6119,16 @@ img.ProseMirror-separator {
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   const collectionOptions = ['Collection 1', 'Collection 2', 'Collection 3', 'Collection 4'];
-  const dashboardCollections = new Map(rowOrder.map(item => [item.name, []]));
+  const defaultDashboardCollections = new Map([
+    ['Team’s KPIs', ['Collection 1', 'Collection 4']],
+    ['Some new Dashboard', ['Collection 2']],
+    ['Company focus 2026', ['Collection 3']],
+    ['2026 Trial dashboard', ['Collection 1']],
+    ['Market Trends 2025', ['Collection 1', 'Collection 3']],
+    ['Customer Insights 2024', ['Collection 2']],
+    ['Revenue Forecasts Q3', ['Collection 4']]
+  ]);
+  const dashboardCollections = new Map(rowOrder.map(item => [item.name, [...(defaultDashboardCollections.get(item.name) || [])]]));
   const navTemplates = new Map(existingChildItems.map(item => {
     const text = item.querySelector('.amni-Item_Text')?.textContent?.trim();
     return [text, item.cloneNode(true)];
@@ -5825,10 +6190,10 @@ img.ProseMirror-separator {
 
   function renderDashboardCollectionCell(cell, dashboardName) {
     const selected = dashboardCollections.get(dashboardName) || [];
-    const first = selected[0];
+    const tooltip = selected.join(', ');
+    const count = selected.length > 1 ? selected.length - 1 : 0;
     cell.innerHTML = [
-      first ? '<span class="oboard-dashboard-collection-tag" title="' + escapeHtml(first) + '">' + escapeHtml(first) + '</span>' : '',
-      selected.length > 1 ? '<span class="oboard-dashboard-collection-counter">+' + (selected.length - 1) + '</span>' : '',
+      selected.length ? '<span class="oboard-dashboard-collection-badge' + (count ? ' has-count' : '') + '" tabindex="0">' + layersIcon() + (count ? '<span>+' + count + '</span>' : '') + '<span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></span>' : '',
       '<button class="oboard-dashboard-collection-add" type="button" aria-label="Add to collection" data-dashboard-name="' + escapeHtml(dashboardName) + '">' + svgIcon('icon-plus-next') + '</button>'
     ].join('');
   }
@@ -5844,10 +6209,13 @@ img.ProseMirror-separator {
     const header = document.querySelector('.tb-Header');
     const ownerHeader = header?.querySelector('.tb-HeaderCell-owner');
     if (header && ownerHeader && !header.querySelector('.tb-HeaderCell-collections')) {
-      const headerCell = document.createElement('div');
+      const headerCell = ownerHeader.cloneNode(true);
       headerCell.className = 'tb-HeaderCell-collections tb-HeaderCell';
       headerCell.style.flex = '0 0 112px';
-      headerCell.innerHTML = '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell"><span>Collections</span>' + svgIcon('icon-sort-two-ways-next', 'cdth-HeaderCell_DefaultStateSorting') + '</div>';
+      const label = headerCell.querySelector('span');
+      if (label) label.textContent = 'Collections';
+      const svg = headerCell.querySelector('svg');
+      setIcon(svg, 'icon-sort-two-ways-next');
       header.insertBefore(headerCell, ownerHeader);
     }
 
@@ -5895,8 +6263,21 @@ img.ProseMirror-separator {
     activeDashboardCollectionQuery = '';
   }
 
+  function getDashboardCollectionAnchor(dashboardName) {
+    if (!dashboardName) return null;
+    return document.querySelector('.oboard-dashboard-collection-add[data-dashboard-name="' + CSS.escape(dashboardName) + '"]');
+  }
+
   function positionDashboardCollectionPopover(popover, anchor) {
+    if (!popover || !anchor || !anchor.isConnected) {
+      closeDashboardCollectionPopover();
+      return;
+    }
     const rect = anchor.getBoundingClientRect();
+    if (!rect.width && !rect.height) {
+      closeDashboardCollectionPopover();
+      return;
+    }
     const width = 220;
     const left = Math.max(8, Math.min(window.innerWidth - width - 8, rect.left));
     const top = Math.min(window.innerHeight - 8, rect.bottom);
@@ -5920,7 +6301,15 @@ img.ProseMirror-separator {
 
   function refreshDashboardCollectionPopover() {
     if (!activeDashboardCollectionMenu) return;
-    const { anchor, dashboardName } = activeDashboardCollectionMenu;
+    const { dashboardName } = activeDashboardCollectionMenu;
+    const anchor = activeDashboardCollectionMenu.anchor?.isConnected
+      ? activeDashboardCollectionMenu.anchor
+      : getDashboardCollectionAnchor(dashboardName);
+    if (!anchor) {
+      closeDashboardCollectionPopover();
+      return;
+    }
+    activeDashboardCollectionMenu.anchor = anchor;
     const oldPopover = document.querySelector('.oboard-dashboard-collection-popover');
     oldPopover?.remove();
     document.body.insertAdjacentHTML('beforeend', dashboardCollectionPopoverHtml(dashboardName));
@@ -6881,38 +7270,42 @@ img.ProseMirror-separator {
     ].join('');
   }
 
-  const groupedCollections = [
-    {
-      name: 'Collection 4',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'Social Media Trends 2024', owner: 'Sofia Chen', favorite: false, private: true },
-        { name: 'Website Conversion Analysis 2024', owner: 'Sofia Chen', favorite: false, private: true },
-        { name: 'Revenue Forecasts Q3', owner: 'Sofia Chen', favorite: false, private: true }
-      ]
-    },
-    {
-      name: 'Collection 3',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'Financial Projections Q4', owner: 'Angelina Baker', badge: '+1', badgeTitle: 'Collection 1', private: true }
-      ]
-    },
-    {
-      name: 'Collection 2',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'User Behavior Analysis 2024', owner: 'Evelyn Hayes', private: true }
-      ]
-    },
-    {
-      name: 'Collection 1',
-      owner: 'Sofia Chen',
-      items: [
-        { name: 'Financial Projections Q4', owner: 'Angelina Baker', badge: '+1', badgeTitle: 'Collection 3', private: true }
-      ]
-    }
+  const groupedCollectionDefinitions = [
+    { name: 'Collection 4', owner: 'Sofia Chen' },
+    { name: 'Collection 3', owner: 'Sofia Chen' },
+    { name: 'Collection 2', owner: 'Sofia Chen' },
+    { name: 'Collection 1', owner: 'Sofia Chen' }
   ];
+
+  function dashboardOwner(item) {
+    return item.row.querySelector('.unc-Name')?.textContent?.trim() || 'Viacheslav Makhankov';
+  }
+
+  function dashboardIsPrivate(item) {
+    return item.row.querySelector('.tb-Cell-visibility')?.textContent?.trim() === 'Private';
+  }
+
+  function groupedDashboardData(item, collectionName) {
+    const collections = dashboardCollections.get(item.name) || [];
+    const otherCollections = collections.filter(collection => collection !== collectionName);
+    return {
+      name: item.name,
+      owner: dashboardOwner(item),
+      favorite: item.favorite,
+      private: dashboardIsPrivate(item),
+      badge: otherCollections.length ? '+' + otherCollections.length : '',
+      badgeTitle: otherCollections.join(', ')
+    };
+  }
+
+  function buildGroupedCollections() {
+    return groupedCollectionDefinitions.map(collection => ({
+      ...collection,
+      items: rowOrder
+        .filter(item => (dashboardCollections.get(item.name) || []).includes(collection.name))
+        .map(item => groupedDashboardData(item, collection.name))
+    }));
+  }
 
   function ownerCell(name) {
     return [
@@ -6923,8 +7316,11 @@ img.ProseMirror-separator {
     ].join('');
   }
 
-  function privateCell() {
-    return '<span class="oboard-grouped-private">' + svgIcon('icon-lock-next') + '<span>Private</span></span>';
+  function visibilityCell(item) {
+    return [
+      '<span class="oboard-grouped-visibility-icon">' + (item.private ? svgIcon('icon-lock-next') : '') + '</span>',
+      '<span class="oboard-grouped-visibility-text">' + (item.private ? 'Private' : 'Public') + '</span>'
+    ].join('');
   }
 
   function collectionBadge(item) {
@@ -6953,12 +7349,12 @@ img.ProseMirror-separator {
       '<button class="oboard-drag-handle oboard-grouped-drag-handle" type="button" aria-label="Reorder dashboard">' + svgIcon(DRAG) + '</button>',
       '<div class="oboard-grouped-row-inner">',
       '<div class="oboard-grouped-name-cell">',
-      '<span class="oboard-grouped-favorite">' + svgIcon(item.favorite ? FILLED : EMPTY) + '</span>',
+      '<button class="oboard-grouped-favorite" type="button" aria-label="Toggle favorite">' + svgIcon(item.favorite ? FILLED : EMPTY) + '</button>',
       '<span class="oboard-grouped-title">' + escapeHtml(item.name) + '</span>',
       '</div>',
       '<div class="oboard-grouped-collections-cell">' + collectionBadge(item) + '</div>',
       ownerCell(item.owner),
-      '<div class="oboard-grouped-visibility-cell">' + (item.private ? privateCell() : '') + '</div>',
+      '<div class="oboard-grouped-visibility-cell">' + visibilityCell(item) + '</div>',
       '<button class="oboard-grouped-more" type="button" aria-label="More actions">' + svgIcon('icon-more-next') + '</button>',
       '</div>',
       '</div>'
@@ -7045,15 +7441,16 @@ img.ProseMirror-separator {
   }
 
   function groupedListHtml() {
+    const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
       '<div class="oboard-grouped-head-name">',
       '<span class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></span>',
       '<span class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></span>',
       '</div>',
-      '<div></div>',
+      '<div class="oboard-grouped-head-label"><span>Collections</span><span class="oboard-grouped-sort">↕</span></div>',
       '<div class="oboard-grouped-head-label"><span>Owner</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></div>',
+      '<div class="oboard-grouped-visibility-cell"><span class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></span></div>',
       '<div></div>',
       '</div>',
       groupedCollections.map(collection => groupedCollectionRow(collection) + collection.items.map(item => groupedDashboardRow(item, collection.name)).join('')).join('')
@@ -7086,6 +7483,16 @@ img.ProseMirror-separator {
     if (!groupedListEventsBound) {
       groupedListEventsBound = true;
       host.addEventListener('click', event => {
+        const favoriteButton = event.target.closest('.oboard-grouped-favorite');
+        if (favoriteButton) {
+          event.preventDefault();
+          event.stopPropagation();
+          const name = favoriteButton.closest('.oboard-grouped-dashboard')?.dataset.dashboardName;
+          const item = rowOrder.find(row => row.name === name);
+          if (!item) return;
+          updateDashboardFavorite(name, !item.favorite);
+          return;
+        }
         const copyLink = event.target.closest('.oboard-grouped-copy-link');
         if (copyLink) {
           event.preventDefault();
@@ -7104,6 +7511,176 @@ img.ProseMirror-separator {
     return host;
   }
 
+  const MODE_TRANSITION_DURATION = 520;
+  const MODE_BRANCH_DURATION = 360;
+  const MODE_TRANSITION_EASING = 'cubic-bezier(0.2, 0, 0, 1)';
+
+  function transitionCloneForRow(item, rect) {
+    const clone = item.row.cloneNode(true);
+    clone.classList.add('oboard-mode-transition-row');
+    clone.style.margin = '0';
+    clone.style.pointerEvents = 'none';
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    return { clone, rect };
+  }
+
+  function groupedTargetForDashboard(name, collectionName) {
+    if (!collectionName) return null;
+    return document.querySelector(
+      '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(name) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
+    );
+  }
+
+  function primaryCollectionForDashboard(item) {
+    const memberships = dashboardCollections.get(item.name) || [];
+    const primaryMembership = groupedCollectionDefinitions.find(collection => memberships.includes(collection.name))?.name || memberships[0];
+    return { memberships, primaryMembership };
+  }
+
+  function groupedTargetsForDashboard(name, memberships) {
+    return groupedCollectionDefinitions
+      .filter(collection => memberships.includes(collection.name))
+      .map(collection => ({
+        collectionName: collection.name,
+        node: groupedTargetForDashboard(name, collection.name)
+      }))
+      .filter(target => target.node);
+  }
+
+  function animateGroupedScaffold(host, delayBase = 0) {
+    const items = [
+      { node: host.querySelector('.oboard-grouped-head'), delay: delayBase, duration: 260 },
+      ...Array.from(host.querySelectorAll('.oboard-grouped-collection')).map((node, index) => ({
+        node,
+        delay: delayBase + 80 + index * 42,
+        duration: 360
+      }))
+    ].filter(item => item.node);
+
+    return items.map(item => item.node.animate([
+      { opacity: 0, transform: 'translateX(24px)' },
+      { opacity: 1, transform: 'translateX(0)' }
+    ], {
+      duration: item.duration,
+      delay: item.delay,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {}));
+  }
+
+  function animateCloneToTarget(clone, sourceRect, targetRect, options = {}) {
+    const x = targetRect.left - sourceRect.left;
+    const y = targetRect.top - sourceRect.top;
+    return clone.animate([
+      {
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0)',
+        width: sourceRect.width + 'px',
+        height: sourceRect.height + 'px'
+      },
+      {
+        opacity: 1,
+        transform: 'translate3d(' + x + 'px, ' + y + 'px, 0)',
+        width: targetRect.width + 'px',
+        height: targetRect.height + 'px'
+      }
+    ], {
+      duration: options.duration || MODE_TRANSITION_DURATION,
+      delay: options.delay || 0,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {});
+  }
+
+  function settleCloneAtRect(clone, rect) {
+    clone.getAnimations().forEach(animation => animation.cancel());
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    clone.style.opacity = '1';
+    clone.style.transform = 'none';
+  }
+
+  function animateCloneOut(clone) {
+    return clone.animate([
+      { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+      { opacity: 0, transform: 'translate3d(0, 12px, 0)' }
+    ], {
+      duration: 260,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {});
+  }
+
+  function animateUngroupedToGrouped() {
+    const page = document.querySelector('.dp-MainContent-CustomDashboardList');
+    if (!page || page.classList.contains('oboard-grouped-mode')) return Promise.resolve();
+    const host = initGroupedList();
+    if (!host) return Promise.resolve();
+
+    const sourceStates = rowOrder.map(item => ({
+      item,
+      rect: item.row.getBoundingClientRect(),
+      ...primaryCollectionForDashboard(item)
+    }));
+
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+      page.classList.add('oboard-grouped-mode');
+      return Promise.resolve();
+    }
+
+    page.classList.add('oboard-mode-transitioning');
+    host.getBoundingClientRect();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'oboard-mode-transition-overlay';
+    document.body.appendChild(overlay);
+
+    const settledClones = [];
+    const rowAnimations = sourceStates.map(state => {
+      const targets = groupedTargetsForDashboard(state.item.name, state.memberships);
+      const target = targets[0]?.node || groupedTargetForDashboard(state.item.name, state.primaryMembership);
+      const { clone, rect } = transitionCloneForRow(state.item, state.rect);
+      overlay.appendChild(clone);
+      if (!target || !state.memberships.length) {
+        return animateCloneOut(clone);
+      }
+      const targetRect = target.getBoundingClientRect();
+      return animateCloneToTarget(clone, rect, targetRect).then(() => {
+        settleCloneAtRect(clone, targetRect);
+        settledClones.push({ state, clone, primaryRect: targetRect, targets: targets.slice(1) });
+      });
+    });
+
+    return Promise.all(rowAnimations).then(() => {
+      const branchAnimations = settledClones.flatMap(entry => entry.targets.map((target, index) => {
+        const targetRect = target.node.getBoundingClientRect();
+        const duplicate = entry.state.item.row.cloneNode(true);
+        duplicate.classList.add('oboard-mode-transition-row');
+        duplicate.style.margin = '0';
+        duplicate.style.pointerEvents = 'none';
+        duplicate.style.left = entry.primaryRect.left + 'px';
+        duplicate.style.top = entry.primaryRect.top + 'px';
+        duplicate.style.width = entry.primaryRect.width + 'px';
+        duplicate.style.height = entry.primaryRect.height + 'px';
+        overlay.appendChild(duplicate);
+        return animateCloneToTarget(duplicate, entry.primaryRect, targetRect, {
+          duration: MODE_BRANCH_DURATION,
+          delay: index * 48
+        }).then(() => settleCloneAtRect(duplicate, targetRect));
+      }));
+      return Promise.all(branchAnimations);
+    }).then(() => Promise.all(animateGroupedScaffold(host, 40))).then(() => {
+      page.classList.add('oboard-grouped-mode');
+      page.classList.remove('oboard-mode-transitioning');
+      overlay.remove();
+    });
+  }
+
   function setButtonText(button, text) {
     if (!button) return;
     Array.from(button.childNodes).forEach(node => {
@@ -7113,18 +7690,23 @@ img.ProseMirror-separator {
     });
   }
 
-  function applyDashboardMode(mode) {
+  function applyDashboardMode(mode, options = {}) {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
     const createButton = document.querySelector('.cdl-DashboardHeader_NewReport');
     const grouped = mode === 'grouped';
-    page?.classList.toggle('oboard-grouped-mode', grouped);
     setButtonText(createButton, grouped ? 'Create collection' : 'Create dashboard');
     if (grouped) {
       hidePreview();
       closeDashboardCollectionPopover();
+      if (options.animate) {
+        animateUngroupedToGrouped();
+        return;
+      }
       initGroupedList();
+      page?.classList.add('oboard-grouped-mode');
     } else {
       closeCollectionMenu();
+      page?.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
       initDashboardCollectionColumn();
     }
   }
@@ -7144,6 +7726,7 @@ img.ProseMirror-separator {
 
     function setMode(mode) {
       const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
+      const previousMode = switcher.dataset.mode || '';
       switcher.dataset.mode = normalizedMode;
       switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
         const active = option.dataset.mode === normalizedMode;
@@ -7151,7 +7734,7 @@ img.ProseMirror-separator {
         option.setAttribute('aria-checked', active ? 'true' : 'false');
       });
       window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
-      applyDashboardMode(normalizedMode);
+      applyDashboardMode(normalizedMode, { animate: false });
     }
 
     switcher.addEventListener('click', event => {
@@ -7366,22 +7949,31 @@ img.ProseMirror-separator {
     if (previewSource) positionPreview(previewSource);
   });
 
+  function updateDashboardFavorite(name, favorite) {
+    const item = rowOrder.find(row => row.name === name);
+    if (!item) return;
+    item.favorite = favorite;
+    setIcon(item.row.querySelector('.cdl-ActionFavoriteButton svg'), favorite ? FILLED : EMPTY);
+    document.querySelectorAll('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(name) + '"] .oboard-grouped-favorite svg').forEach(svg => {
+      setIcon(svg, favorite ? FILLED : EMPTY);
+    });
+    syncSidebar();
+    saveFavoriteOrder();
+  }
+
   rowOrder.forEach(item => {
     const button = item.row.querySelector('.cdl-ActionFavoriteButton');
-    const svg = button?.querySelector('svg');
     button?.addEventListener('click', event => {
       event.preventDefault();
       event.stopPropagation();
-      item.favorite = !item.favorite;
-      setIcon(svg, item.favorite ? FILLED : EMPTY);
-      syncSidebar();
-      saveFavoriteOrder();
+      updateDashboardFavorite(item.name, !item.favorite);
     });
   });
 
   restoreOrder();
   restoreFavoriteOrder();
   restoreDashboardCollections();
+  initWorkspacePopover();
   initDashboardCollectionColumn();
   attachTableDragHandlers();
   syncSidebar();

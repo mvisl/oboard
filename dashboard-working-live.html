@@ -248,7 +248,30 @@ img.ProseMirror-separator {
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibilityIcon,
   .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
-    flex: 0 0 52px !important;
+    flex: 0 0 32px !important;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibility,
+  .dp-MainContent-CustomDashboardList .tb-Cell-visibility {
+    flex: 0 0 152px !important;
+  }
+
+  .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
+    display: flex;
+    align-items: center;
+  }
+
+  .dp-MainContent-CustomDashboardList .cdl-VisibilityIconCell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 32px;
+    height: 24px;
+  }
+
+  .dp-MainContent-CustomDashboardList .cdl-VisibilityIconCell .ai-Icon {
+    width: 24px;
+    height: 24px;
   }
 
   .tb-Cell-collections {
@@ -576,7 +599,7 @@ img.ProseMirror-separator {
   .oboard-grouped-row-inner {
     display: grid;
     grid-template-columns: minmax(320px, 1fr) 224px 376px 184px 24px;
-    column-gap: 16px;
+    column-gap: 0;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
@@ -584,7 +607,7 @@ img.ProseMirror-separator {
 
   .oboard-grouped-head {
     height: 33px;
-    padding: 0 32px 8px 56px;
+    padding: 0 0 8px 120px;
     border-bottom: 1px solid var(--gray, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
     font-size: 12px;
@@ -627,15 +650,15 @@ img.ProseMirror-separator {
 
   .oboard-grouped-row-inner {
     height: 48px;
-    padding-right: 32px;
+    padding-right: 0;
   }
 
   .oboard-grouped-collection .oboard-grouped-row-inner {
-    padding-left: 12px;
+    padding-left: 76px;
   }
 
   .oboard-grouped-dashboard .oboard-grouped-row-inner {
-    padding-left: 52px;
+    padding-left: 116px;
   }
 
   .oboard-grouped-collection.is-hover-demo,
@@ -649,11 +672,28 @@ img.ProseMirror-separator {
 
   .oboard-grouped-name-cell,
   .oboard-grouped-owner-cell,
-  .oboard-grouped-visibility-cell,
   .oboard-grouped-collections-cell {
     display: flex;
     align-items: center;
     min-width: 0;
+  }
+
+  .oboard-grouped-visibility-cell {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .oboard-grouped-head .oboard-grouped-visibility-cell,
+  .oboard-grouped-dashboard .oboard-grouped-visibility-cell {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 152px);
+    align-items: center;
+  }
+
+  .oboard-grouped-head .oboard-grouped-visibility-cell .oboard-grouped-head-label,
+  .oboard-grouped-visibility-text {
+    grid-column: 2;
   }
 
   .oboard-grouped-name-cell {
@@ -734,7 +774,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-owner-name,
-  .oboard-grouped-private {
+  .oboard-grouped-visibility-text {
     overflow: hidden;
     min-width: 0;
     color: var(--dark-blue, #172b4d);
@@ -745,13 +785,16 @@ img.ProseMirror-separator {
     text-overflow: ellipsis;
   }
 
-  .oboard-grouped-private {
+  .oboard-grouped-visibility-icon {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: flex-start;
+    grid-column: 1;
+    width: 32px;
+    height: 24px;
   }
 
-  .oboard-grouped-private .ai-Icon {
+  .oboard-grouped-visibility-icon .ai-Icon {
     width: 24px;
     height: 24px;
     color: var(--dark-2, #42526e);
@@ -7273,8 +7316,11 @@ img.ProseMirror-separator {
     ].join('');
   }
 
-  function privateCell() {
-    return '<span class="oboard-grouped-private">' + svgIcon('icon-lock-next') + '<span>Private</span></span>';
+  function visibilityCell(item) {
+    return [
+      '<span class="oboard-grouped-visibility-icon">' + (item.private ? svgIcon('icon-lock-next') : '') + '</span>',
+      '<span class="oboard-grouped-visibility-text">' + (item.private ? 'Private' : 'Public') + '</span>'
+    ].join('');
   }
 
   function collectionBadge(item) {
@@ -7308,7 +7354,7 @@ img.ProseMirror-separator {
       '</div>',
       '<div class="oboard-grouped-collections-cell">' + collectionBadge(item) + '</div>',
       ownerCell(item.owner),
-      '<div class="oboard-grouped-visibility-cell">' + (item.private ? privateCell() : '') + '</div>',
+      '<div class="oboard-grouped-visibility-cell">' + visibilityCell(item) + '</div>',
       '<button class="oboard-grouped-more" type="button" aria-label="More actions">' + svgIcon('icon-more-next') + '</button>',
       '</div>',
       '</div>'
@@ -7402,9 +7448,9 @@ img.ProseMirror-separator {
       '<span class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></span>',
       '<span class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></span>',
       '</div>',
-      '<div></div>',
+      '<div class="oboard-grouped-head-label"><span>Collections</span><span class="oboard-grouped-sort">↕</span></div>',
       '<div class="oboard-grouped-head-label"><span>Owner</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></div>',
+      '<div class="oboard-grouped-visibility-cell"><span class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></span></div>',
       '<div></div>',
       '</div>',
       groupedCollections.map(collection => groupedCollectionRow(collection) + collection.items.map(item => groupedDashboardRow(item, collection.name)).join('')).join('')
