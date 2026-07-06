@@ -598,7 +598,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head,
   .oboard-grouped-row-inner {
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) 224px 376px 184px 24px;
+    grid-template-columns: 52px minmax(0, 1fr) 224px 376px 184px 24px;
     column-gap: 0;
     align-items: center;
     width: 100%;
@@ -607,11 +607,12 @@ img.ProseMirror-separator {
 
   .oboard-grouped-head {
     height: 33px;
-    padding: 0 0 8px 120px;
+    padding: 0 0 8px;
     border-bottom: 1px solid var(--gray, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
+    font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 700;
     line-height: 16px;
   }
 
@@ -627,6 +628,7 @@ img.ProseMirror-separator {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    font-weight: 700;
   }
 
   .oboard-grouped-head-favorite .ai-Icon {
@@ -654,11 +656,11 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-collection .oboard-grouped-row-inner {
-    padding-left: 76px;
+    padding-left: 0;
   }
 
   .oboard-grouped-dashboard .oboard-grouped-row-inner {
-    padding-left: 116px;
+    padding-left: 0;
   }
 
   .oboard-grouped-collection.is-hover-demo,
@@ -670,12 +672,17 @@ img.ProseMirror-separator {
     background: var(--surface-subtle, #f4f7fc);
   }
 
+  .oboard-grouped-service-cell,
   .oboard-grouped-name-cell,
   .oboard-grouped-owner-cell,
   .oboard-grouped-collections-cell {
     display: flex;
     align-items: center;
     min-width: 0;
+  }
+
+  .oboard-grouped-service-cell {
+    justify-content: flex-start;
   }
 
   .oboard-grouped-visibility-cell {
@@ -1188,7 +1195,7 @@ img.ProseMirror-separator {
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header {
-    border-bottom: 1px solid var(--grey-2-next, #dfe1e6) !important;
+    border-bottom: 0 !important;
     box-shadow: none !important;
   }
 
@@ -7348,8 +7355,10 @@ img.ProseMirror-separator {
       '<div class="oboard-grouped-row oboard-grouped-dashboard' + (item.hover ? ' is-hover-demo' : '') + '" data-dashboard-name="' + escapeHtml(item.name) + '" data-collection="' + escapeHtml(collectionName) + '">',
       '<button class="oboard-drag-handle oboard-grouped-drag-handle" type="button" aria-label="Reorder dashboard">' + svgIcon(DRAG) + '</button>',
       '<div class="oboard-grouped-row-inner">',
-      '<div class="oboard-grouped-name-cell">',
+      '<div class="oboard-grouped-service-cell">',
       '<button class="oboard-grouped-favorite" type="button" aria-label="Toggle favorite">' + svgIcon(item.favorite ? FILLED : EMPTY) + '</button>',
+      '</div>',
+      '<div class="oboard-grouped-name-cell">',
       '<span class="oboard-grouped-title">' + escapeHtml(item.name) + '</span>',
       '</div>',
       '<div class="oboard-grouped-collections-cell">' + collectionBadge(item) + '</div>',
@@ -7365,8 +7374,10 @@ img.ProseMirror-separator {
     return [
       '<div class="oboard-grouped-row oboard-grouped-collection' + (collection.hover ? ' is-hover-demo' : '') + '" data-collection="' + escapeHtml(collection.name) + '">',
       '<div class="oboard-grouped-row-inner">',
-      '<div class="oboard-grouped-name-cell">',
+      '<div class="oboard-grouped-service-cell">',
       '<button class="oboard-grouped-chevrons" type="button" aria-label="Collapse collection">' + svgIcon('icon-arrow-down-simple-next') + '</button>',
+      '</div>',
+      '<div class="oboard-grouped-name-cell">',
       collectionIcon(),
       '<span class="oboard-grouped-title">' + escapeHtml(collection.name) + '</span>',
       '</div>',
@@ -7444,10 +7455,8 @@ img.ProseMirror-separator {
     const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
-      '<div class="oboard-grouped-head-name">',
-      '<span class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></span>',
-      '<span class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></span>',
-      '</div>',
+      '<div class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></div>',
+      '<div class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></div>',
       '<div class="oboard-grouped-head-label"><span>Collections</span><span class="oboard-grouped-sort">↕</span></div>',
       '<div class="oboard-grouped-head-label"><span>Owner</span><span class="oboard-grouped-sort">↕</span></div>',
       '<div class="oboard-grouped-visibility-cell"><span class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></span></div>',
