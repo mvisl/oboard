@@ -305,6 +305,7 @@ img.ProseMirror-separator {
     height: 24px;
     min-width: 0;
     box-sizing: border-box;
+    appearance: none;
     border: 0;
     border-radius: 6px;
     background: var(--component-colors-components-buttons-tertiary-color-button-tertiary-color-bg-hover, #eff4ff);
@@ -314,6 +315,7 @@ img.ProseMirror-separator {
     font-weight: 400;
     line-height: 20px;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .oboard-dashboard-collection-badge {
@@ -680,6 +682,7 @@ img.ProseMirror-separator {
     height: var(--oboard-dashboard-row-height, 44px);
     border-bottom: 1px solid var(--gray, #dfe1e6);
     box-sizing: border-box;
+    transition: background-color 220ms ease-in-out;
   }
 
   .oboard-grouped-row-inner {
@@ -700,6 +703,7 @@ img.ProseMirror-separator {
   .oboard-grouped-collection:hover,
   .oboard-grouped-collection:focus-within,
   .oboard-grouped-dashboard.is-hover-demo,
+  .oboard-grouped-dashboard.is-navigation-highlight,
   .oboard-grouped-dashboard.is-related-hover,
   .oboard-grouped-dashboard:hover,
   .oboard-grouped-dashboard:focus-within {
@@ -6164,6 +6168,7 @@ img.ProseMirror-separator {
   let dashboardCollectionMenuEventsBound = false;
   let activeDashboardCollectionMenu = null;
   let activeDashboardCollectionQuery = '';
+  let groupedNavigationHighlightTimer = null;
   let groupedDragClientX = 0;
   let groupedDragClientY = 0;
   let activeSortableLock = null;
@@ -6242,8 +6247,9 @@ img.ProseMirror-separator {
     const selected = dashboardCollections.get(dashboardName) || [];
     const tooltip = selected.join(', ');
     const count = selected.length > 1 ? selected.length - 1 : 0;
+    const collections = selected.map(encodeURIComponent).join('|');
     cell.innerHTML = [
-      selected.length ? '<span class="oboard-dashboard-collection-badge' + (count ? ' has-count' : '') + '" tabindex="0">' + layersIcon() + (count ? '<span>+' + count + '</span>' : '') + '<span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></span>' : '',
+      selected.length ? '<button class="oboard-dashboard-collection-badge' + (count ? ' has-count' : '') + '" type="button" data-dashboard-name="' + escapeHtml(dashboardName) + '" data-collections="' + escapeHtml(collections) + '" aria-label="Show dashboard in collections">' + layersIcon() + (count ? '<span>+' + count + '</span>' : '') + '<span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></button>' : '',
       '<button class="oboard-dashboard-collection-add" type="button" aria-label="Add to collection" data-dashboard-name="' + escapeHtml(dashboardName) + '">' + svgIcon('icon-plus-next') + '</button>'
     ].join('');
   }
@@ -6401,6 +6407,24 @@ img.ProseMirror-separator {
         event.preventDefault();
         event.stopPropagation();
         openDashboardCollectionPopover(addButton, addButton.dataset.dashboardName);
+        return;
+      }
+
+      const collectionBadge = event.target.closest('.oboard-dashboard-collection-badge');
+      if (collectionBadge) {
+        event.preventDefault();
+        event.stopPropagation();
+        const collections = (collectionBadge.dataset.collections || '')
+          .split('|')
+          .filter(Boolean)
+          .map(value => {
+            try {
+              return decodeURIComponent(value);
+            } catch (error) {
+              return value;
+            }
+          });
+        focusGroupedDashboardCollections(collectionBadge.dataset.dashboardName, collections);
         return;
       }
 
@@ -7451,6 +7475,59 @@ img.ProseMirror-separator {
     });
   }
 
+  function clearGroupedNavigationHighlight(host) {
+    window.clearTimeout(groupedNavigationHighlightTimer);
+    groupedNavigationHighlightTimer = null;
+    host?.querySelectorAll('.is-navigation-highlight').forEach(row => row.classList.remove('is-navigation-highlight'));
+  }
+
+  function setGroupedCollectionCollapsed(host, collectionRow, collapsed) {
+    if (!host || !collectionRow) return;
+    const collection = collectionRow.dataset.collection;
+    const button = collectionRow.querySelector('.oboard-grouped-chevrons');
+    collectionRow.classList.remove('is-related-hover');
+    collectionRow.classList.toggle('is-collapsed', collapsed);
+    button?.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
+    host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
+      row.classList.remove('is-related-hover', 'is-navigation-highlight');
+      row.hidden = collapsed;
+    });
+  }
+
+  function focusGroupedDashboardCollections(dashboardName, collections) {
+    const selectedCollections = (collections || dashboardCollections.get(dashboardName) || []).filter(Boolean);
+    if (!dashboardName || !selectedCollections.length) return;
+
+    selectDashboardMode('grouped', { animate: false });
+    const host = initGroupedList();
+    if (!host) return;
+
+    closeCollectionMenu();
+    clearGroupedRelatedHover(host);
+    clearGroupedNavigationHighlight(host);
+
+    const targetCollections = new Set(selectedCollections);
+    host.querySelectorAll(':scope > .oboard-grouped-collection').forEach(collectionRow => {
+      setGroupedCollectionCollapsed(host, collectionRow, !targetCollections.has(collectionRow.dataset.collection));
+    });
+
+    const highlightedRows = selectedCollections
+      .map(collection => host.querySelector(
+        '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collection) + '"]'
+      ))
+      .filter(Boolean);
+
+    requestAnimationFrame(() => {
+      highlightedRows.forEach(row => row.classList.add('is-navigation-highlight'));
+      highlightedRows[0]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+
+    groupedNavigationHighlightTimer = window.setTimeout(() => {
+      highlightedRows.forEach(row => row.classList.remove('is-navigation-highlight'));
+      groupedNavigationHighlightTimer = null;
+    }, 2200);
+  }
+
   function groupedCollectionActions(collection) {
     return [
       '<div class="oboard-grouped-collection-actions">',
@@ -7589,16 +7666,10 @@ img.ProseMirror-separator {
     host.querySelectorAll('.oboard-grouped-collection').forEach(collectionRow => {
       const button = collectionRow.querySelector('.oboard-grouped-chevrons');
       button?.addEventListener('click', () => {
-        const collection = collectionRow.dataset.collection;
         const collapsed = !collectionRow.classList.contains('is-collapsed');
         clearGroupedRelatedHover(host);
-        collectionRow.classList.remove('is-related-hover');
-        collectionRow.classList.toggle('is-collapsed', collapsed);
-        button.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
-        host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
-          row.classList.remove('is-related-hover');
-          row.hidden = collapsed;
-        });
+        clearGroupedNavigationHighlight(host);
+        setGroupedCollectionCollapsed(host, collectionRow, collapsed);
         button.blur();
       });
     });
@@ -7834,6 +7905,21 @@ img.ProseMirror-separator {
     }
   }
 
+  function selectDashboardMode(mode, options = {}) {
+    const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
+    const switcher = document.querySelector('.oboard-dashboard-mode-switcher');
+    if (switcher) {
+      switcher.dataset.mode = normalizedMode;
+      switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
+        const active = option.dataset.mode === normalizedMode;
+        option.classList.toggle('is-active', active);
+        option.setAttribute('aria-checked', active ? 'true' : 'false');
+      });
+    }
+    window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
+    applyDashboardMode(normalizedMode, options);
+  }
+
   function initDashboardGroupSwitcher() {
     const headerLeft = document.querySelector('.cdl-DashboardHeader_LeftSide');
     if (!headerLeft || headerLeft.querySelector('.oboard-dashboard-mode-switcher')) return;
@@ -7848,16 +7934,7 @@ img.ProseMirror-separator {
     ].join('');
 
     function setMode(mode) {
-      const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
-      const previousMode = switcher.dataset.mode || '';
-      switcher.dataset.mode = normalizedMode;
-      switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
-        const active = option.dataset.mode === normalizedMode;
-        option.classList.toggle('is-active', active);
-        option.setAttribute('aria-checked', active ? 'true' : 'false');
-      });
-      window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
-      applyDashboardMode(normalizedMode, { animate: false });
+      selectDashboardMode(mode, { animate: false });
     }
 
     switcher.addEventListener('click', event => {
