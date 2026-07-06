@@ -190,7 +190,7 @@ img.ProseMirror-separator {
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
-    width: 200px;
+    width: fit-content;
     height: 32px;
     box-sizing: border-box;
     gap: 8px;
@@ -200,15 +200,25 @@ img.ProseMirror-separator {
     background: var(--grey-3-next, #f5f6f7);
   }
 
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body.oboard-styled-scrollbar {
+    overflow-y: scroll;
+  }
+
   .oboard-dashboard-mode-option {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex: 0 0 auto;
+    width: max-content;
     height: 24px;
-    min-width: 0;
+    min-width: max-content;
     box-sizing: border-box;
-    gap: 0;
-    padding: 0 8px 0 0;
+    gap: 2px;
+    padding: 0 8px 0 2px;
     border: 0;
     border-radius: 3px;
     background: transparent;
@@ -237,23 +247,23 @@ img.ProseMirror-separator {
 
   .tb-HeaderCell-collections,
   .tb-Cell-collections {
-    flex: 0 0 224px !important;
+    flex: 0 0 var(--oboard-dashboard-collections-column, 224px) !important;
     min-width: 0;
   }
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-owner,
   .dp-MainContent-CustomDashboardList .tb-Cell-owner {
-    flex: 0 0 376px !important;
+    flex: 0 0 var(--oboard-dashboard-owner-column, 376px) !important;
   }
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibilityIcon,
   .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
-    flex: 0 0 32px !important;
+    flex: 0 0 var(--oboard-dashboard-visibility-icon-column, 32px) !important;
   }
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibility,
   .dp-MainContent-CustomDashboardList .tb-Cell-visibility {
-    flex: 0 0 152px !important;
+    flex: 0 0 var(--oboard-dashboard-visibility-text-column, 152px) !important;
   }
 
   .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
@@ -265,7 +275,7 @@ img.ProseMirror-separator {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    width: 32px;
+    width: var(--oboard-dashboard-visibility-icon-column, 32px);
     height: 24px;
   }
 
@@ -598,7 +608,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head,
   .oboard-grouped-row-inner {
     display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 224px 376px 184px 24px;
+    grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 224px 376px 184px 24px);
     column-gap: 0;
     align-items: center;
     width: 100%;
@@ -606,9 +616,10 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-head {
-    height: 33px;
-    padding: 0 0 8px;
-    border-bottom: 1px solid var(--gray, #dfe1e6);
+    align-items: start;
+    height: 32px;
+    padding: 2px 0 0;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-size: 12px;
@@ -627,31 +638,52 @@ img.ProseMirror-separator {
   .oboard-grouped-head-label {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 0;
+    min-width: 0;
     font-weight: 700;
   }
 
-  .oboard-grouped-head-favorite .ai-Icon {
+  .oboard-grouped-head .cdth-HeaderCell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+    height: 20px;
+    color: var(--grey-semi-medium, #6b778c);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+  }
+
+  .oboard-grouped-head .cdth-HeaderCell span {
+    min-width: 0;
+  }
+
+  .oboard-grouped-head-favorite .ai-Icon:first-child {
     width: 24px;
     height: 24px;
     color: var(--grey-semi-medium, #6b778c);
   }
 
-  .oboard-grouped-sort {
-    color: var(--gray, #dfe1e6);
-    font-size: 18px;
-    line-height: 16px;
+  .oboard-grouped-head .oboard-grouped-sort-icon {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .oboard-grouped-head .cdth-HeaderCell_DefaultStateSorting {
+    color: var(--grey-2-next, #dfe1e6);
   }
 
   .oboard-grouped-row {
     position: relative;
-    height: 48px;
+    height: var(--oboard-dashboard-row-height, 44px);
     border-bottom: 1px solid var(--gray, #dfe1e6);
     box-sizing: border-box;
   }
 
   .oboard-grouped-row-inner {
-    height: 48px;
+    height: var(--oboard-dashboard-row-height, 44px);
     padding-right: 0;
   }
 
@@ -664,9 +696,11 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-collection.is-hover-demo,
+  .oboard-grouped-collection.is-related-hover,
   .oboard-grouped-collection:hover,
   .oboard-grouped-collection:focus-within,
   .oboard-grouped-dashboard.is-hover-demo,
+  .oboard-grouped-dashboard.is-related-hover,
   .oboard-grouped-dashboard:hover,
   .oboard-grouped-dashboard:focus-within {
     background: var(--surface-subtle, #f4f7fc);
@@ -694,7 +728,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head .oboard-grouped-visibility-cell,
   .oboard-grouped-dashboard .oboard-grouped-visibility-cell {
     display: grid;
-    grid-template-columns: 32px minmax(0, 152px);
+    grid-template-columns: var(--oboard-dashboard-visibility-icon-column, 32px) minmax(0, var(--oboard-dashboard-visibility-text-column, 152px));
     align-items: center;
   }
 
@@ -1186,6 +1220,15 @@ img.ProseMirror-separator {
 
   .dp-MainContent-CustomDashboardList {
     --oboard-dashboard-reorder-gutter: 0px;
+    --oboard-dashboard-service-column: 52px;
+    --oboard-dashboard-collections-column: 112px;
+    --oboard-dashboard-owner-column: 208px;
+    --oboard-dashboard-visibility-icon-column: 32px;
+    --oboard-dashboard-visibility-text-column: 128px;
+    --oboard-dashboard-action-column: 24px;
+    --oboard-dashboard-visibility-column: calc(var(--oboard-dashboard-visibility-icon-column) + var(--oboard-dashboard-visibility-text-column));
+    --oboard-dashboard-row-height: 44px;
+    --oboard-dashboard-grid-columns: var(--oboard-dashboard-service-column) minmax(0, 1fr) var(--oboard-dashboard-collections-column) var(--oboard-dashboard-owner-column) var(--oboard-dashboard-visibility-column) var(--oboard-dashboard-action-column);
   }
 
   .dp-MainContent-CustomDashboardList .tb-Header,
@@ -7257,6 +7300,19 @@ img.ProseMirror-separator {
     return '<svg data-target-id="' + id + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon ' + className + '"><use xlink:href="#' + id + '" href="#' + id + '"></use></svg>';
   }
 
+  function tableHeaderSortIcon(id, className = '') {
+    return svgIcon(id, 'oboard-grouped-sort-icon ' + className);
+  }
+
+  function groupedHeaderLabel(label, sorted = false) {
+    return [
+      '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-label">',
+      '<span>' + label + '</span>',
+      tableHeaderSortIcon(sorted ? 'icon-arrow-up-next' : 'icon-sort-two-ways-next', sorted ? '' : 'cdth-HeaderCell_DefaultStateSorting'),
+      '</div>'
+    ].join('');
+  }
+
   function layersIcon(className = '') {
     return [
       '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="svg-icon ai-Icon oboard-dashboard-mode-layers-icon ' + className + '">',
@@ -7332,13 +7388,67 @@ img.ProseMirror-separator {
 
   function collectionBadge(item) {
     if (!item.badge) return '';
+    const relatedCollections = (item.badgeTitle || '').split(', ').filter(Boolean);
     return [
-      '<span class="oboard-grouped-collection-badge" tabindex="0">',
+      '<span class="oboard-grouped-collection-badge" tabindex="0" data-dashboard-name="' + escapeHtml(item.name) + '" data-related-collections="' + escapeHtml(relatedCollections.map(encodeURIComponent).join('|')) + '">',
       layersIcon(),
       '<span>' + escapeHtml(item.badge) + '</span>',
       '<span class="oboard-grouped-tooltip">' + escapeHtml(item.badgeTitle || 'Other collections') + '</span>',
       '</span>'
     ].join('');
+  }
+
+  function clearGroupedRelatedHover(host) {
+    host?.querySelectorAll('.is-related-hover').forEach(row => row.classList.remove('is-related-hover'));
+  }
+
+  function applyGroupedRelatedHover(badge) {
+    const host = badge?.closest('.oboard-grouped-list');
+    const currentRow = badge?.closest('.oboard-grouped-dashboard');
+    if (!host || !currentRow) return;
+
+    clearGroupedRelatedHover(host);
+    const dashboardName = badge.dataset.dashboardName || currentRow.dataset.dashboardName || '';
+    const relatedCollections = (badge.dataset.relatedCollections || '')
+      .split('|')
+      .filter(Boolean)
+      .map(value => {
+        try {
+          return decodeURIComponent(value);
+        } catch (error) {
+          return value;
+        }
+      });
+
+    relatedCollections.forEach(collectionName => {
+      const dashboardRow = host.querySelector(
+        '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
+      );
+      if (dashboardRow && !dashboardRow.hidden) {
+        dashboardRow.classList.add('is-related-hover');
+        return;
+      }
+
+      const collectionRow = host.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collectionName) + '"]');
+      collectionRow?.classList.add('is-related-hover');
+    });
+  }
+
+  function bindGroupedRelatedHoverBadges(host) {
+    host.querySelectorAll('.oboard-grouped-collection-badge').forEach(badge => {
+      const clearIfLeavingBadge = event => {
+        if (badge.contains(event.relatedTarget)) return;
+        clearGroupedRelatedHover(host);
+      };
+      badge.addEventListener('pointerenter', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('mouseenter', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('mouseover', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('pointerleave', clearIfLeavingBadge);
+      badge.addEventListener('mouseleave', clearIfLeavingBadge);
+      badge.addEventListener('mouseout', clearIfLeavingBadge);
+      badge.addEventListener('focus', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('blur', () => clearGroupedRelatedHover(host));
+    });
   }
 
   function groupedCollectionActions(collection) {
@@ -7454,11 +7564,11 @@ img.ProseMirror-separator {
     const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
-      '<div class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Collections</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Owner</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-visibility-cell"><span class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></span></div>',
+      '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-favorite">' + svgIcon(EMPTY) + tableHeaderSortIcon('icon-sort-two-ways-next', 'cdth-HeaderCell_DefaultStateSorting') + '</div>',
+      groupedHeaderLabel('Name', true),
+      groupedHeaderLabel('Collections'),
+      groupedHeaderLabel('Owner'),
+      '<div class="oboard-grouped-visibility-cell">' + groupedHeaderLabel('Visibility') + '</div>',
       '<div></div>',
       '</div>',
       groupedCollections.map(collection => groupedCollectionRow(collection) + collection.items.map(item => groupedDashboardRow(item, collection.name)).join('')).join('')
@@ -7481,13 +7591,18 @@ img.ProseMirror-separator {
       button?.addEventListener('click', () => {
         const collection = collectionRow.dataset.collection;
         const collapsed = !collectionRow.classList.contains('is-collapsed');
+        clearGroupedRelatedHover(host);
+        collectionRow.classList.remove('is-related-hover');
         collectionRow.classList.toggle('is-collapsed', collapsed);
         button.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
         host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
+          row.classList.remove('is-related-hover');
           row.hidden = collapsed;
         });
+        button.blur();
       });
     });
+    bindGroupedRelatedHoverBadges(host);
     if (!groupedListEventsBound) {
       groupedListEventsBound = true;
       host.addEventListener('click', event => {
