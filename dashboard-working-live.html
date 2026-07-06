@@ -1736,7 +1736,7 @@ img.ProseMirror-separator {
   .oboard-sidebar-sections {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 12px;
     width: 100%;
     height: 100%;
     overflow: visible;
@@ -1768,18 +1768,18 @@ img.ProseMirror-separator {
 
   .oboard-nav-section-primary {
     margin-top: -16px;
-    height: var(--oboard-top-section-height, var(--oboard-primary-section-min-height, 232px));
-    min-height: var(--oboard-primary-section-min-height, 232px);
-    max-height: 380px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
     flex: 0 0 auto;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
     overflow: visible;
   }
 
   .oboard-nav-section-primary > .amnl-List {
-    height: 100%;
-    max-height: 100%;
-    overflow: hidden;
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .oboard-nav-section-favorites {
@@ -1798,6 +1798,27 @@ img.ProseMirror-separator {
     width: 100%;
   }
 
+  .oboard-favorites-title {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    box-sizing: border-box;
+    color: var(--dark-2, #42526e);
+  }
+
+  .oboard-favorites-title .svg-icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .oboard-favorites-title .amni-Item_Text {
+    margin-left: 16px;
+  }
+
   .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
     display: flex;
     flex: 1 1 auto;
@@ -1808,11 +1829,6 @@ img.ProseMirror-separator {
     margin: 0;
     padding: 0;
     overflow: visible;
-  }
-
-  .oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item {
-    flex: 0 0 auto;
-    margin: 0;
   }
 
   .oboard-favorites-list.amnl-List-children {
@@ -5908,6 +5924,7 @@ img.ProseMirror-separator {
     const rootList = nav?.querySelector(':scope > .amnl-List');
     const dashboardItem = rootList?.querySelector(':scope > .amnl-List_Item-dashboard');
     const originalFavorites = dashboardItem?.querySelector(':scope > .amnl-List-children');
+    const objectivesChildren = rootList?.querySelector(':scope > .amnl-List_Item-objectives > .amnl-List-children');
     if (!nav || !rootList || !dashboardItem || !originalFavorites || nav.querySelector('.oboard-sidebar-sections')) {
       return { nav, dashboardChildren: originalFavorites };
     }
@@ -5918,81 +5935,22 @@ img.ProseMirror-separator {
     const primarySection = document.createElement('div');
     primarySection.className = 'oboard-nav-section oboard-nav-section-primary';
 
-    const divider = document.createElement('div');
-    divider.className = 'oboard-section-resizer';
-    divider.setAttribute('role', 'separator');
-    divider.setAttribute('aria-orientation', 'horizontal');
-    divider.setAttribute('aria-label', 'Resize navigation sections');
-
     const favoritesSection = document.createElement('div');
     favoritesSection.className = 'oboard-nav-section oboard-nav-section-favorites';
 
+    const favoritesTitle = document.createElement('div');
+    favoritesTitle.className = 'oboard-favorites-title amni-Item amni-Item-default';
+    favoritesTitle.innerHTML = svgIcon(FILLED, 'amni-Item_Icon') + '<span class="amni-Item_Text">Favorites</span>';
+
+    objectivesChildren?.remove();
     originalFavorites.classList.add('oboard-favorites-list');
     primarySection.appendChild(rootList);
-    favoritesSection.appendChild(dashboardItem);
+    favoritesSection.appendChild(favoritesTitle);
+    favoritesSection.appendChild(originalFavorites);
     sections.appendChild(primarySection);
-    sections.appendChild(divider);
     sections.appendChild(favoritesSection);
     nav.appendChild(sections);
     nav.classList.add('oboard-sidebar-sectioned');
-
-    let startY = 0;
-    let startHeight = 0;
-    let startMinHeight = 0;
-    let dragging = false;
-
-    function getPrimaryMinHeight() {
-      const listRect = rootList.getBoundingClientRect();
-      const childBottom = Array.from(rootList.children).reduce((bottom, child) => {
-        return Math.max(bottom, child.getBoundingClientRect().bottom - listRect.top);
-      }, 0);
-      return Math.ceil(childBottom + 20);
-    }
-
-    function normalizePrimaryHeight() {
-      const minHeight = getPrimaryMinHeight();
-      nav.style.setProperty('--oboard-primary-section-min-height', minHeight + 'px');
-      const savedHeight = parseInt(window.localStorage.getItem('oboard-sidebar-primary-height'), 10);
-      const currentHeight = parseInt(getComputedStyle(primarySection).height, 10);
-      const requestedHeight = Number.isFinite(savedHeight) ? savedHeight : currentHeight;
-      const normalizedHeight = Math.max(minHeight, Math.min(380, requestedHeight));
-      nav.style.setProperty('--oboard-top-section-height', normalizedHeight + 'px');
-      if (Number.isFinite(savedHeight) && normalizedHeight !== savedHeight) {
-        window.localStorage.setItem('oboard-sidebar-primary-height', String(normalizedHeight));
-      }
-    }
-
-    function onMove(event) {
-      if (!dragging) return;
-      const nextHeight = Math.max(startMinHeight, Math.min(380, startHeight + event.clientY - startY));
-      nav.style.setProperty('--oboard-top-section-height', nextHeight + 'px');
-    }
-
-    function onUp() {
-      if (!dragging) return;
-      dragging = false;
-      divider.classList.remove('oboard-section-resizer-active');
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
-      const value = parseInt(getComputedStyle(primarySection).height, 10);
-      if (Number.isFinite(value)) window.localStorage.setItem('oboard-sidebar-primary-height', String(value));
-    }
-
-    divider.addEventListener('pointerdown', event => {
-      dragging = true;
-      startY = event.clientY;
-      startHeight = primarySection.getBoundingClientRect().height;
-      startMinHeight = getPrimaryMinHeight();
-      nav.style.setProperty('--oboard-primary-section-min-height', startMinHeight + 'px');
-      divider.classList.add('oboard-section-resizer-active');
-      document.addEventListener('pointermove', onMove);
-      document.addEventListener('pointerup', onUp);
-      event.preventDefault();
-    });
-
-    normalizePrimaryHeight();
-    requestAnimationFrame(normalizePrimaryHeight);
-    window.addEventListener('resize', normalizePrimaryHeight);
 
     return { nav, dashboardChildren: originalFavorites };
   }
@@ -7731,7 +7689,7 @@ img.ProseMirror-separator {
         option.setAttribute('aria-checked', active ? 'true' : 'false');
       });
       window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
-      applyDashboardMode(normalizedMode, { animate: previousMode === 'ungrouped' && normalizedMode === 'grouped' });
+      applyDashboardMode(normalizedMode, { animate: false });
     }
 
     switcher.addEventListener('click', event => {
