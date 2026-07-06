@@ -528,6 +528,19 @@ img.ProseMirror-separator {
     outline: none;
   }
 
+  .oboard-dashboard-collection-option.is-selected,
+  .oboard-dashboard-collection-option:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .oboard-dashboard-collection-option.is-selected:hover,
+  .oboard-dashboard-collection-option.is-selected:focus-visible,
+  .oboard-dashboard-collection-option:disabled:hover,
+  .oboard-dashboard-collection-option:disabled:focus-visible {
+    background: var(--white-color, #fff);
+  }
+
   .oboard-dashboard-collection-create {
     border-bottom: 1px solid var(--gray-blue-250, #dde2ea);
   }
@@ -6292,6 +6305,7 @@ img.ProseMirror-separator {
 
   function dashboardCollectionPopoverHtml(dashboardName) {
     const selected = dashboardCollections.get(dashboardName) || [];
+    const selectedSet = new Set(selected);
     const query = activeDashboardCollectionQuery;
     const normalizedQuery = query.trim().toLowerCase();
     const options = uniqueCollectionOptions().filter(collection => !normalizedQuery || collection.toLowerCase().includes(normalizedQuery));
@@ -6306,7 +6320,10 @@ img.ProseMirror-separator {
       '<input type="text" value="' + escapeHtml(query) + '" placeholder="' + (selectedChip ? '' : 'Select collection') + '" autocomplete="off" aria-label="Select collection">',
       '</div>',
       canCreate ? '<button class="oboard-dashboard-collection-create" type="button" data-create-collection="' + escapeHtml(query.trim()) + '">' + svgIcon('icon-plus-next') + '<span>Create “' + escapeHtml(query.trim()) + '”</span></button>' : '',
-      options.map(collection => '<button class="oboard-dashboard-collection-option" type="button" data-collection="' + escapeHtml(collection) + '"><span class="oboard-dashboard-collection-option-icon">C</span><span>' + escapeHtml(collection) + '</span></button>').join(''),
+      options.map(collection => {
+        const isSelected = selectedSet.has(collection);
+        return '<button class="oboard-dashboard-collection-option' + (isSelected ? ' is-selected' : '') + '" type="button" data-collection="' + escapeHtml(collection) + '"' + (isSelected ? ' disabled aria-disabled="true"' : '') + '><span class="oboard-dashboard-collection-option-icon">C</span><span>' + escapeHtml(collection) + '</span></button>';
+      }).join(''),
       '</div>'
     ].join('');
   }
@@ -6438,6 +6455,7 @@ img.ProseMirror-separator {
       const option = event.target.closest('.oboard-dashboard-collection-option');
       if (option) {
         event.preventDefault();
+        if (option.disabled || option.classList.contains('is-selected')) return;
         addDashboardToCollection(activeDashboardCollectionMenu?.dashboardName, option.dataset.collection);
         return;
       }
