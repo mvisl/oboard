@@ -1798,25 +1798,24 @@ img.ProseMirror-separator {
     width: 100%;
   }
 
-  .oboard-favorites-title {
+  .oboard-favorites-title-row {
+    flex: 0 0 auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .oboard-favorites-title-row > .amni-Item {
     display: flex;
     align-items: center;
-    flex: 0 0 auto;
+    gap: 8px;
     width: 100%;
+    height: 40px;
     min-height: 40px;
-    margin: 0;
+    padding: 8px;
+    border-radius: 6px;
     box-sizing: border-box;
     color: var(--dark-2, #42526e);
-  }
-
-  .oboard-favorites-title .svg-icon {
-    flex: 0 0 24px;
-    width: 24px;
-    height: 24px;
-  }
-
-  .oboard-favorites-title .amni-Item_Text {
-    margin-left: 16px;
   }
 
   .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
@@ -5938,9 +5937,9 @@ img.ProseMirror-separator {
     const favoritesSection = document.createElement('div');
     favoritesSection.className = 'oboard-nav-section oboard-nav-section-favorites';
 
-    const favoritesTitle = document.createElement('div');
-    favoritesTitle.className = 'oboard-favorites-title amni-Item amni-Item-default';
-    favoritesTitle.innerHTML = svgIcon(FILLED, 'amni-Item_Icon') + '<span class="amni-Item_Text">Favorites</span>';
+    const favoritesTitle = document.createElement('li');
+    favoritesTitle.className = 'amnl-List_Item oboard-favorites-title-row';
+    favoritesTitle.innerHTML = '<span class="amni-Item amni-Item-default">' + svgIcon(FILLED, 'amni-Item_Icon') + '<span class="amni-Item_Text">Favorites</span></span>';
 
     objectivesChildren?.remove();
     originalFavorites.classList.add('oboard-favorites-list');
