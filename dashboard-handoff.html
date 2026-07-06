@@ -77,13 +77,14 @@
 <body>
   <main>
     <h1>Oboard Dashboard Prototype Handoff</h1>
-    <p class="meta">Updated: 2026-07-05. Current working prototype for dashboard collections and favorites.</p>
+    <p class="meta">Updated: 2026-07-06. Current working and temp prototypes for dashboard collections and favorites.</p>
 
     <section>
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html">dashboard-working-temp.html</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=3024fc9">dashboard-working-temp.html?fix=3024fc9</a></li>
+        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-3024fc9.html">dashboard-working-temp-3024fc9.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
         <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
         <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
@@ -95,11 +96,11 @@
     <section>
       <h2>Files And Branches</h2>
       <ul>
-        <li>Local source folder: <code>/Users/viacheslavmakhankov/Desktop/Oboard</code></li>
+        <li>Local source folder: <code>/Users/makhankov-vi/Documents/Oboard</code></li>
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page: <code>main 8494072</code>, <code>gh-pages 41f4365</code></li>
+        <li>Current pushed commits before this handoff page update: <code>gh-pages 53cb566</code>; latest temp behavior commit: <code>3024fc9</code>.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
     </section>
@@ -107,14 +108,18 @@
     <section>
       <h2>Current Prototype Behavior</h2>
       <ul>
-        <li>Left menu is split into top navigation and dashboard/favorites container. Original page remains untouched.</li>
+        <li>Left menu is split into top navigation and a Favorites container. Original page remains untouched.</li>
         <li>Dashboard list has an Ungrouped / Grouped switcher before All owners.</li>
         <li>Ungrouped list has extra dashboards: Market Trends 2025, Customer Insights 2024, Revenue Forecasts Q3, Website Traffic Analysis 2024.</li>
         <li>Collections column uses stack icon. One collection shows only stack icon; multiple collections show stack plus count such as <code>+1</code>; no collection shows no icon.</li>
         <li>Grouped view is generated from the same dashboard collection membership model, not a separate static list.</li>
         <li>Some dashboards intentionally belong to multiple collections and appear more than once in Grouped.</li>
-        <li>Dashboards without collection membership dissolve during Ungrouped to Grouped transition and do not appear in Grouped.</li>
         <li>Grouped heart buttons toggle favorites and sync with Ungrouped rows plus the left dashboard list.</li>
+        <li>In temp, Favorites contains <code>My objectives</code> and <code>My groups objectives</code> first, followed by dashboard favorites. Each item shows its section icon at 16×16 with 50% opacity; on hover it changes to a drag handle.</li>
+        <li>In temp, hovering a grouped <code>+1</code> collection badge highlights the related dashboard row if visible, or the related collapsed collection row if the dashboard is hidden.</li>
+        <li>In temp, clicking a collection badge in Ungrouped switches to Grouped, opens the relevant collection or collections, and highlights the matching dashboard rows with timed animation.</li>
+        <li>In temp, dragging an open collection carries its visible child dashboard rows as one bundle and uses an elevation state without rounded corners.</li>
+        <li>In temp, related hover and tooltip state is force-cleared on pointer move away, scroll, click, blur, and visibility change to avoid stuck hover rows.</li>
         <li>Libertex workspace dropdown opens but has no selection behavior yet.</li>
       </ul>
     </section>
@@ -134,9 +139,9 @@
     <section>
       <h2>Known Follow-ups</h2>
       <ul>
-        <li>Transition from Ungrouped to Grouped may still need product-design review against live Oboard motion patterns.</li>
-        <li>Ungrouped right-side columns should be checked visually against the latest Figma/user screenshot after any future column changes.</li>
-        <li>Drag and drop in grouped empty collections needs careful target affordance if that flow continues.</li>
+        <li>Approve the latest temp build before copying it into <code>dashboard-working.html</code>.</li>
+        <li>Collection bundle drag should be checked manually in a real browser after any grouped-row layout change.</li>
+        <li>Grouped empty collections still need careful target affordance if that flow continues.</li>
         <li>Collection assignment popover should eventually match the production selector exactly, including search/create behavior.</li>
       </ul>
     </section>
