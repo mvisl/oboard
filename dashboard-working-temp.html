@@ -569,7 +569,8 @@ img.ProseMirror-separator {
 
   .oboard-grouped-list {
     display: none;
-    width: 100%;
+    width: calc(100% + var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)));
+    margin-left: calc(-1 * var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)));
     margin-top: 30px;
     color: var(--dark-blue, #172b4d);
     font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
@@ -633,7 +634,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head {
     align-items: start;
     height: 32px;
-    padding: 2px 0 0;
+    padding: 2px 0 0 var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
     border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -701,14 +702,7 @@ img.ProseMirror-separator {
   .oboard-grouped-row-inner {
     height: var(--oboard-dashboard-row-height, 44px);
     padding-right: 0;
-  }
-
-  .oboard-grouped-collection .oboard-grouped-row-inner {
-    padding-left: 0;
-  }
-
-  .oboard-grouped-dashboard .oboard-grouped-row-inner {
-    padding-left: 0;
+    padding-left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
   }
 
   .oboard-grouped-collection.is-hover-demo,
@@ -891,19 +885,19 @@ img.ProseMirror-separator {
   .oboard-grouped-drag-handle {
     display: flex;
     position: absolute;
-    left: 4px;
+    left: calc((var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)) - 24px) / 2);
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
   }
 
-  .oboard-grouped-dashboard:not(:hover):not(:focus-within):not(.is-hover-demo) .oboard-grouped-drag-handle {
+  .oboard-grouped-row:not(:hover):not(:focus-within):not(.is-hover-demo) .oboard-grouped-drag-handle {
     opacity: 0;
   }
 
-  .oboard-grouped-dashboard:hover .oboard-grouped-drag-handle,
-  .oboard-grouped-dashboard:focus-within .oboard-grouped-drag-handle,
-  .oboard-grouped-dashboard.is-hover-demo .oboard-grouped-drag-handle {
+  .oboard-grouped-row:hover .oboard-grouped-drag-handle,
+  .oboard-grouped-row:focus-within .oboard-grouped-drag-handle,
+  .oboard-grouped-row.is-hover-demo .oboard-grouped-drag-handle {
     opacity: 1;
   }
 
@@ -1237,6 +1231,7 @@ img.ProseMirror-separator {
 
   .dp-MainContent-CustomDashboardList {
     --oboard-dashboard-reorder-gutter: 0px;
+    --oboard-dashboard-row-start-gutter: var(--page-left-padding, 32px);
     --oboard-dashboard-service-column: 52px;
     --oboard-dashboard-collections-column: 112px;
     --oboard-dashboard-owner-column: 208px;
@@ -7238,10 +7233,10 @@ img.ProseMirror-separator {
     groupedSortable?.destroy();
     groupedSortable = window.Sortable.create(host, {
       ...sortableBaseOptions(event => {
-        placeGroupedDashboardFromDrop(event);
+        placeGroupedRowFromDrop(event);
       }, event => event.item.getBoundingClientRect()),
-      draggable: '.oboard-grouped-dashboard',
-      filter: '.oboard-grouped-collection, .oboard-grouped-head',
+      draggable: '.oboard-grouped-row',
+      filter: '.oboard-grouped-head',
       preventOnFilter: false,
       onMove(event, originalEvent) {
         if (originalEvent?.clientX) groupedDragClientX = originalEvent.clientX;
@@ -7336,6 +7331,19 @@ img.ProseMirror-separator {
       }
     }
     normalizeGroupedDashboardCollections(host);
+  }
+
+  function placeGroupedRowFromDrop(event) {
+    const host = document.querySelector('.oboard-grouped-list');
+    const item = event?.item;
+    if (!host || !item) return;
+
+    if (item.classList.contains('oboard-grouped-collection')) {
+      reorderGroupedDashboardCollections(host);
+      return;
+    }
+
+    placeGroupedDashboardFromDrop(event);
   }
 
   function svgIcon(id, className = '') {
@@ -7577,6 +7585,7 @@ img.ProseMirror-separator {
   function groupedCollectionRow(collection) {
     return [
       '<div class="oboard-grouped-row oboard-grouped-collection' + (collection.hover ? ' is-hover-demo' : '') + '" data-collection="' + escapeHtml(collection.name) + '">',
+      '<button class="oboard-drag-handle oboard-grouped-drag-handle oboard-grouped-collection-drag-handle" type="button" aria-label="Reorder collection">' + svgIcon(DRAG) + '</button>',
       '<div class="oboard-grouped-row-inner">',
       '<div class="oboard-grouped-service-cell">',
       '<button class="oboard-grouped-chevrons" type="button" aria-label="Collapse collection">' + svgIcon('icon-arrow-down-simple-next') + '</button>',
