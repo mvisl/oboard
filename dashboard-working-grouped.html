@@ -235,34 +235,25 @@ img.ProseMirror-separator {
     box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.15), 0 2px 4px 0 rgba(0, 0, 0, 0.15);
   }
 
-  .dp-MainContent-CustomDashboardList {
-    --oboard-collections-col: clamp(224px, 25vw, 448px);
-    --oboard-owner-col: clamp(376px, 47vw, 856px);
-    --oboard-visibility-icon-col: 32px;
-    --oboard-visibility-text-col: 152px;
-    --oboard-visibility-col: calc(var(--oboard-visibility-icon-col) + var(--oboard-visibility-text-col));
-    --oboard-action-col: 24px;
-  }
-
   .tb-HeaderCell-collections,
   .tb-Cell-collections {
-    flex: 0 0 var(--oboard-collections-col) !important;
+    flex: 0 0 224px !important;
     min-width: 0;
   }
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-owner,
   .dp-MainContent-CustomDashboardList .tb-Cell-owner {
-    flex: 0 0 var(--oboard-owner-col) !important;
+    flex: 0 0 376px !important;
   }
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibilityIcon,
   .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
-    flex: 0 0 var(--oboard-visibility-icon-col) !important;
+    flex: 0 0 32px !important;
   }
 
   .dp-MainContent-CustomDashboardList .tb-HeaderCell-visibility,
   .dp-MainContent-CustomDashboardList .tb-Cell-visibility {
-    flex: 0 0 var(--oboard-visibility-text-col) !important;
+    flex: 0 0 152px !important;
   }
 
   .dp-MainContent-CustomDashboardList .tb-Cell-visibilityIcon {
@@ -274,7 +265,7 @@ img.ProseMirror-separator {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    width: var(--oboard-visibility-icon-col);
+    width: 32px;
     height: 24px;
   }
 
@@ -607,12 +598,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head,
   .oboard-grouped-row-inner {
     display: grid;
-    grid-template-columns:
-      minmax(0, 1fr)
-      var(--oboard-collections-col)
-      var(--oboard-owner-col)
-      var(--oboard-visibility-col)
-      var(--oboard-action-col);
+    grid-template-columns: minmax(320px, 1fr) 224px 376px 184px 24px;
     column-gap: 0;
     align-items: center;
     width: 100%;
@@ -621,7 +607,7 @@ img.ProseMirror-separator {
 
   .oboard-grouped-head {
     height: 33px;
-    padding: 0 0 8px 52px;
+    padding: 0 0 8px 120px;
     border-bottom: 1px solid var(--gray, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
     font-size: 12px;
@@ -633,7 +619,6 @@ img.ProseMirror-separator {
     display: flex;
     align-items: center;
     gap: 16px;
-    overflow: hidden;
     min-width: 0;
   }
 
@@ -669,15 +654,11 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-collection .oboard-grouped-row-inner {
-    padding-left: 52px;
+    padding-left: 76px;
   }
 
   .oboard-grouped-dashboard .oboard-grouped-row-inner {
-    padding-left: 52px;
-  }
-
-  .oboard-grouped-dashboard .oboard-grouped-name-cell {
-    padding-left: 40px;
+    padding-left: 116px;
   }
 
   .oboard-grouped-collection.is-hover-demo,
@@ -706,7 +687,7 @@ img.ProseMirror-separator {
   .oboard-grouped-head .oboard-grouped-visibility-cell,
   .oboard-grouped-dashboard .oboard-grouped-visibility-cell {
     display: grid;
-    grid-template-columns: var(--oboard-visibility-icon-col) minmax(0, var(--oboard-visibility-text-col));
+    grid-template-columns: 32px minmax(0, 152px);
     align-items: center;
   }
 
@@ -809,7 +790,7 @@ img.ProseMirror-separator {
     align-items: center;
     justify-content: flex-start;
     grid-column: 1;
-    width: var(--oboard-visibility-icon-col);
+    width: 32px;
     height: 24px;
   }
 
