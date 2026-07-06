@@ -536,13 +536,23 @@ img.ProseMirror-separator {
   .oboard-mode-transitioning .tb-Body,
   .oboard-mode-transitioning .atcb-Button,
   .oboard-mode-transitioning .tb-EndBlock {
-    opacity: 0.14;
-    transition: opacity 180ms ease;
+    display: none !important;
   }
 
   .oboard-mode-transitioning .oboard-grouped-list {
     display: block;
+    opacity: 1;
+  }
+
+  .oboard-mode-transitioning .oboard-grouped-head,
+  .oboard-mode-transitioning .oboard-grouped-collection {
     opacity: 0;
+    transform: translateX(24px);
+    will-change: opacity, transform;
+  }
+
+  .oboard-mode-transitioning .oboard-grouped-dashboard {
+    visibility: hidden;
   }
 
   .oboard-mode-transition-overlay {
@@ -557,9 +567,9 @@ img.ProseMirror-separator {
     box-sizing: border-box;
     overflow: hidden;
     background: var(--white-color, #fff);
-    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+    box-shadow: none;
     transform-origin: left top;
-    will-change: transform, opacity;
+    will-change: transform, width, height, opacity;
   }
 
   .oboard-grouped-head,
@@ -1729,6 +1739,7 @@ img.ProseMirror-separator {
     gap: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
 
   .oboard-nav-section {
@@ -1757,23 +1768,29 @@ img.ProseMirror-separator {
 
   .oboard-nav-section-primary {
     margin-top: -16px;
-    height: var(--oboard-top-section-height, auto);
-    min-height: 0;
+    height: var(--oboard-top-section-height, var(--oboard-primary-section-min-height, 280px));
+    min-height: var(--oboard-primary-section-min-height, 280px);
     max-height: 380px;
     flex: 0 0 auto;
     padding-bottom: 12px;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .oboard-nav-section-primary > .amnl-List {
     height: auto;
     max-height: none;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .oboard-nav-section-favorites {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
+    max-height: 100%;
     min-height: 118px;
+    overflow: hidden;
   }
 
   .oboard-nav-section .amnl-List_Item > .amni-Item,
@@ -1782,18 +1799,27 @@ img.ProseMirror-separator {
   }
 
   .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
-    display: block;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
     list-style: none;
+    min-height: 0;
+    height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
   }
 
   .oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item {
+    flex: 0 0 auto;
     margin: 0;
   }
 
   .oboard-favorites-list.amnl-List-children {
+    flex: 1 1 auto;
+    min-height: 0;
     margin-top: 8px;
+    overflow: hidden;
   }
 
   .oboard-favorites-list .amni-Item {
@@ -1865,7 +1891,8 @@ img.ProseMirror-separator {
   }
 
   .oboard-sidebar-sectioned .oboard-nav-section-favorites .amnl-List-children {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 
   .oboard-nav-section-primary .oboard-prototype-active {
@@ -5914,6 +5941,27 @@ img.ProseMirror-separator {
     let startMinHeight = 0;
     let dragging = false;
 
+    function getPrimaryMinHeight() {
+      const listRect = rootList.getBoundingClientRect();
+      const childBottom = Array.from(rootList.children).reduce((bottom, child) => {
+        return Math.max(bottom, child.getBoundingClientRect().bottom - listRect.top);
+      }, 0);
+      return Math.ceil(Math.max(rootList.scrollHeight, childBottom) + 20);
+    }
+
+    function normalizePrimaryHeight() {
+      const minHeight = getPrimaryMinHeight();
+      nav.style.setProperty('--oboard-primary-section-min-height', minHeight + 'px');
+      const savedHeight = parseInt(window.localStorage.getItem('oboard-sidebar-primary-height'), 10);
+      const currentHeight = parseInt(getComputedStyle(primarySection).height, 10);
+      const requestedHeight = Number.isFinite(savedHeight) ? savedHeight : currentHeight;
+      const normalizedHeight = Math.max(minHeight, Math.min(380, requestedHeight));
+      nav.style.setProperty('--oboard-top-section-height', normalizedHeight + 'px');
+      if (Number.isFinite(savedHeight) && normalizedHeight !== savedHeight) {
+        window.localStorage.setItem('oboard-sidebar-primary-height', String(normalizedHeight));
+      }
+    }
+
     function onMove(event) {
       if (!dragging) return;
       const nextHeight = Math.max(startMinHeight, Math.min(380, startHeight + event.clientY - startY));
@@ -5934,12 +5982,17 @@ img.ProseMirror-separator {
       dragging = true;
       startY = event.clientY;
       startHeight = primarySection.getBoundingClientRect().height;
-      startMinHeight = 96;
+      startMinHeight = getPrimaryMinHeight();
+      nav.style.setProperty('--oboard-primary-section-min-height', startMinHeight + 'px');
       divider.classList.add('oboard-section-resizer-active');
       document.addEventListener('pointermove', onMove);
       document.addEventListener('pointerup', onUp);
       event.preventDefault();
     });
+
+    normalizePrimaryHeight();
+    requestAnimationFrame(normalizePrimaryHeight);
+    window.addEventListener('resize', normalizePrimaryHeight);
 
     return { nav, dashboardChildren: originalFavorites };
   }
@@ -7455,10 +7508,15 @@ img.ProseMirror-separator {
     return host;
   }
 
-  function transitionCloneForRow(item) {
-    const rect = item.row.getBoundingClientRect();
+  const MODE_TRANSITION_DURATION = 520;
+  const MODE_BRANCH_DURATION = 360;
+  const MODE_TRANSITION_EASING = 'cubic-bezier(0.2, 0, 0, 1)';
+
+  function transitionCloneForRow(item, rect) {
     const clone = item.row.cloneNode(true);
     clone.classList.add('oboard-mode-transition-row');
+    clone.style.margin = '0';
+    clone.style.pointerEvents = 'none';
     clone.style.left = rect.left + 'px';
     clone.style.top = rect.top + 'px';
     clone.style.width = rect.width + 'px';
@@ -7473,57 +7531,150 @@ img.ProseMirror-separator {
     );
   }
 
+  function primaryCollectionForDashboard(item) {
+    const memberships = dashboardCollections.get(item.name) || [];
+    const primaryMembership = groupedCollectionDefinitions.find(collection => memberships.includes(collection.name))?.name || memberships[0];
+    return { memberships, primaryMembership };
+  }
+
+  function groupedTargetsForDashboard(name, memberships) {
+    return groupedCollectionDefinitions
+      .filter(collection => memberships.includes(collection.name))
+      .map(collection => ({
+        collectionName: collection.name,
+        node: groupedTargetForDashboard(name, collection.name)
+      }))
+      .filter(target => target.node);
+  }
+
+  function animateGroupedScaffold(host, delayBase = 0) {
+    const items = [
+      { node: host.querySelector('.oboard-grouped-head'), delay: delayBase, duration: 260 },
+      ...Array.from(host.querySelectorAll('.oboard-grouped-collection')).map((node, index) => ({
+        node,
+        delay: delayBase + 80 + index * 42,
+        duration: 360
+      }))
+    ].filter(item => item.node);
+
+    return items.map(item => item.node.animate([
+      { opacity: 0, transform: 'translateX(24px)' },
+      { opacity: 1, transform: 'translateX(0)' }
+    ], {
+      duration: item.duration,
+      delay: item.delay,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {}));
+  }
+
+  function animateCloneToTarget(clone, sourceRect, targetRect, options = {}) {
+    const x = targetRect.left - sourceRect.left;
+    const y = targetRect.top - sourceRect.top;
+    return clone.animate([
+      {
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0)',
+        width: sourceRect.width + 'px',
+        height: sourceRect.height + 'px'
+      },
+      {
+        opacity: 1,
+        transform: 'translate3d(' + x + 'px, ' + y + 'px, 0)',
+        width: targetRect.width + 'px',
+        height: targetRect.height + 'px'
+      }
+    ], {
+      duration: options.duration || MODE_TRANSITION_DURATION,
+      delay: options.delay || 0,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {});
+  }
+
+  function settleCloneAtRect(clone, rect) {
+    clone.getAnimations().forEach(animation => animation.cancel());
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    clone.style.opacity = '1';
+    clone.style.transform = 'none';
+  }
+
+  function animateCloneOut(clone) {
+    return clone.animate([
+      { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+      { opacity: 0, transform: 'translate3d(0, 12px, 0)' }
+    ], {
+      duration: 260,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {});
+  }
+
   function animateUngroupedToGrouped() {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
     if (!page || page.classList.contains('oboard-grouped-mode')) return Promise.resolve();
     const host = initGroupedList();
     if (!host) return Promise.resolve();
 
+    const sourceStates = rowOrder.map(item => ({
+      item,
+      rect: item.row.getBoundingClientRect(),
+      ...primaryCollectionForDashboard(item)
+    }));
+
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+      page.classList.add('oboard-grouped-mode');
+      return Promise.resolve();
+    }
+
     page.classList.add('oboard-mode-transitioning');
+    host.getBoundingClientRect();
+
     const overlay = document.createElement('div');
     overlay.className = 'oboard-mode-transition-overlay';
     document.body.appendChild(overlay);
 
-    const animations = rowOrder.map(item => {
-      const memberships = dashboardCollections.get(item.name) || [];
-      const primaryMembership = groupedCollectionDefinitions.find(collection => memberships.includes(collection.name))?.name || memberships[0];
-      const target = groupedTargetForDashboard(item.name, primaryMembership);
-      const { clone, rect } = transitionCloneForRow(item);
+    const settledClones = [];
+    const rowAnimations = sourceStates.map(state => {
+      const targets = groupedTargetsForDashboard(state.item.name, state.memberships);
+      const target = targets[0]?.node || groupedTargetForDashboard(state.item.name, state.primaryMembership);
+      const { clone, rect } = transitionCloneForRow(state.item, state.rect);
       overlay.appendChild(clone);
-      if (!target || !memberships.length) {
-        return clone.animate([
-          { opacity: 1, transform: 'translateY(0)' },
-          { opacity: 0, transform: 'translateY(10px)' }
-        ], {
-          duration: 420,
-          easing: 'cubic-bezier(0.2, 0, 0, 1)',
-          fill: 'forwards'
-        }).finished.catch(() => {});
+      if (!target || !state.memberships.length) {
+        return animateCloneOut(clone);
       }
       const targetRect = target.getBoundingClientRect();
-      clone.style.left = targetRect.left + 'px';
-      clone.style.width = targetRect.width + 'px';
-      return clone.animate([
-        { opacity: 1, transform: 'translateY(' + (rect.top - targetRect.top) + 'px)' },
-        {
-          opacity: 1,
-          transform: 'translateY(0)'
-        }
-      ], {
-        duration: 560,
-        easing: 'cubic-bezier(0.2, 0, 0, 1)',
-        fill: 'forwards'
-      }).finished.catch(() => {});
+      return animateCloneToTarget(clone, rect, targetRect).then(() => {
+        settleCloneAtRect(clone, targetRect);
+        settledClones.push({ state, clone, primaryRect: targetRect, targets: targets.slice(1) });
+      });
     });
 
-    return Promise.all(animations).then(() => {
+    return Promise.all(rowAnimations).then(() => {
+      const branchAnimations = settledClones.flatMap(entry => entry.targets.map((target, index) => {
+        const targetRect = target.node.getBoundingClientRect();
+        const duplicate = entry.state.item.row.cloneNode(true);
+        duplicate.classList.add('oboard-mode-transition-row');
+        duplicate.style.margin = '0';
+        duplicate.style.pointerEvents = 'none';
+        duplicate.style.left = entry.primaryRect.left + 'px';
+        duplicate.style.top = entry.primaryRect.top + 'px';
+        duplicate.style.width = entry.primaryRect.width + 'px';
+        duplicate.style.height = entry.primaryRect.height + 'px';
+        overlay.appendChild(duplicate);
+        return animateCloneToTarget(duplicate, entry.primaryRect, targetRect, {
+          duration: MODE_BRANCH_DURATION,
+          delay: index * 48
+        }).then(() => settleCloneAtRect(duplicate, targetRect));
+      }));
+      return Promise.all(branchAnimations);
+    }).then(() => Promise.all(animateGroupedScaffold(host, 40))).then(() => {
       page.classList.add('oboard-grouped-mode');
       page.classList.remove('oboard-mode-transitioning');
       overlay.remove();
-      host.animate([{ opacity: 0 }, { opacity: 1 }], {
-        duration: 160,
-        easing: 'ease-out'
-      });
     });
   }
 
