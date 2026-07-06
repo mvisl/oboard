@@ -217,8 +217,8 @@ img.ProseMirror-separator {
     height: 24px;
     min-width: max-content;
     box-sizing: border-box;
-    gap: 4px;
-    padding: 0 12px;
+    gap: 0;
+    padding: 0 8px 0 0;
     border: 0;
     border-radius: 3px;
     background: transparent;
@@ -616,9 +616,9 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-head {
-    height: 33px;
-    padding: 0 0 8px;
-    border-bottom: 1px solid var(--gray, #dfe1e6);
+    height: 32px;
+    padding: 0;
+    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
     color: var(--grey-semi-medium, #6b778c);
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-size: 12px;
@@ -637,20 +637,41 @@ img.ProseMirror-separator {
   .oboard-grouped-head-label {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+    min-width: 0;
     font-weight: 700;
   }
 
-  .oboard-grouped-head-favorite .ai-Icon {
+  .oboard-grouped-head .cdth-HeaderCell {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    height: 24px;
+    color: var(--grey-semi-medium, #6b778c);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+  }
+
+  .oboard-grouped-head .cdth-HeaderCell span {
+    min-width: 0;
+  }
+
+  .oboard-grouped-head-favorite .ai-Icon:first-child {
     width: 24px;
     height: 24px;
     color: var(--grey-semi-medium, #6b778c);
   }
 
-  .oboard-grouped-sort {
-    color: var(--gray, #dfe1e6);
-    font-size: 18px;
-    line-height: 16px;
+  .oboard-grouped-head .oboard-grouped-sort-icon {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .oboard-grouped-head .cdth-HeaderCell_DefaultStateSorting {
+    color: var(--grey-2-next, #dfe1e6);
   }
 
   .oboard-grouped-row {
@@ -1197,10 +1218,10 @@ img.ProseMirror-separator {
   .dp-MainContent-CustomDashboardList {
     --oboard-dashboard-reorder-gutter: 0px;
     --oboard-dashboard-service-column: 52px;
-    --oboard-dashboard-collections-column: 224px;
-    --oboard-dashboard-owner-column: 376px;
+    --oboard-dashboard-collections-column: 112px;
+    --oboard-dashboard-owner-column: 208px;
     --oboard-dashboard-visibility-icon-column: 32px;
-    --oboard-dashboard-visibility-text-column: 152px;
+    --oboard-dashboard-visibility-text-column: 128px;
     --oboard-dashboard-action-column: 24px;
     --oboard-dashboard-visibility-column: calc(var(--oboard-dashboard-visibility-icon-column) + var(--oboard-dashboard-visibility-text-column));
     --oboard-dashboard-row-height: 44px;
@@ -7276,6 +7297,19 @@ img.ProseMirror-separator {
     return '<svg data-target-id="' + id + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon ' + className + '"><use xlink:href="#' + id + '" href="#' + id + '"></use></svg>';
   }
 
+  function tableHeaderSortIcon(id, className = '') {
+    return svgIcon(id, 'oboard-grouped-sort-icon ' + className);
+  }
+
+  function groupedHeaderLabel(label, sorted = false) {
+    return [
+      '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-label">',
+      '<span>' + label + '</span>',
+      tableHeaderSortIcon(sorted ? 'icon-arrow-up-next' : 'icon-sort-two-ways-next', sorted ? '' : 'cdth-HeaderCell_DefaultStateSorting'),
+      '</div>'
+    ].join('');
+  }
+
   function layersIcon(className = '') {
     return [
       '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="svg-icon ai-Icon oboard-dashboard-mode-layers-icon ' + className + '">',
@@ -7473,11 +7507,11 @@ img.ProseMirror-separator {
     const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
-      '<div class="oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '<span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Name</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Collections</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-head-label"><span>Owner</span><span class="oboard-grouped-sort">↕</span></div>',
-      '<div class="oboard-grouped-visibility-cell"><span class="oboard-grouped-head-label"><span>Visibility</span><span class="oboard-grouped-sort">↕</span></span></div>',
+      '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-favorite">' + svgIcon(EMPTY) + tableHeaderSortIcon('icon-sort-two-ways-next', 'cdth-HeaderCell_DefaultStateSorting') + '</div>',
+      groupedHeaderLabel('Name', true),
+      groupedHeaderLabel('Collections'),
+      groupedHeaderLabel('Owner'),
+      '<div class="oboard-grouped-visibility-cell">' + groupedHeaderLabel('Visibility') + '</div>',
       '<div></div>',
       '</div>',
       groupedCollections.map(collection => groupedCollectionRow(collection) + collection.items.map(item => groupedDashboardRow(item, collection.name)).join('')).join('')
