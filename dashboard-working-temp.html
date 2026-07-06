@@ -977,6 +977,11 @@ img.ProseMirror-separator {
     opacity: 0;
   }
 
+  .oboard-grouped-dashboard .oboard-grouped-more {
+    justify-self: start;
+    transform: translateX(-24px);
+  }
+
   .oboard-grouped-dashboard:hover .oboard-grouped-more,
   .oboard-grouped-dashboard:focus-within .oboard-grouped-more,
   .oboard-grouped-dashboard.is-hover-demo .oboard-grouped-more {
@@ -1356,7 +1361,14 @@ img.ProseMirror-separator {
     color: var(--grey-1-next, #b5bbc5);
     cursor: grab;
     opacity: 0;
+    overflow: visible;
     transition: opacity 120ms ease;
+  }
+
+  .oboard-drag-handle > .ai-Icon[data-target-id="icon-drag-next"] {
+    overflow: visible;
+    transform: scale(1.35);
+    transform-origin: center;
   }
 
   .oboard-drag-handle:active {
@@ -2048,6 +2060,15 @@ img.ProseMirror-separator {
     border-radius: 6px;
     box-sizing: border-box;
     color: var(--dark-2, #42526e);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  .oboard-favorites-title-row > .amni-Item .amni-Item_Text {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
   }
 
   .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
@@ -2065,7 +2086,7 @@ img.ProseMirror-separator {
   .oboard-favorites-list.amnl-List-children {
     flex: 1 1 auto;
     min-height: 0;
-    margin-top: 8px;
+    margin-top: 4px;
     overflow: hidden;
   }
 
@@ -2089,14 +2110,23 @@ img.ProseMirror-separator {
     height: 24px;
     transform: translateY(-50%);
     opacity: 1;
+    overflow: visible;
   }
 
-  .oboard-favorites-drag-handle .oboard-favorites-section-icon,
-  .oboard-favorites-drag-handle .oboard-favorites-drag-icon {
+  .oboard-favorites-drag-handle .oboard-favorites-section-icon {
     position: absolute;
     inset: 4px;
     width: 16px;
     height: 16px;
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-favorites-drag-handle .oboard-favorites-drag-icon {
+    position: absolute;
+    inset: 0;
+    width: 24px;
+    height: 24px;
+    overflow: visible;
     transition: opacity 120ms ease;
   }
 
@@ -6402,7 +6432,7 @@ img.ProseMirror-separator {
     const handle = createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite item');
     handle.innerHTML = [
       '<svg data-target-id="' + iconId + '" height="16" width="16" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-section-icon"><use xlink:href="#' + iconId + '" href="#' + iconId + '"></use></svg>',
-      '<svg data-target-id="' + DRAG + '" height="16" width="16" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
+      '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
     ].join('');
     return handle;
   }
@@ -7160,8 +7190,23 @@ img.ProseMirror-separator {
   let previewTimer = null;
   let previewSource = null;
 
-  function previewHtml(name) {
+  function previewHtml(name, type = 'dashboard') {
     const safeName = escapeHtml(name);
+    if (type === 'objective') {
+      return [
+        '<div class="oboard-dashboard-preview-path">Objectives <span>/</span> <strong>' + safeName + '</strong></div>',
+        '<div class="oboard-dashboard-preview-title">' + safeName + '</div>',
+        '<div class="oboard-dashboard-preview-module">',
+        '<div class="oboard-dashboard-preview-module-header"><span>Alignment view</span><div class="oboard-dashboard-preview-segment"><span class="is-active">List</span><span>Progress</span><span>Roadmap</span></div></div>',
+        '<div class="oboard-dashboard-preview-grid">',
+        '<div class="oboard-dashboard-preview-cell is-head">Objectives and Metrics</div><div class="oboard-dashboard-preview-cell is-head">Current / Target</div><div class="oboard-dashboard-preview-cell is-head">Progress</div><div class="oboard-dashboard-preview-cell is-head">Status</div>',
+        '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">Dp</span>LIB-60 Test Dep</div><div class="oboard-dashboard-preview-cell">&ndash; / &ge; 100</div><div class="oboard-dashboard-preview-cell">0%</div><div class="oboard-dashboard-preview-cell">NOT STARTED</div>',
+        '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KPI</span>LIB-59 test KPI</div><div class="oboard-dashboard-preview-cell">0 / 100</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">12%</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">AT RISK</div>',
+        '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KR</span>LIB-12 Reduce infrastructure costs</div><div class="oboard-dashboard-preview-cell">25 / 100</div><div class="oboard-dashboard-preview-cell">25%</div><div class="oboard-dashboard-preview-cell">BEHIND</div>',
+        '</div>',
+        '</div>'
+      ].join('');
+    }
     return [
       '<div class="oboard-dashboard-preview-path">Custom dashboards <span>/</span> <strong>' + safeName + '</strong></div>',
       '<div class="oboard-dashboard-preview-title">' + safeName + '</div>',
@@ -7213,7 +7258,7 @@ img.ProseMirror-separator {
 
   function showPreview(item) {
     previewSource = item;
-    preview.innerHTML = previewHtml(item.name);
+    preview.innerHTML = previewHtml(item.name, item.type || 'dashboard');
     preview.classList.toggle('oboard-dashboard-preview-small', item.mode === 'favorite');
     positionPreview(item);
     preview.classList.add('oboard-dashboard-preview-visible');
@@ -7246,13 +7291,13 @@ img.ProseMirror-separator {
     if (!dashboardChildren) return;
     dashboardChildren.querySelectorAll(':scope > .amnl-List_Item').forEach(item => {
       if (item.dataset.oboardPreviewReady === 'true') return;
-      if (item.dataset.favoriteType !== 'dashboard') return;
       const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
       if (!name) return;
+      const type = item.dataset.favoriteType || 'dashboard';
       item.dataset.oboardPreviewReady = 'true';
       item.addEventListener('mouseenter', () => {
         window.clearTimeout(previewTimer);
-        previewTimer = window.setTimeout(() => showPreview({ name, row: item, sourceElement: item, mode: 'favorite' }), 1000);
+        previewTimer = window.setTimeout(() => showPreview({ name, row: item, sourceElement: item, mode: 'favorite', type }), 1000);
       });
       item.addEventListener('mouseleave', hidePreview);
       item.addEventListener('pointerdown', event => {
@@ -7523,6 +7568,7 @@ img.ProseMirror-separator {
     const groupedSortableOptions = sortableBaseOptions(event => {
       placeGroupedRowFromDrop(event);
     }, groupedSortableLockRect);
+    const baseGroupedOnChoose = groupedSortableOptions.onChoose;
     const baseGroupedOnStart = groupedSortableOptions.onStart;
     const baseGroupedOnEnd = groupedSortableOptions.onEnd;
     const baseGroupedOnClone = groupedSortableOptions.onClone;
@@ -7531,8 +7577,11 @@ img.ProseMirror-separator {
       draggable: '.oboard-grouped-row',
       filter: '.oboard-grouped-head',
       preventOnFilter: false,
-      onStart(event) {
+      onChoose(event) {
         prepareGroupedCollectionBundleDrag(event.item);
+        baseGroupedOnChoose(event);
+      },
+      onStart(event) {
         baseGroupedOnStart(event);
       },
       onClone(event) {
@@ -8583,14 +8632,14 @@ img.ProseMirror-separator {
       home: { selector: '.amnl-List_Item-homePage > .amni-Item', url: '#/workspaces/23574', html: homeViewTemplate },
       checkins: { selector: '.amnl-List_Item-checkinsFeed > .amni-Item', url: '#/check-ins/feed', html: checkinsViewTemplate },
       objectives: { selector: '.amnl-List_Item-objectives > .amni-Item', url: '#/workspaces/23574/objectives/alignment/table?filterPreset=myGroup', html: objectivesViewTemplate },
-      dashboard: { selector: '.oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item', url: '#/workspaces/23574/dashboard/custom-dashboard/list?ownerIds=[0]&sortBy=%22A-Z%22&sortField=%22name%22' }
+      dashboard: { selector: '.oboard-nav-section-primary .amnl-List_Item-dashboard > .amni-Item, .amnl-List_Item-dashboard > .amni-Item', url: '#/workspaces/23574/dashboard/custom-dashboard/list?ownerIds=[0]&sortBy=%22A-Z%22&sortField=%22name%22' }
     };
 
     function setActive(pageName) {
-      Object.values(pages).forEach(page => {
-        const link = document.querySelector(page.selector);
-        link?.classList.remove('amni-Item-exact-active');
-        link?.classList.remove('oboard-prototype-active');
+      const nav = document.querySelector('.amn-Nav.oboard-sidebar-sectioned') || document;
+      nav.querySelectorAll('.amni-Item-exact-active, .oboard-prototype-active').forEach(link => {
+        link.classList.remove('amni-Item-exact-active');
+        link.classList.remove('oboard-prototype-active');
       });
       const activeLink = document.querySelector(pages[pageName]?.selector);
       if (!activeLink) return;
