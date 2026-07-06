@@ -707,7 +707,8 @@ img.ProseMirror-separator {
     0% {
       background-color: transparent;
     }
-    50% {
+    33.333%,
+    66.666% {
       background-color: var(--surface-subtle, #f4f7fc);
     }
     100% {
@@ -757,11 +758,12 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-dashboard.is-navigation-highlight {
-    animation: oboardGroupedNavigationHighlight 600ms ease-in-out both;
+    animation: oboardGroupedNavigationHighlight 900ms ease-in-out both;
   }
 
   .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):hover,
-  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):focus-within {
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):focus-within,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-row:not(.is-navigation-highlight):hover {
     background: transparent;
   }
 
@@ -930,6 +932,11 @@ img.ProseMirror-separator {
     opacity: 1;
   }
 
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-dashboard:hover .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"],
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-dashboard:hover .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 0;
+  }
+
   .oboard-grouped-drag-handle {
     display: flex;
     position: absolute;
@@ -950,7 +957,8 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:hover .oboard-grouped-drag-handle,
-  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:focus-within .oboard-grouped-drag-handle {
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:focus-within .oboard-grouped-drag-handle,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-row:hover .oboard-grouped-drag-handle {
     opacity: 0;
   }
 
@@ -973,6 +981,11 @@ img.ProseMirror-separator {
   .oboard-grouped-dashboard:focus-within .oboard-grouped-more,
   .oboard-grouped-dashboard.is-hover-demo .oboard-grouped-more {
     opacity: 1;
+  }
+
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-dashboard:hover .oboard-grouped-more,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-dashboard:hover .oboard-grouped-more {
+    opacity: 0;
   }
 
   .oboard-grouped-more .ai-Icon {
@@ -1000,7 +1013,8 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-list.is-navigation-opening .oboard-grouped-collection:hover .oboard-grouped-collection-actions,
-  .oboard-grouped-list.is-navigation-opening .oboard-grouped-collection:focus-within .oboard-grouped-collection-actions {
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-collection:focus-within .oboard-grouped-collection-actions,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-collection:hover .oboard-grouped-collection-actions {
     opacity: 0;
     pointer-events: none;
   }
@@ -6250,8 +6264,9 @@ img.ProseMirror-separator {
   let activeDashboardCollectionMenu = null;
   let activeDashboardCollectionQuery = '';
   let groupedNavigationHighlightTimer = null;
+  let groupedNavigationHoverUnlock = null;
   const GROUPED_NAVIGATION_OPEN_MS = 300;
-  const GROUPED_NAVIGATION_HIGHLIGHT_MS = 600;
+  const GROUPED_NAVIGATION_HIGHLIGHT_MS = 900;
   const groupedCopyLinkResetTimers = new WeakMap();
   let groupedDragClientX = 0;
   let groupedDragClientY = 0;
@@ -7589,8 +7604,35 @@ img.ProseMirror-separator {
   function clearGroupedNavigationHighlight(host) {
     window.clearTimeout(groupedNavigationHighlightTimer);
     groupedNavigationHighlightTimer = null;
-    host?.classList.remove('is-navigation-opening');
+    if (groupedNavigationHoverUnlock) {
+      window.removeEventListener('pointermove', groupedNavigationHoverUnlock, true);
+      window.removeEventListener('mousemove', groupedNavigationHoverUnlock, true);
+      groupedNavigationHoverUnlock = null;
+    }
+    host?.classList.remove('is-navigation-opening', 'is-navigation-hover-locked');
     host?.querySelectorAll('.is-navigation-highlight').forEach(row => row.classList.remove('is-navigation-highlight'));
+  }
+
+  function releaseGroupedNavigationHoverLock(host) {
+    if (groupedNavigationHoverUnlock) {
+      window.removeEventListener('pointermove', groupedNavigationHoverUnlock, true);
+      window.removeEventListener('mousemove', groupedNavigationHoverUnlock, true);
+      groupedNavigationHoverUnlock = null;
+    }
+    host?.classList.remove('is-navigation-hover-locked');
+  }
+
+  function holdGroupedNavigationHoverUntilPointerMove(host) {
+    if (!host) return;
+    host.classList.add('is-navigation-hover-locked');
+    if (groupedNavigationHoverUnlock) {
+      window.removeEventListener('pointermove', groupedNavigationHoverUnlock, true);
+      window.removeEventListener('mousemove', groupedNavigationHoverUnlock, true);
+    }
+
+    groupedNavigationHoverUnlock = () => releaseGroupedNavigationHoverLock(host);
+    window.addEventListener('pointermove', groupedNavigationHoverUnlock, true);
+    window.addEventListener('mousemove', groupedNavigationHoverUnlock, true);
   }
 
   function setGroupedCollectionCollapsed(host, collectionRow, collapsed) {
@@ -7664,6 +7706,7 @@ img.ProseMirror-separator {
     groupedNavigationHighlightTimer = window.setTimeout(() => {
       rows.forEach(row => row.classList.remove('is-navigation-highlight'));
       host?.classList.remove('is-navigation-opening');
+      holdGroupedNavigationHoverUntilPointerMove(host);
       groupedNavigationHighlightTimer = null;
     }, GROUPED_NAVIGATION_HIGHLIGHT_MS);
   }
@@ -8088,6 +8131,7 @@ img.ProseMirror-separator {
     if (grouped) {
       hidePreview();
       closeDashboardCollectionPopover();
+      releaseGroupedNavigationHoverLock(document.querySelector('.oboard-grouped-list'));
       if (options.animate) {
         animateUngroupedToGrouped();
         return;
@@ -8096,6 +8140,7 @@ img.ProseMirror-separator {
       page?.classList.add('oboard-grouped-mode');
     } else {
       closeCollectionMenu();
+      clearGroupedNavigationHighlight(document.querySelector('.oboard-grouped-list'));
       page?.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
       initDashboardCollectionColumn();
     }
