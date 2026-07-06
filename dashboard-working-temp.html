@@ -695,9 +695,11 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-collection.is-hover-demo,
+  .oboard-grouped-collection.is-related-hover,
   .oboard-grouped-collection:hover,
   .oboard-grouped-collection:focus-within,
   .oboard-grouped-dashboard.is-hover-demo,
+  .oboard-grouped-dashboard.is-related-hover,
   .oboard-grouped-dashboard:hover,
   .oboard-grouped-dashboard:focus-within {
     background: var(--surface-subtle, #f4f7fc);
@@ -7385,13 +7387,67 @@ img.ProseMirror-separator {
 
   function collectionBadge(item) {
     if (!item.badge) return '';
+    const relatedCollections = (item.badgeTitle || '').split(', ').filter(Boolean);
     return [
-      '<span class="oboard-grouped-collection-badge" tabindex="0">',
+      '<span class="oboard-grouped-collection-badge" tabindex="0" data-dashboard-name="' + escapeHtml(item.name) + '" data-related-collections="' + escapeHtml(relatedCollections.map(encodeURIComponent).join('|')) + '">',
       layersIcon(),
       '<span>' + escapeHtml(item.badge) + '</span>',
       '<span class="oboard-grouped-tooltip">' + escapeHtml(item.badgeTitle || 'Other collections') + '</span>',
       '</span>'
     ].join('');
+  }
+
+  function clearGroupedRelatedHover(host) {
+    host?.querySelectorAll('.is-related-hover').forEach(row => row.classList.remove('is-related-hover'));
+  }
+
+  function applyGroupedRelatedHover(badge) {
+    const host = badge?.closest('.oboard-grouped-list');
+    const currentRow = badge?.closest('.oboard-grouped-dashboard');
+    if (!host || !currentRow) return;
+
+    clearGroupedRelatedHover(host);
+    const dashboardName = badge.dataset.dashboardName || currentRow.dataset.dashboardName || '';
+    const relatedCollections = (badge.dataset.relatedCollections || '')
+      .split('|')
+      .filter(Boolean)
+      .map(value => {
+        try {
+          return decodeURIComponent(value);
+        } catch (error) {
+          return value;
+        }
+      });
+
+    relatedCollections.forEach(collectionName => {
+      const dashboardRow = host.querySelector(
+        '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
+      );
+      if (dashboardRow && !dashboardRow.hidden) {
+        dashboardRow.classList.add('is-related-hover');
+        return;
+      }
+
+      const collectionRow = host.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collectionName) + '"]');
+      collectionRow?.classList.add('is-related-hover');
+    });
+  }
+
+  function bindGroupedRelatedHoverBadges(host) {
+    host.querySelectorAll('.oboard-grouped-collection-badge').forEach(badge => {
+      const clearIfLeavingBadge = event => {
+        if (badge.contains(event.relatedTarget)) return;
+        clearGroupedRelatedHover(host);
+      };
+      badge.addEventListener('pointerenter', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('mouseenter', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('mouseover', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('pointerleave', clearIfLeavingBadge);
+      badge.addEventListener('mouseleave', clearIfLeavingBadge);
+      badge.addEventListener('mouseout', clearIfLeavingBadge);
+      badge.addEventListener('focus', () => applyGroupedRelatedHover(badge));
+      badge.addEventListener('blur', () => clearGroupedRelatedHover(host));
+    });
   }
 
   function groupedCollectionActions(collection) {
@@ -7541,6 +7597,7 @@ img.ProseMirror-separator {
         });
       });
     });
+    bindGroupedRelatedHoverBadges(host);
     if (!groupedListEventsBound) {
       groupedListEventsBound = true;
       host.addEventListener('click', event => {
