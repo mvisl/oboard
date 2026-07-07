@@ -571,12 +571,25 @@ img.ProseMirror-separator {
 
   .oboard-grouped-list {
     display: none;
+    position: relative;
     width: calc(100% + var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)) + var(--page-right-padding, 32px));
     margin-left: calc(-1 * var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)));
     margin-top: 30px;
     color: var(--dark-blue, #172b4d);
     font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
     opacity: 1;
+  }
+
+  .oboard-grouped-list::before {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    top: 32px;
+    z-index: 20;
+    height: 1px;
+    background: var(--grey-2-next, #dfe1e6);
+    pointer-events: none;
   }
 
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-grouped-list {
@@ -751,6 +764,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-head::after {
+    z-index: 21;
     background: var(--grey-2-next, #dfe1e6);
   }
 
@@ -7203,22 +7217,24 @@ img.ProseMirror-separator {
     if (!sourceName || !originalEvent?.clientY) return;
     const sourceType = favoriteTypeForName(sourceName);
     const otherType = sourceType === 'objective' ? 'dashboard' : 'objective';
-    const sourceBounds = favoriteSectionBounds(sourceType);
     const otherBounds = favoriteSectionBounds(otherType);
-    if (!sourceBounds || !otherBounds) {
+    if (!otherBounds) {
       clearFavoriteSectionSwitchTimer();
       return;
     }
 
     const y = originalEvent.clientY;
-    if (y < otherBounds.top) {
+    const otherMiddle = otherBounds.top + ((otherBounds.bottom - otherBounds.top) / 2);
+    if (y < otherBounds.top || y < otherMiddle) {
       scheduleFavoriteSectionSwitch(sourceName, [sourceType, otherType]);
       return;
     }
-    if (y > otherBounds.bottom) {
+
+    if (y > otherBounds.bottom || y >= otherMiddle) {
       scheduleFavoriteSectionSwitch(sourceName, [otherType, sourceType]);
       return;
     }
+
     clearFavoriteSectionSwitchTimer();
   }
 
@@ -7742,6 +7758,7 @@ img.ProseMirror-separator {
 
   let previewTimer = null;
   let previewSource = null;
+  let previewPointerDown = false;
 
   function previewHtml(name, type = 'dashboard') {
     const safeName = escapeHtml(name);
@@ -7810,6 +7827,7 @@ img.ProseMirror-separator {
   }
 
   function showPreview(item) {
+    if (previewPointerDown || document.body.classList.contains('oboard-reordering')) return;
     previewSource = item;
     preview.innerHTML = previewHtml(item.name, item.type || 'dashboard');
     preview.classList.toggle('oboard-dashboard-preview-small', item.mode === 'favorite');
@@ -7825,6 +7843,13 @@ img.ProseMirror-separator {
     preview.classList.remove('oboard-dashboard-preview-small');
   }
 
+  document.addEventListener('pointerup', () => {
+    previewPointerDown = false;
+  });
+  document.addEventListener('pointercancel', () => {
+    previewPointerDown = false;
+  });
+
   function attachDashboardPreview() {
     rowOrder.forEach(item => {
       if (item.row.dataset.oboardPreviewReady === 'true') return;
@@ -7835,7 +7860,8 @@ img.ProseMirror-separator {
       });
       item.row.addEventListener('mouseleave', hidePreview);
       item.row.addEventListener('pointerdown', event => {
-        if (event.target.closest('.oboard-drag-handle')) hidePreview();
+        previewPointerDown = true;
+        hidePreview();
       });
     });
   }
@@ -7854,7 +7880,8 @@ img.ProseMirror-separator {
       });
       item.addEventListener('mouseleave', hidePreview);
       item.addEventListener('pointerdown', event => {
-        if (event.target.closest('.oboard-drag-handle')) hidePreview();
+        previewPointerDown = true;
+        hidePreview();
       });
     });
   }
@@ -8087,6 +8114,7 @@ img.ProseMirror-separator {
       scrollSpeed: 12,
       onChoose: hidePreview,
       onStart(event) {
+        previewPointerDown = true;
         hidePreview();
         document.body.classList.add('oboard-reordering');
         styleSortableClone(event);
@@ -8095,6 +8123,7 @@ img.ProseMirror-separator {
       onClone: styleSortableClone,
       onEnd(event) {
         stopSortableLock();
+        previewPointerDown = false;
         document.body.classList.remove('oboard-reordering');
         onEnd(event);
       },
