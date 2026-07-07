@@ -797,7 +797,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-row::after {
-    opacity: 0.7;
+    opacity: 0.35;
   }
 
   .oboard-grouped-row-inner {
@@ -1764,12 +1764,13 @@ img.ProseMirror-separator {
   .oboard-grouped-collection-bundle-ghost::before {
     content: "";
     position: absolute;
-    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    left: 0;
     right: 0;
     top: var(--oboard-dashboard-row-height, 44px);
     z-index: 5;
     height: 1px;
     background: var(--gray, #dfe1e6);
+    opacity: 0.35;
     pointer-events: none;
   }
 
