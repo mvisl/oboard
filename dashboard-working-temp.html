@@ -1586,9 +1586,9 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) {
-    --oboard-grouped-projection-dash: 16px;
-    --oboard-grouped-projection-gap: 12px;
-    --oboard-grouped-projection-line: 2px;
+    --oboard-grouped-projection-dash: 8px;
+    --oboard-grouped-projection-gap: 6px;
+    --oboard-grouped-projection-line: 1px;
     --oboard-grouped-projection-color: rgba(var(--dark-2-rgb, 66,82,110), 0.38);
     opacity: 0.5;
     background-color: var(--surface-subtle, #f4f7fc);
@@ -1611,6 +1611,7 @@ img.ProseMirror-separator {
     opacity: 0 !important;
   }
 
+  .oboard-grouped-head:has(+ .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback))::after,
   .oboard-grouped-row:has(+ .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback))::after,
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback)::before,
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback)::after,
