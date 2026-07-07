@@ -1580,6 +1580,13 @@ img.ProseMirror-separator {
     height: var(--oboard-grouped-bundle-height, var(--oboard-dashboard-row-height, 44px)) !important;
     min-height: var(--oboard-grouped-bundle-height, var(--oboard-dashboard-row-height, 44px)) !important;
     overflow: hidden !important;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-drag-handle,
+  .oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
+    top: calc(var(--oboard-dashboard-row-height, 44px) / 2);
   }
 
   .oboard-grouped-dashboard.oboard-grouped-bundle-child-dragging {
@@ -1609,7 +1616,6 @@ img.ProseMirror-separator {
     pointer-events: none;
   }
 
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row {
     position: relative;
     display: block !important;
@@ -1620,24 +1626,6 @@ img.ProseMirror-separator {
     background: var(--white-color, #fff);
   }
 
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child {
-    left: 0;
-    right: 0;
-  }
-
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-related-hover,
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-navigation-highlight,
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-hover-demo {
-    background: var(--white-color, #fff) !important;
-  }
-
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-drag-handle,
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-more {
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-row-inner,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row-inner {
     display: grid !important;
     grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 112px 208px 160px 24px) !important;
@@ -1648,7 +1636,6 @@ img.ProseMirror-separator {
     padding-left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
   }
 
-  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child::after,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row::after {
     content: "";
     position: absolute;
@@ -6670,6 +6657,7 @@ img.ProseMirror-separator {
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   let activeGroupedCollectionBundleDrag = null;
+  let groupedCollectionBundleDragId = 0;
   let activeGroupedDashboardCopyDrag = null;
   let groupedDuplicateHintTimer = null;
   let groupedDuplicateHint = null;
@@ -8004,18 +7992,18 @@ img.ProseMirror-separator {
     if (!collectionRow || !childRows.length) return null;
     const rect = groupedCollectionBundleRect(collectionRow, childRows);
     const height = Math.round(rect.height);
+    const rowHeight = Math.round(collectionRow.getBoundingClientRect().height || parseFloat(getComputedStyle(collectionRow).getPropertyValue('--oboard-dashboard-row-height')) || 44);
     collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
-    const inlineRows = childRows.map(row => groupedCollectionBundleChildClone(row, 'oboard-grouped-bundle-inline-child'));
     activeGroupedCollectionBundleDrag = {
+      id: String(++groupedCollectionBundleDragId),
       collectionRow,
       childRows,
-      inlineRows,
       height,
+      rowHeight,
       rect
     };
     collectionRow.classList.add('oboard-grouped-bundle-dragging');
     collectionRow.style.setProperty('--oboard-grouped-bundle-height', height + 'px');
-    inlineRows.forEach(row => collectionRow.appendChild(row));
     childRows.forEach(row => row.classList.add('oboard-grouped-bundle-child-dragging'));
     return activeGroupedCollectionBundleDrag;
   }
@@ -8048,6 +8036,7 @@ img.ProseMirror-separator {
   function styleGroupedCollectionBundleClone(clone, item) {
     const bundle = activeGroupedCollectionBundleDrag;
     if (!clone || !item || !bundle || bundle.collectionRow !== item) return;
+    const isReady = clone.dataset.oboardGroupedBundleId === bundle.id;
     const page = item.closest('.dp-MainContent-CustomDashboardList');
     const pageStyle = page ? getComputedStyle(page) : null;
     [
@@ -8076,6 +8065,9 @@ img.ProseMirror-separator {
     clone.style.overflow = 'hidden';
     clone.style.boxSizing = 'border-box';
     clone.style.setProperty('--oboard-grouped-bundle-height', bundle.height + 'px');
+    if (isReady) return;
+
+    clone.dataset.oboardGroupedBundleId = bundle.id;
     clone.querySelectorAll('.oboard-grouped-bundle-inline-child, .oboard-grouped-bundle-cloned-child').forEach(row => row.remove());
 
     bundle.childRows.forEach(row => {
@@ -8098,6 +8090,7 @@ img.ProseMirror-separator {
     bundle.collectionRow.style.removeProperty('--oboard-grouped-bundle-height');
     bundle.collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
     bundle.childRows.forEach(row => row.classList.remove('oboard-grouped-bundle-child-dragging'));
+    groupedSortable?.option?.('fallbackOffset', { x: 0, y: 0 });
     activeGroupedCollectionBundleDrag = null;
   }
 
@@ -8291,7 +8284,11 @@ img.ProseMirror-separator {
       filter: '.oboard-grouped-head',
       preventOnFilter: false,
       onChoose(event) {
-        prepareGroupedCollectionBundleDrag(event.item);
+        const bundle = prepareGroupedCollectionBundleDrag(event.item);
+        groupedSortable?.option?.('fallbackOffset', bundle
+          ? { x: 0, y: Math.max(0, Math.round((bundle.height - bundle.rowHeight) / 2)) }
+          : { x: 0, y: 0 }
+        );
         baseGroupedOnChoose(event);
       },
       onStart(event) {
