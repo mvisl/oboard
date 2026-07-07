@@ -1582,7 +1582,15 @@ img.ProseMirror-separator {
     min-height: var(--oboard-grouped-bundle-height, var(--oboard-dashboard-row-height, 44px)) !important;
     overflow: hidden !important;
     background: var(--white-color, #fff);
-    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) {
+    opacity: 0.5;
+    box-shadow: none !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) > .oboard-grouped-drag-handle {
+    opacity: 0 !important;
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-drag-handle,
@@ -1605,10 +1613,18 @@ img.ProseMirror-separator {
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost {
     position: fixed !important;
+    opacity: 0.96 !important;
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .sortable-fallback.oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
+    opacity: 1 !important;
   }
 
   .oboard-sortable-drag.oboard-grouped-collection-bundle-ghost:not(.sortable-fallback) {
     position: relative !important;
+    opacity: 0.5 !important;
+    box-shadow: none !important;
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging::before,
