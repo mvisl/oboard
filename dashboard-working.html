@@ -198,6 +198,7 @@ img.ProseMirror-separator {
     border: 0;
     border-radius: 6px;
     background: var(--grey-3-next, #f5f6f7);
+    margin-right: 16px;
   }
 
   html {
@@ -305,6 +306,7 @@ img.ProseMirror-separator {
     height: 24px;
     min-width: 0;
     box-sizing: border-box;
+    appearance: none;
     border: 0;
     border-radius: 6px;
     background: var(--component-colors-components-buttons-tertiary-color-button-tertiary-color-bg-hover, #eff4ff);
@@ -314,6 +316,7 @@ img.ProseMirror-separator {
     font-weight: 400;
     line-height: 20px;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .oboard-dashboard-collection-badge {
@@ -526,6 +529,19 @@ img.ProseMirror-separator {
     outline: none;
   }
 
+  .oboard-dashboard-collection-option.is-selected,
+  .oboard-dashboard-collection-option:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .oboard-dashboard-collection-option.is-selected:hover,
+  .oboard-dashboard-collection-option.is-selected:focus-visible,
+  .oboard-dashboard-collection-option:disabled:hover,
+  .oboard-dashboard-collection-option:disabled:focus-visible {
+    background: var(--white-color, #fff);
+  }
+
   .oboard-dashboard-collection-create {
     border-bottom: 1px solid var(--gray-blue-250, #dde2ea);
   }
@@ -548,17 +564,32 @@ img.ProseMirror-separator {
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-Header,
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-Body,
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .atcb-Button,
-  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-EndBlock {
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .tb-EndBlock,
+  .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-dashboard-footer {
     display: none !important;
   }
 
   .oboard-grouped-list {
     display: none;
-    width: 100%;
+    position: relative;
+    width: calc(100% + var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)) + var(--page-right-padding, 32px));
+    margin-left: calc(-1 * var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)));
     margin-top: 30px;
     color: var(--dark-blue, #172b4d);
     font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
     opacity: 1;
+  }
+
+  .oboard-grouped-list::before {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    top: 32px;
+    z-index: 20;
+    height: 1px;
+    background: var(--grey-2-next, #dfe1e6);
+    pointer-events: none;
   }
 
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-grouped-list {
@@ -568,7 +599,8 @@ img.ProseMirror-separator {
   .oboard-mode-transitioning .tb-Header,
   .oboard-mode-transitioning .tb-Body,
   .oboard-mode-transitioning .atcb-Button,
-  .oboard-mode-transitioning .tb-EndBlock {
+  .oboard-mode-transitioning .tb-EndBlock,
+  .oboard-mode-transitioning .oboard-dashboard-footer {
     display: none !important;
   }
 
@@ -611,15 +643,15 @@ img.ProseMirror-separator {
     grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 224px 376px 184px 24px);
     column-gap: 0;
     align-items: center;
-    width: 100%;
+    width: calc(100% - var(--page-right-padding, 32px));
     box-sizing: border-box;
   }
 
   .oboard-grouped-head {
+    position: relative;
     align-items: start;
     height: 32px;
-    padding: 2px 0 0;
-    border-bottom: 1px solid var(--grey-2-next, #dfe1e6);
+    padding: 2px 0 0 var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
     color: var(--grey-semi-medium, #6b778c);
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-size: 12px;
@@ -632,6 +664,16 @@ img.ProseMirror-separator {
     align-items: center;
     gap: 16px;
     min-width: 0;
+  }
+
+  .oboard-grouped-head-service {
+    min-width: 0;
+  }
+
+  .oboard-grouped-head-name .oboard-grouped-head-favorite {
+    flex: 0 0 24px;
+    justify-content: center;
+    width: 24px;
   }
 
   .oboard-grouped-head-favorite,
@@ -669,30 +711,79 @@ img.ProseMirror-separator {
     flex: 0 0 20px;
     width: 20px;
     height: 20px;
+    opacity: 0;
   }
 
   .oboard-grouped-head .cdth-HeaderCell_DefaultStateSorting {
     color: var(--grey-2-next, #dfe1e6);
   }
 
+  @keyframes oboardGroupedNavigationHighlight {
+    0% {
+      background-color: transparent;
+    }
+    25%,
+    50% {
+      background-color: var(--bg-brand-primary_alt, #e5f0ff);
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+
+  @keyframes oboardFavoritesTypeHighlight {
+    0% {
+      background-color: transparent;
+    }
+    25%,
+    50% {
+      background-color: var(--bg-secondary-alt, #dfe1e6);
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+
   .oboard-grouped-row {
     position: relative;
     height: var(--oboard-dashboard-row-height, 44px);
-    border-bottom: 1px solid var(--gray, #dfe1e6);
     box-sizing: border-box;
+    transition: background-color 220ms ease-in-out;
+  }
+
+  .oboard-grouped-head::after,
+  .oboard-grouped-row::after {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
+  }
+
+  .oboard-grouped-head::after {
+    z-index: 21;
+    background: var(--grey-2-next, #dfe1e6);
+  }
+
+  .oboard-grouped-head + .oboard-grouped-row::before {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    top: 0;
+    z-index: 3;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
   }
 
   .oboard-grouped-row-inner {
     height: var(--oboard-dashboard-row-height, 44px);
     padding-right: 0;
-  }
-
-  .oboard-grouped-collection .oboard-grouped-row-inner {
-    padding-left: 0;
-  }
-
-  .oboard-grouped-dashboard .oboard-grouped-row-inner {
-    padding-left: 0;
+    padding-left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
   }
 
   .oboard-grouped-collection.is-hover-demo,
@@ -704,6 +795,25 @@ img.ProseMirror-separator {
   .oboard-grouped-dashboard:hover,
   .oboard-grouped-dashboard:focus-within {
     background: var(--surface-subtle, #f4f7fc);
+  }
+
+  .oboard-grouped-dashboard.is-navigation-highlight {
+    background: var(--bg-brand-primary_alt, #e5f0ff);
+    animation: oboardGroupedNavigationHighlight 1200ms ease-in-out both;
+  }
+
+  .oboard-grouped-dashboard.oboard-copy-anchor {
+    background: var(--surface-subtle, #f4f7fc);
+  }
+
+  .oboard-grouped-dashboard.oboard-copy-anchor .oboard-grouped-drag-handle {
+    opacity: 0 !important;
+  }
+
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):hover,
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):focus-within,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-row:not(.is-navigation-highlight):hover {
+    background: transparent;
   }
 
   .oboard-grouped-service-cell,
@@ -871,23 +981,34 @@ img.ProseMirror-separator {
     opacity: 1;
   }
 
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-dashboard:hover .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"],
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-dashboard:hover .oboard-grouped-favorite .ai-Icon[data-target-id="icon-add-to-favorites-black"] {
+    opacity: 0;
+  }
+
   .oboard-grouped-drag-handle {
     display: flex;
     position: absolute;
-    left: 4px;
+    left: calc((var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px)) - 24px) / 2);
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
   }
 
-  .oboard-grouped-dashboard:not(:hover):not(:focus-within):not(.is-hover-demo) .oboard-grouped-drag-handle {
+  .oboard-grouped-row:not(:hover):not(:focus-within):not(.is-hover-demo) .oboard-grouped-drag-handle {
     opacity: 0;
   }
 
-  .oboard-grouped-dashboard:hover .oboard-grouped-drag-handle,
-  .oboard-grouped-dashboard:focus-within .oboard-grouped-drag-handle,
-  .oboard-grouped-dashboard.is-hover-demo .oboard-grouped-drag-handle {
+  .oboard-grouped-row:hover .oboard-grouped-drag-handle,
+  .oboard-grouped-row:focus-within .oboard-grouped-drag-handle,
+  .oboard-grouped-row.is-hover-demo .oboard-grouped-drag-handle {
     opacity: 1;
+  }
+
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:hover .oboard-grouped-drag-handle,
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:focus-within .oboard-grouped-drag-handle,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-row:hover .oboard-grouped-drag-handle {
+    opacity: 0;
   }
 
   .oboard-grouped-more {
@@ -911,6 +1032,11 @@ img.ProseMirror-separator {
     opacity: 1;
   }
 
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-dashboard:hover .oboard-grouped-more,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-dashboard:hover .oboard-grouped-more {
+    opacity: 0;
+  }
+
   .oboard-grouped-more .ai-Icon {
     width: 24px;
     height: 24px;
@@ -921,7 +1047,8 @@ img.ProseMirror-separator {
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
-    width: 100%;
+    justify-self: end;
+    width: max-content;
     min-width: 0;
     opacity: 0;
     pointer-events: none;
@@ -933,6 +1060,13 @@ img.ProseMirror-separator {
   .oboard-grouped-collection.is-menu-open .oboard-grouped-collection-actions {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-collection:hover .oboard-grouped-collection-actions,
+  .oboard-grouped-list.is-navigation-opening .oboard-grouped-collection:focus-within .oboard-grouped-collection-actions,
+  .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-collection:hover .oboard-grouped-collection-actions {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .oboard-grouped-copy-link {
@@ -961,6 +1095,14 @@ img.ProseMirror-separator {
     gap: 4px;
   }
 
+  .oboard-grouped-copy-link.is-copied {
+    width: 124px;
+    padding: 2px 6px 2px 4px;
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+    gap: 4px;
+  }
+
   .oboard-grouped-copy-link .ai-Icon {
     flex: 0 0 24px;
     width: 24px;
@@ -983,6 +1125,12 @@ img.ProseMirror-separator {
   .oboard-grouped-copy-link:focus-visible .oboard-grouped-copy-link-text,
   .oboard-grouped-copy-link.is-expanded .oboard-grouped-copy-link-text {
     max-width: 68px;
+    opacity: 1;
+  }
+
+  .oboard-grouped-copy-link.is-copied .oboard-grouped-copy-link-text {
+    max-width: 90px;
+    color: var(--white-color, #fff);
     opacity: 1;
   }
 
@@ -1205,9 +1353,38 @@ img.ProseMirror-separator {
     transform: translateX(-50%);
   }
 
-  .oboard-grouped-collection-badge:hover .oboard-grouped-tooltip,
-  .oboard-grouped-collection-badge:focus-within .oboard-grouped-tooltip {
+  .oboard-duplicate-drag-tooltip {
+    position: fixed;
+    z-index: 10040;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(23, 43, 77, 0.96);
+    color: var(--white-color, #fff);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: opacity 140ms ease, transform 140ms ease;
+  }
+
+  .oboard-duplicate-drag-tooltip.is-visible {
     opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .oboard-grouped-collection-badge:not(:hover) .oboard-grouped-tooltip {
+    transition-duration: 0ms;
+  }
+
+  .oboard-grouped-collection-badge:hover:not(.is-click-suppressed) .oboard-grouped-tooltip {
+    opacity: 1;
+  }
+
+  .oboard-grouped-collection-badge.is-click-suppressed .oboard-grouped-tooltip {
+    opacity: 0 !important;
   }
 
   .oboard-grouped-dashboard[hidden] {
@@ -1220,6 +1397,7 @@ img.ProseMirror-separator {
 
   .dp-MainContent-CustomDashboardList {
     --oboard-dashboard-reorder-gutter: 0px;
+    --oboard-dashboard-row-start-gutter: var(--page-left-padding, 32px);
     --oboard-dashboard-service-column: 52px;
     --oboard-dashboard-collections-column: 112px;
     --oboard-dashboard-owner-column: 208px;
@@ -1253,7 +1431,14 @@ img.ProseMirror-separator {
     color: var(--grey-1-next, #b5bbc5);
     cursor: grab;
     opacity: 0;
+    overflow: visible;
     transition: opacity 120ms ease;
+  }
+
+  .oboard-drag-handle > .ai-Icon[data-target-id="icon-drag-next"] {
+    overflow: visible;
+    transform: scale(1.35);
+    transform-origin: center;
   }
 
   .oboard-drag-handle:active {
@@ -1383,6 +1568,7 @@ img.ProseMirror-separator {
   }
 
   .sortable-fallback {
+    position: fixed !important;
     pointer-events: none !important;
     z-index: 10001 !important;
     opacity: 0.96 !important;
@@ -1390,6 +1576,132 @@ img.ProseMirror-separator {
     background: var(--white-color, #fff);
     box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
     box-sizing: border-box;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging {
+    height: var(--oboard-grouped-bundle-height, var(--oboard-dashboard-row-height, 44px)) !important;
+    min-height: var(--oboard-grouped-bundle-height, var(--oboard-dashboard-row-height, 44px)) !important;
+    overflow: hidden !important;
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) {
+    opacity: 0.5;
+    box-shadow: none !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) > .oboard-grouped-drag-handle {
+    opacity: 0 !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-drag-handle,
+  .oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
+    top: calc(var(--oboard-dashboard-row-height, 44px) / 2);
+  }
+
+  .oboard-grouped-dashboard.oboard-grouped-bundle-child-dragging {
+    display: none !important;
+  }
+
+  .sortable-fallback.oboard-grouped-collection-bundle-ghost,
+  .oboard-sortable-drag.oboard-grouped-collection-bundle-ghost {
+    overflow: hidden !important;
+    border: 1px solid var(--gray-blue-250, #dde2ea);
+    border-radius: 0 !important;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .sortable-fallback.oboard-grouped-collection-bundle-ghost {
+    position: fixed !important;
+    opacity: 0.96 !important;
+    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .sortable-fallback.oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
+    opacity: 1 !important;
+  }
+
+  .oboard-sortable-drag.oboard-grouped-collection-bundle-ghost:not(.sortable-fallback) {
+    position: relative !important;
+    opacity: 0.5 !important;
+    box-shadow: none !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging::before,
+  .oboard-grouped-collection-bundle-ghost::before {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    top: var(--oboard-dashboard-row-height, 44px);
+    z-index: 5;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child,
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-row {
+    position: relative;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 100%;
+    height: var(--oboard-dashboard-row-height, 44px);
+    background: var(--white-color, #fff);
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child {
+    left: 0;
+    right: 0;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-related-hover,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-navigation-highlight,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-hover-demo {
+    background: var(--white-color, #fff) !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-drag-handle,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-more {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-row-inner,
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-row-inner {
+    display: grid !important;
+    grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 112px 208px 160px 24px) !important;
+    align-items: center;
+    width: calc(100% - var(--page-right-padding, 32px));
+    box-sizing: border-box;
+    height: var(--oboard-dashboard-row-height, 44px);
+    padding-left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child::after,
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-row::after {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
+  }
+
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-bundle-cloned-child {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-collection-actions,
+  .oboard-grouped-collection-bundle-ghost .oboard-grouped-more {
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .tb-Body .tb-RowWrapper.sortable-chosen,
@@ -1461,6 +1773,95 @@ img.ProseMirror-separator {
     min-width: 0;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .oboard-dashboard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 28px var(--page-right-padding, 32px) 0 var(--page-left-padding, 32px);
+    color: var(--gray-blue-700, #6b778c);
+    font-family: var(--font-family, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  }
+
+  .oboard-dashboard-page-size {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 105px;
+    height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--gray-blue-100, #f4f5f7);
+    color: var(--dark-2, #42526e);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 18px;
+    cursor: pointer;
+  }
+
+  .oboard-dashboard-page-size[aria-expanded="true"] {
+    background: var(--dark-2, #42526e);
+    color: var(--white-color, #fff);
+  }
+
+  .oboard-dashboard-page-size .ai-Icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 120ms ease;
+  }
+
+  .oboard-dashboard-page-size[aria-expanded="true"] .ai-Icon {
+    transform: rotate(180deg);
+  }
+
+  .oboard-dashboard-page-count {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 18px;
+  }
+
+  .oboard-dashboard-page-size-menu {
+    position: fixed;
+    z-index: 10020;
+    width: 160px;
+    padding: 0;
+    border: 1px solid var(--gray-blue-250, #dde2ea);
+    border-radius: 0 0 8px 8px;
+    background: var(--white-color, #fff);
+    box-shadow: rgba(9, 30, 66, 0.08) 0 0 1px, rgba(9, 30, 66, 0.18) 0 8px 18px;
+    overflow: hidden;
+  }
+
+  .oboard-dashboard-page-size-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 0;
+    background: var(--white-color, #fff);
+    color: var(--dark-blue, #172b4d);
+    font: inherit;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .oboard-dashboard-page-size-option:hover,
+  .oboard-dashboard-page-size-option:focus-visible {
+    background: var(--gray-blue-100, #f4f5f7);
+    outline: 0;
+  }
+
+  .oboard-dashboard-page-size-option.is-selected {
+    background: var(--gray-blue-200, #dfe8f8);
   }
 
   .oboard-dashboard-preview {
@@ -1909,6 +2310,15 @@ img.ProseMirror-separator {
     border-radius: 6px;
     box-sizing: border-box;
     color: var(--dark-2, #42526e);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  .oboard-favorites-title-row > .amni-Item .amni-Item_Text {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
   }
 
   .oboard-nav-section-favorites > .amnl-List_Item-dashboard {
@@ -1926,7 +2336,7 @@ img.ProseMirror-separator {
   .oboard-favorites-list.amnl-List-children {
     flex: 1 1 auto;
     min-height: 0;
-    margin-top: 8px;
+    margin-top: 4px;
     overflow: hidden;
   }
 
@@ -1939,17 +2349,86 @@ img.ProseMirror-separator {
     position: relative;
   }
 
+  .oboard-favorites-list .amnl-List_Item.is-type-navigation-highlight {
+    animation: oboardFavoritesTypeHighlight 1200ms ease-in-out both;
+  }
+
+  .oboard-favorites-list .amnl-List_Item.is-type-navigation-highlight-start {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  .oboard-favorites-list .amnl-List_Item.is-type-navigation-highlight-end {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .oboard-favorites-section-separator {
+    display: block;
+    flex: 0 0 auto;
+    list-style: none;
+    height: 1px;
+    min-height: 1px;
+    margin: 10px 12px 10px 36px;
+    padding: 0;
+    background: var(--gray-blue-250, #dde2ea);
+    pointer-events: none;
+  }
+
   .oboard-favorites-drag-handle {
     display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     left: 4px;
     top: 50%;
+    width: 24px;
+    height: 24px;
     transform: translateY(-50%);
+    opacity: 1;
+    overflow: visible;
+  }
+
+  .oboard-favorites-drag-handle .oboard-favorites-section-icon {
+    position: absolute;
+    inset: 4px;
+    width: 16px;
+    height: 16px;
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-favorites-drag-handle .oboard-favorites-drag-icon {
+    position: absolute;
+    inset: 0;
+    width: 24px;
+    height: 24px;
+    overflow: visible;
+    transition: opacity 120ms ease;
+  }
+
+  .oboard-favorites-drag-handle .oboard-favorites-section-icon {
+    opacity: 0.7;
+  }
+
+  .oboard-favorites-drag-handle .oboard-favorites-drag-icon {
+    opacity: 0;
+  }
+
+  .oboard-favorites-list .amnl-List_Item:hover .oboard-favorites-section-icon,
+  .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorites-section-icon,
+  .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorites-section-icon {
+    opacity: 0;
   }
 
   .oboard-favorites-list .amnl-List_Item:hover .oboard-favorites-drag-handle,
   .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorites-drag-handle,
   .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorites-drag-handle {
+    opacity: 1;
+  }
+
+  .oboard-favorites-list .amnl-List_Item:hover .oboard-favorites-drag-icon,
+  .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorites-drag-icon,
+  .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorites-drag-icon {
     opacity: 1;
   }
 
@@ -6005,6 +6484,7 @@ img.ProseMirror-separator {
   const DRAG = 'icon-drag-next';
   const ORDER_STORAGE_KEY = 'oboard-dashboard-row-order';
   const FAVORITE_ORDER_STORAGE_KEY = 'oboard-dashboard-favorite-order';
+  const FAVORITE_SECTION_ORDER_STORAGE_KEY = 'oboard-dashboard-favorite-section-order';
   const DASHBOARD_MODE_STORAGE_KEY = 'oboard-dashboard-group-mode';
   const DASHBOARD_COLLECTIONS_STORAGE_KEY = 'oboard-dashboard-collections';
 
@@ -6017,8 +6497,11 @@ img.ProseMirror-separator {
     const dashboardItem = rootList?.querySelector(':scope > .amnl-List_Item-dashboard');
     const originalFavorites = dashboardItem?.querySelector(':scope > .amnl-List-children');
     const objectivesChildren = rootList?.querySelector(':scope > .amnl-List_Item-objectives > .amnl-List-children');
+    const objectiveFavoriteItems = objectivesChildren
+      ? Array.from(objectivesChildren.querySelectorAll(':scope > .amnl-List_Item')).map(item => item.cloneNode(true))
+      : [];
     if (!nav || !rootList || !dashboardItem || !originalFavorites || nav.querySelector('.oboard-sidebar-sections')) {
-      return { nav, dashboardChildren: originalFavorites };
+      return { nav, dashboardChildren: originalFavorites, objectiveFavoriteItems };
     }
 
     const sections = document.createElement('div');
@@ -6044,7 +6527,7 @@ img.ProseMirror-separator {
     nav.appendChild(sections);
     nav.classList.add('oboard-sidebar-sectioned');
 
-    return { nav, dashboardChildren: originalFavorites };
+    return { nav, dashboardChildren: originalFavorites, objectiveFavoriteItems };
   }
 
   const sidebar = buildSidebarSections();
@@ -6109,6 +6592,13 @@ img.ProseMirror-separator {
     }
   }
 
+  function setDashboardRowOwner(row, owner) {
+    if (!row || !owner) return;
+    row.dataset.dashboardOwner = owner;
+    const ownerName = row.querySelector('.unc-Name');
+    if (ownerName) ownerName.textContent = owner;
+  }
+
   function seedExtraDashboardRows() {
     const body = document.querySelector('.tb-Body');
     if (!body) return;
@@ -6116,10 +6606,10 @@ img.ProseMirror-separator {
     const privateTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Private'));
     const publicTemplate = Array.from(body.querySelectorAll(':scope > .tb-RowWrapper')).find(row => row.textContent.includes('Public')) || privateTemplate;
     const extraDashboards = [
-      { name: 'Market Trends 2025', favorite: true, visibility: 'Public' },
-      { name: 'Customer Insights 2024', favorite: true, visibility: 'Private' },
-      { name: 'Revenue Forecasts Q3', favorite: false, visibility: 'Private' },
-      { name: 'Website Traffic Analysis 2024', favorite: false, visibility: 'Private' }
+      { name: 'Market Trends 2025', favorite: true, visibility: 'Public', owner: 'Sofia Chen' },
+      { name: 'Customer Insights 2024', favorite: true, visibility: 'Private', owner: 'Sofia Chen' },
+      { name: 'Revenue Forecasts Q3', favorite: false, visibility: 'Private', owner: 'Marcus Holloway' },
+      { name: 'Website Traffic Analysis 2024', favorite: false, visibility: 'Private', owner: 'Isabella Rossi' }
     ];
     extraDashboards.forEach((dashboard, index) => {
       if (existingNames.has(dashboard.name)) return;
@@ -6136,6 +6626,7 @@ img.ProseMirror-separator {
       if (visibilityIcon) {
         visibilityIcon.innerHTML = dashboard.visibility === 'Private' ? svgIcon('icon-lock-next') : '<!---->';
       }
+      setDashboardRowOwner(clone, dashboard.owner);
       clone.querySelectorAll('[class*="-favorites-"], [class*="-name-"], [class*="-owner-"], [class*="-visibility-"], [class*="-action-"]').forEach(node => {
         node.className = node.className.replace(/-\d+/g, '-' + (20 + index));
       });
@@ -6152,22 +6643,70 @@ img.ProseMirror-separator {
     return { name, row, favorite: icon?.getAttribute('data-target-id') === FILLED };
   }).filter(item => item.name);
 
+  const dashboardOwners = new Map([
+    ['7 Days deposit', 'Viacheslav Makhankov'],
+    ['Team’s KPIs', 'Viacheslav Makhankov'],
+    ['Some new Dashboard', 'Viacheslav Makhankov'],
+    ['2026 Trial dashboard', 'Viacheslav Makhankov'],
+    ['Company focus 2026', 'Viacheslav Makhankov'],
+    ['Market Trends 2025', 'Sofia Chen'],
+    ['Customer Insights 2024', 'Sofia Chen'],
+    ['Revenue Forecasts Q3', 'Marcus Holloway'],
+    ['Website Traffic Analysis 2024', 'Isabella Rossi']
+  ]);
+
+  rowOrder.forEach(item => {
+    const owner = dashboardOwners.get(item.name)
+      || item.row.dataset.dashboardOwner
+      || item.row.querySelector('.unc-Name')?.textContent?.trim()
+      || 'Viacheslav Makhankov';
+    dashboardOwners.set(item.name, owner);
+    setDashboardRowOwner(item.row, owner);
+  });
+
   const dashboardChildren = sidebar.dashboardChildren || document.querySelector('.amnl-List_Item-dashboard > .amnl-List-children');
   const existingChildItems = dashboardChildren ? Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item')) : [];
   const originalSidebarOrder = existingChildItems.map(item => item.querySelector('.amni-Item_Text')?.textContent?.trim()).filter(Boolean);
-  let favoriteOrder = [...originalSidebarOrder];
+  const objectiveFavoriteTemplates = new Map((sidebar.objectiveFavoriteItems || []).map(item => {
+    const text = item.querySelector('.amni-Item_Text')?.textContent?.trim();
+    return [text, item];
+  }).filter(([text]) => text));
+  const objectiveFavoriteNames = Array.from(objectiveFavoriteTemplates.keys());
+  let favoriteOrder = [...objectiveFavoriteNames, ...originalSidebarOrder];
+  const favoriteSectionTypes = ['objective', 'dashboard'];
+  let favoriteSectionOrder = [...favoriteSectionTypes];
+  let favoriteSectionSwitchTimer = null;
+  let favoriteSectionSwitchKey = '';
+  let favoriteDragSnapshot = null;
+  let favoriteSectionSwitchCommitted = false;
+  let favoritesTypeHighlightTimer = null;
   let tableSortable = null;
   let favoriteSortable = null;
   let groupedSortable = null;
   let groupedListEventsBound = false;
+  let groupedRelatedHoverCleanupBound = false;
   let collectionMenuEventsBound = false;
   let dashboardCollectionMenuEventsBound = false;
   let activeDashboardCollectionMenu = null;
   let activeDashboardCollectionQuery = '';
+  let groupedNavigationHighlightTimer = null;
+  let groupedNavigationHoverUnlock = null;
+  const GROUPED_NAVIGATION_OPEN_MS = 300;
+  const GROUPED_NAVIGATION_HIGHLIGHT_MS = 1200;
+  const groupedCopyLinkResetTimers = new WeakMap();
+  let dashboardPageSize = 50;
+  let dashboardPageSizeMenu = null;
+  let dashboardPageSizeEventsBound = false;
   let groupedDragClientX = 0;
   let groupedDragClientY = 0;
   let activeSortableLock = null;
   let sortableLockFrame = 0;
+  let activeGroupedCollectionBundleDrag = null;
+  let groupedCollectionBundleDragId = 0;
+  let activeGroupedDashboardCopyDrag = null;
+  let groupedDuplicateHintTimer = null;
+  let groupedDuplicateHint = null;
+  let groupedDuplicateHintState = null;
   const collectionOptions = ['Collection 1', 'Collection 2', 'Collection 3', 'Collection 4'];
   const defaultDashboardCollections = new Map([
     ['Team’s KPIs', ['Collection 1', 'Collection 4']],
@@ -6209,6 +6748,16 @@ img.ProseMirror-separator {
     return handle;
   }
 
+  function createFavoriteDragHandle(type) {
+    const iconId = type === 'objective' ? 'icon-menu-objectives' : 'icon-menu-dashboard';
+    const handle = createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite item');
+    handle.innerHTML = [
+      '<svg data-target-id="' + iconId + '" height="16" width="16" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-section-icon"><use xlink:href="#' + iconId + '" href="#' + iconId + '"></use></svg>',
+      '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
+    ].join('');
+    return handle;
+  }
+
   function uniqueCollectionOptions() {
     return Array.from(new Set(collectionOptions.filter(Boolean)));
   }
@@ -6242,9 +6791,10 @@ img.ProseMirror-separator {
     const selected = dashboardCollections.get(dashboardName) || [];
     const tooltip = selected.join(', ');
     const count = selected.length > 1 ? selected.length - 1 : 0;
+    const collections = selected.map(encodeURIComponent).join('|');
     cell.innerHTML = [
-      selected.length ? '<span class="oboard-dashboard-collection-badge' + (count ? ' has-count' : '') + '" tabindex="0">' + layersIcon() + (count ? '<span>+' + count + '</span>' : '') + '<span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></span>' : '',
-      '<button class="oboard-dashboard-collection-add" type="button" aria-label="Add to collection" data-dashboard-name="' + escapeHtml(dashboardName) + '">' + svgIcon('icon-plus-next') + '</button>'
+      '<button class="oboard-dashboard-collection-add" type="button" aria-label="Add to collection" data-dashboard-name="' + escapeHtml(dashboardName) + '">' + svgIcon('icon-plus-next') + '</button>',
+      selected.length ? '<button class="oboard-dashboard-collection-badge' + (count ? ' has-count' : '') + '" type="button" data-dashboard-name="' + escapeHtml(dashboardName) + '" data-collections="' + escapeHtml(collections) + '" aria-label="Show dashboard in collections">' + layersIcon() + (count ? '<span>+' + count + '</span>' : '') + '<span class="oboard-dashboard-collection-tooltip">' + escapeHtml(tooltip) + '</span></button>' : ''
     ].join('');
   }
 
@@ -6286,6 +6836,7 @@ img.ProseMirror-separator {
 
   function dashboardCollectionPopoverHtml(dashboardName) {
     const selected = dashboardCollections.get(dashboardName) || [];
+    const selectedSet = new Set(selected);
     const query = activeDashboardCollectionQuery;
     const normalizedQuery = query.trim().toLowerCase();
     const options = uniqueCollectionOptions().filter(collection => !normalizedQuery || collection.toLowerCase().includes(normalizedQuery));
@@ -6300,7 +6851,10 @@ img.ProseMirror-separator {
       '<input type="text" value="' + escapeHtml(query) + '" placeholder="' + (selectedChip ? '' : 'Select collection') + '" autocomplete="off" aria-label="Select collection">',
       '</div>',
       canCreate ? '<button class="oboard-dashboard-collection-create" type="button" data-create-collection="' + escapeHtml(query.trim()) + '">' + svgIcon('icon-plus-next') + '<span>Create “' + escapeHtml(query.trim()) + '”</span></button>' : '',
-      options.map(collection => '<button class="oboard-dashboard-collection-option" type="button" data-collection="' + escapeHtml(collection) + '"><span class="oboard-dashboard-collection-option-icon">C</span><span>' + escapeHtml(collection) + '</span></button>').join(''),
+      options.map(collection => {
+        const isSelected = selectedSet.has(collection);
+        return '<button class="oboard-dashboard-collection-option' + (isSelected ? ' is-selected' : '') + '" type="button" data-collection="' + escapeHtml(collection) + '"' + (isSelected ? ' disabled aria-disabled="true"' : '') + '><span class="oboard-dashboard-collection-option-icon">C</span><span>' + escapeHtml(collection) + '</span></button>';
+      }).join(''),
       '</div>'
     ].join('');
   }
@@ -6404,6 +6958,24 @@ img.ProseMirror-separator {
         return;
       }
 
+      const collectionBadge = event.target.closest('.oboard-dashboard-collection-badge');
+      if (collectionBadge) {
+        event.preventDefault();
+        event.stopPropagation();
+        const collections = (collectionBadge.dataset.collections || '')
+          .split('|')
+          .filter(Boolean)
+          .map(value => {
+            try {
+              return decodeURIComponent(value);
+            } catch (error) {
+              return value;
+            }
+          });
+        focusGroupedDashboardCollections(collectionBadge.dataset.dashboardName, collections);
+        return;
+      }
+
       const createButton = event.target.closest('.oboard-dashboard-collection-create');
       if (createButton) {
         event.preventDefault();
@@ -6414,6 +6986,7 @@ img.ProseMirror-separator {
       const option = event.target.closest('.oboard-dashboard-collection-option');
       if (option) {
         event.preventDefault();
+        if (option.disabled || option.classList.contains('is-selected')) return;
         addDashboardToCollection(activeDashboardCollectionMenu?.dashboardName, option.dataset.collection);
         return;
       }
@@ -6451,30 +7024,38 @@ img.ProseMirror-separator {
     window.addEventListener('scroll', closeDashboardCollectionPopover, true);
   }
 
-  function buildNavItem(name) {
-    const item = (navTemplates.get(name) || fallbackTemplate)?.cloneNode(true);
-    if (!item) return null;
-    item.dataset.dashboardName = name;
-    item.className = 'amnl-List_Item amnl-List_Item-' + slug(name);
-    const text = item.querySelector('.amni-Item_Text');
-    if (text) {
-      text.textContent = name;
-      text.removeAttribute('title');
-    }
-    const content = item.querySelector('.amni-Item');
-    if (content && !content.querySelector('.oboard-favorites-drag-handle')) {
-      content.prepend(createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite dashboard'));
-    }
-    return item;
+  function favoriteTypeForName(name) {
+    return objectiveFavoriteTemplates.has(name) ? 'objective' : 'dashboard';
   }
 
-  function sidebarNames() {
+  function normalizeFavoriteSectionOrder(order) {
+    const source = Array.isArray(order) ? order : [];
+    const normalized = source.filter(type => favoriteSectionTypes.includes(type));
+    favoriteSectionTypes.forEach(type => {
+      if (!normalized.includes(type)) normalized.push(type);
+    });
+    return normalized.slice(0, favoriteSectionTypes.length);
+  }
+
+  function favoriteBaseNames() {
     const favorites = new Set(rowOrder.filter(item => item.favorite).map(item => item.name));
+    const objectiveNames = new Set(objectiveFavoriteNames);
     const names = [];
     favoriteOrder.forEach(name => {
+      if (objectiveNames.has(name)) {
+        names.push(name);
+        objectiveNames.delete(name);
+        return;
+      }
       if (favorites.has(name)) {
         names.push(name);
         favorites.delete(name);
+      }
+    });
+    objectiveFavoriteNames.forEach(name => {
+      if (objectiveNames.has(name)) {
+        names.push(name);
+        objectiveNames.delete(name);
       }
     });
     rowOrder.forEach(item => {
@@ -6486,13 +7067,67 @@ img.ProseMirror-separator {
     return names;
   }
 
+  function groupedFavoriteNames(names = favoriteBaseNames()) {
+    const byType = {
+      objective: [],
+      dashboard: []
+    };
+    names.forEach(name => {
+      byType[favoriteTypeForName(name)].push(name);
+    });
+    return favoriteSectionOrder.flatMap(type => byType[type] || []);
+  }
+
+  function createFavoriteSeparator() {
+    const separator = document.createElement('li');
+    separator.className = 'amnl-List_Item oboard-favorites-section-separator';
+    separator.setAttribute('aria-hidden', 'true');
+    separator.dataset.favoriteSeparator = 'true';
+    return separator;
+  }
+
+  function renderFavoriteNames(names) {
+    if (!dashboardChildren) return;
+    const groups = favoriteSectionOrder.map(type => ({
+      type,
+      names: names.filter(name => favoriteTypeForName(name) === type)
+    })).filter(group => group.names.length);
+    groups.forEach((group, index) => {
+      if (index > 0) dashboardChildren.appendChild(createFavoriteSeparator());
+      group.names.forEach(name => {
+        const navItem = buildNavItem(name);
+        if (navItem) dashboardChildren.appendChild(navItem);
+      });
+    });
+  }
+
+  function buildNavItem(name) {
+    const type = objectiveFavoriteTemplates.has(name) ? 'objective' : 'dashboard';
+    const item = (objectiveFavoriteTemplates.get(name) || navTemplates.get(name) || fallbackTemplate)?.cloneNode(true);
+    if (!item) return null;
+    item.dataset.dashboardName = name;
+    item.dataset.favoriteType = type;
+    item.className = 'amnl-List_Item amnl-List_Item-' + slug(name);
+    const text = item.querySelector('.amni-Item_Text');
+    if (text) {
+      text.textContent = name;
+      text.removeAttribute('title');
+    }
+    const content = item.querySelector('.amni-Item');
+    if (content && !content.querySelector('.oboard-favorites-drag-handle')) {
+      content.prepend(createFavoriteDragHandle(type));
+    }
+    return item;
+  }
+
+  function sidebarNames() {
+    return groupedFavoriteNames();
+  }
+
   function syncSidebar() {
     if (!dashboardChildren) return;
     dashboardChildren.innerHTML = '';
-    sidebarNames().forEach(name => {
-      const navItem = buildNavItem(name);
-      if (navItem) dashboardChildren.appendChild(navItem);
-    });
+    renderFavoriteNames(sidebarNames());
     attachFavoriteDragHandlers();
     attachFavoritePreview();
     initFavoriteSortable();
@@ -6500,11 +7135,21 @@ img.ProseMirror-separator {
 
   function reorderFavoriteDom(names) {
     if (!dashboardChildren) return false;
-    const currentItems = new Map(Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item')).map(item => [item.dataset.dashboardName, item]));
+    const currentItems = new Map(Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)')).map(item => [item.dataset.dashboardName, item]));
     if (!names.every(name => currentItems.has(name))) return false;
-    names.forEach(name => dashboardChildren.appendChild(currentItems.get(name)));
+    const before = snapshotLayout('.oboard-favorites-list > .amnl-List_Item:not(.oboard-favorites-section-separator)');
+    dashboardChildren.querySelectorAll(':scope > .oboard-favorites-section-separator').forEach(separator => separator.remove());
+    const groups = favoriteSectionOrder.map(type => ({
+      type,
+      names: names.filter(name => favoriteTypeForName(name) === type)
+    })).filter(group => group.names.length);
+    groups.forEach((group, index) => {
+      if (index > 0) dashboardChildren.appendChild(createFavoriteSeparator());
+      group.names.forEach(name => dashboardChildren.appendChild(currentItems.get(name)));
+    });
     attachFavoriteDragHandlers();
     attachFavoritePreview();
+    requestAnimationFrame(() => animateLayoutFrom(before, '.oboard-favorites-list > .amnl-List_Item:not(.oboard-favorites-section-separator)', 300));
     return true;
   }
 
@@ -6518,6 +7163,179 @@ img.ProseMirror-separator {
 
   function saveFavoriteOrder() {
     window.localStorage.setItem(FAVORITE_ORDER_STORAGE_KEY, JSON.stringify(favoriteOrder));
+  }
+
+  function saveFavoriteSectionOrder() {
+    window.localStorage.setItem(FAVORITE_SECTION_ORDER_STORAGE_KEY, JSON.stringify(favoriteSectionOrder));
+  }
+
+  function clearFavoriteSectionSwitchTimer() {
+    if (!favoriteSectionSwitchTimer) return;
+    window.clearTimeout(favoriteSectionSwitchTimer);
+    favoriteSectionSwitchTimer = null;
+    favoriteSectionSwitchKey = '';
+  }
+
+  function moveFavoriteNameToTypeStart(name) {
+    const type = favoriteTypeForName(name);
+    const names = sidebarNames().filter(itemName => itemName !== name);
+    const firstSameTypeIndex = names.findIndex(itemName => favoriteTypeForName(itemName) === type);
+    if (firstSameTypeIndex >= 0) {
+      names.splice(firstSameTypeIndex, 0, name);
+    } else {
+      names.push(name);
+    }
+    favoriteOrder = names;
+  }
+
+  function applyFavoriteSectionOrder(nextOrder, leadName) {
+    favoriteSectionSwitchCommitted = true;
+    favoriteSectionOrder = normalizeFavoriteSectionOrder(nextOrder);
+    if (leadName) moveFavoriteNameToTypeStart(leadName);
+    saveFavoriteSectionOrder();
+    favoriteOrder = sidebarNames();
+    if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
+    saveFavoriteOrder();
+  }
+
+  function favoriteSectionBounds(type) {
+    if (!dashboardChildren) return null;
+    const items = Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)'))
+      .filter(item => favoriteTypeForName(item.dataset.dashboardName || '') === type);
+    if (!items.length) return null;
+    const first = items[0].getBoundingClientRect();
+    const last = items[items.length - 1].getBoundingClientRect();
+    return { top: first.top, bottom: last.bottom };
+  }
+
+  function favoriteDomItems() {
+    if (!dashboardChildren) return [];
+    return Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)'));
+  }
+
+  function favoriteItemType(item) {
+    return favoriteTypeForName(item?.dataset.dashboardName || '');
+  }
+
+  function favoriteDomTypeGroups() {
+    const groups = {
+      objective: [],
+      dashboard: []
+    };
+    favoriteDomItems().forEach(item => {
+      const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
+      const type = favoriteTypeForName(name || '');
+      if (name && groups[type]) groups[type].push(name);
+    });
+    return groups;
+  }
+
+  function favoriteItemSitsInsideOwnSection(item) {
+    if (!item?.parentNode) return true;
+    const type = favoriteItemType(item);
+    let hasSameTypeSibling = false;
+    let hasOtherTypeSibling = false;
+
+    for (let node = item.previousElementSibling; node; node = node.previousElementSibling) {
+      if (node.classList.contains('oboard-favorites-section-separator')) break;
+      if (!node.matches('.amnl-List_Item')) continue;
+      const siblingType = favoriteItemType(node);
+      if (siblingType === type) hasSameTypeSibling = true;
+      else hasOtherTypeSibling = true;
+    }
+
+    for (let node = item.nextElementSibling; node; node = node.nextElementSibling) {
+      if (node.classList.contains('oboard-favorites-section-separator')) break;
+      if (!node.matches('.amnl-List_Item')) continue;
+      const siblingType = favoriteItemType(node);
+      if (siblingType === type) hasSameTypeSibling = true;
+      else hasOtherTypeSibling = true;
+    }
+
+    if (hasOtherTypeSibling) return false;
+    return hasSameTypeSibling || favoriteDomItems().filter(candidate => favoriteItemType(candidate) === type).length <= 1;
+  }
+
+  function captureFavoriteDragSnapshot(sourceName = '') {
+    favoriteSectionSwitchCommitted = false;
+    favoriteDragSnapshot = {
+      sourceName,
+      order: favoriteOrder.slice(),
+      sectionOrder: favoriteSectionOrder.slice()
+    };
+  }
+
+  function restoreFavoriteDragSnapshot() {
+    if (!favoriteDragSnapshot) return;
+    favoriteSectionOrder = normalizeFavoriteSectionOrder(favoriteDragSnapshot.sectionOrder);
+    favoriteOrder = favoriteDragSnapshot.order.slice();
+    if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
+    saveFavoriteSectionOrder();
+    saveFavoriteOrder();
+  }
+
+  function scheduleFavoriteSectionSwitch(sourceName, nextOrder) {
+    const normalized = normalizeFavoriteSectionOrder(nextOrder);
+    const key = sourceName + ':' + normalized.join('|');
+    if (favoriteSectionSwitchKey === key) return;
+    clearFavoriteSectionSwitchTimer();
+    favoriteSectionSwitchKey = key;
+    favoriteSectionSwitchTimer = window.setTimeout(() => {
+      favoriteSectionSwitchTimer = null;
+      favoriteSectionSwitchKey = '';
+      applyFavoriteSectionOrder(normalized, sourceName);
+    }, 1000);
+  }
+
+  function handleFavoriteSectionDragMove(event, originalEvent) {
+    const dragged = event?.dragged;
+    const sourceName = dragged?.dataset.dashboardName;
+    if (!sourceName || !originalEvent?.clientY) return;
+    const sourceType = favoriteTypeForName(sourceName);
+    const otherType = sourceType === 'objective' ? 'dashboard' : 'objective';
+    const otherBounds = favoriteSectionBounds(otherType);
+    if (!otherBounds) {
+      clearFavoriteSectionSwitchTimer();
+      return;
+    }
+
+    const y = originalEvent.clientY;
+    const otherMiddle = otherBounds.top + ((otherBounds.bottom - otherBounds.top) / 2);
+    if (y < otherBounds.top || y < otherMiddle) {
+      scheduleFavoriteSectionSwitch(sourceName, [sourceType, otherType]);
+      return;
+    }
+
+    if (y > otherBounds.bottom || y >= otherMiddle) {
+      scheduleFavoriteSectionSwitch(sourceName, [otherType, sourceType]);
+      return;
+    }
+
+    clearFavoriteSectionSwitchTimer();
+  }
+
+  function highlightFavoriteType(type) {
+    if (!dashboardChildren || !favoriteSectionTypes.includes(type)) return;
+    window.clearTimeout(favoritesTypeHighlightTimer);
+    dashboardChildren.querySelectorAll('.is-type-navigation-highlight, .is-type-navigation-highlight-start, .is-type-navigation-highlight-end').forEach(item => {
+      item.classList.remove('is-type-navigation-highlight', 'is-type-navigation-highlight-start', 'is-type-navigation-highlight-end');
+    });
+    const items = Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)'))
+      .filter(item => favoriteTypeForName(item.dataset.dashboardName || '') === type);
+    if (!items.length) return;
+    items.forEach((item, index) => {
+      item.classList.remove('is-type-navigation-highlight', 'is-type-navigation-highlight-start', 'is-type-navigation-highlight-end');
+      item.getBoundingClientRect();
+      item.classList.add('is-type-navigation-highlight');
+      if (index === 0) item.classList.add('is-type-navigation-highlight-start');
+      if (index === items.length - 1) item.classList.add('is-type-navigation-highlight-end');
+    });
+    favoritesTypeHighlightTimer = window.setTimeout(() => {
+      items.forEach(item => {
+        item.classList.remove('is-type-navigation-highlight', 'is-type-navigation-highlight-start', 'is-type-navigation-highlight-end');
+      });
+      favoritesTypeHighlightTimer = null;
+    }, 1200);
   }
 
   function reorderItems(sourceName, targetName, placeAfter = false) {
@@ -6546,6 +7364,7 @@ img.ProseMirror-separator {
   }
 
   function reorderFavorites(sourceName, targetName, placeAfter = false) {
+    if (favoriteTypeForName(sourceName) !== favoriteTypeForName(targetName)) return false;
     const names = sidebarNames();
     const sourceIndex = names.indexOf(sourceName);
     const targetRawIndex = names.indexOf(targetName);
@@ -6560,6 +7379,7 @@ img.ProseMirror-separator {
   }
 
   function reorderFavoriteData(sourceName, targetName, placeAfter = false) {
+    if (favoriteTypeForName(sourceName) !== favoriteTypeForName(targetName)) return false;
     const names = sidebarNames();
     const sourceIndex = names.indexOf(sourceName);
     const targetRawIndex = names.indexOf(targetName);
@@ -6579,6 +7399,95 @@ img.ProseMirror-separator {
     rowOrder.forEach(item => {
       body.insertBefore(item.row, endBlock || null);
     });
+    renderDashboardFooter();
+  }
+
+  function dashboardVisibleRowCount() {
+    return rowOrder.length;
+  }
+
+  function closeDashboardPageSizeMenu() {
+    document.querySelector('.oboard-dashboard-page-size')?.setAttribute('aria-expanded', 'false');
+    dashboardPageSizeMenu?.remove();
+    dashboardPageSizeMenu = null;
+  }
+
+  function positionDashboardPageSizeMenu(menu, button) {
+    const rect = button.getBoundingClientRect();
+    menu.style.left = Math.round(rect.left) + 'px';
+    menu.style.top = Math.round(rect.bottom) + 'px';
+    menu.style.width = Math.max(160, Math.round(rect.width) + 56) + 'px';
+  }
+
+  function openDashboardPageSizeMenu(button) {
+    closeDashboardPageSizeMenu();
+    button.setAttribute('aria-expanded', 'true');
+    const menu = document.createElement('div');
+    menu.className = 'oboard-dashboard-page-size-menu';
+    menu.setAttribute('role', 'listbox');
+    menu.innerHTML = [10, 20, 50].map(size => (
+      '<button type="button" class="oboard-dashboard-page-size-option' + (size === dashboardPageSize ? ' is-selected' : '') + '" role="option" aria-selected="' + (size === dashboardPageSize ? 'true' : 'false') + '" data-page-size="' + size + '">' + size + '</button>'
+    )).join('');
+    document.body.appendChild(menu);
+    dashboardPageSizeMenu = menu;
+    positionDashboardPageSizeMenu(menu, button);
+  }
+
+  function bindDashboardFooterEvents() {
+    if (dashboardPageSizeEventsBound) return;
+    dashboardPageSizeEventsBound = true;
+    document.addEventListener('click', event => {
+      const sizeButton = event.target.closest('.oboard-dashboard-page-size');
+      if (sizeButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (dashboardPageSizeMenu) {
+          closeDashboardPageSizeMenu();
+        } else {
+          openDashboardPageSizeMenu(sizeButton);
+        }
+        return;
+      }
+
+      const option = event.target.closest('.oboard-dashboard-page-size-option');
+      if (option) {
+        event.preventDefault();
+        dashboardPageSize = Number(option.dataset.pageSize) || 50;
+        closeDashboardPageSizeMenu();
+        renderDashboardFooter();
+        return;
+      }
+
+      if (!event.target.closest('.oboard-dashboard-page-size-menu')) {
+        closeDashboardPageSizeMenu();
+      }
+    });
+    window.addEventListener('resize', closeDashboardPageSizeMenu);
+    window.addEventListener('scroll', closeDashboardPageSizeMenu, true);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeDashboardPageSizeMenu();
+    });
+  }
+
+  function renderDashboardFooter() {
+    const createButton = document.querySelector('.atcb-Button');
+    if (!createButton) return;
+    let footer = document.querySelector('.oboard-dashboard-footer');
+    if (!footer) {
+      footer = document.createElement('div');
+      footer.className = 'oboard-dashboard-footer';
+      createButton.insertAdjacentElement('afterend', footer);
+    }
+    const total = dashboardVisibleRowCount();
+    const shown = Math.min(dashboardPageSize, total);
+    footer.innerHTML = [
+      '<button type="button" class="oboard-dashboard-page-size" aria-haspopup="listbox" aria-expanded="false">',
+      '<span>' + dashboardPageSize + ' entries</span>',
+      svgIcon('icon-arrow-down-black-next'),
+      '</button>',
+      '<div class="oboard-dashboard-page-count">1 - ' + shown + ' of ' + total + '</div>'
+    ].join('');
+    bindDashboardFooterEvents();
   }
 
   function restoreOrder() {
@@ -6606,8 +7515,21 @@ img.ProseMirror-separator {
       names = [];
     }
     if (Array.isArray(names) && names.length) {
-      favoriteOrder = names;
+      const hasObjectiveItems = objectiveFavoriteNames.every(name => names.includes(name));
+      favoriteOrder = hasObjectiveItems
+        ? names
+        : [...objectiveFavoriteNames, ...names.filter(name => !objectiveFavoriteNames.includes(name))];
     }
+  }
+
+  function restoreFavoriteSectionOrder() {
+    let order = [];
+    try {
+      order = JSON.parse(window.localStorage.getItem(FAVORITE_SECTION_ORDER_STORAGE_KEY) || '[]');
+    } catch {
+      order = [];
+    }
+    favoriteSectionOrder = normalizeFavoriteSectionOrder(order.length ? order : favoriteSectionOrder);
   }
 
   function createDropPlaceholder(sourceElement) {
@@ -6896,10 +7818,10 @@ img.ProseMirror-separator {
 
   function attachFavoriteDragHandlers() {
     if (!dashboardChildren) return;
-    dashboardChildren.querySelectorAll(':scope > .amnl-List_Item').forEach(item => {
+    dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)').forEach(item => {
       const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
       const handle = item.querySelector('.oboard-favorites-drag-handle');
-      if (name && handle) attachDragBehavior(handle, name, '.oboard-favorites-list > .amnl-List_Item', '.oboard-favorites-list > .amnl-List_Item', reorderFavorites);
+      if (name && handle) attachDragBehavior(handle, name, '.oboard-favorites-list > .amnl-List_Item:not(.oboard-favorites-section-separator)', '.oboard-favorites-list > .amnl-List_Item:not(.oboard-favorites-section-separator)', reorderFavorites);
     });
   }
 
@@ -6920,9 +7842,25 @@ img.ProseMirror-separator {
 
   let previewTimer = null;
   let previewSource = null;
+  let previewPointerDown = false;
 
-  function previewHtml(name) {
+  function previewHtml(name, type = 'dashboard') {
     const safeName = escapeHtml(name);
+    if (type === 'objective') {
+      return [
+        '<div class="oboard-dashboard-preview-path">Objectives <span>/</span> <strong>' + safeName + '</strong></div>',
+        '<div class="oboard-dashboard-preview-title">' + safeName + '</div>',
+        '<div class="oboard-dashboard-preview-module">',
+        '<div class="oboard-dashboard-preview-module-header"><span>Alignment view</span><div class="oboard-dashboard-preview-segment"><span class="is-active">List</span><span>Progress</span><span>Roadmap</span></div></div>',
+        '<div class="oboard-dashboard-preview-grid">',
+        '<div class="oboard-dashboard-preview-cell is-head">Objectives and Metrics</div><div class="oboard-dashboard-preview-cell is-head">Current / Target</div><div class="oboard-dashboard-preview-cell is-head">Progress</div><div class="oboard-dashboard-preview-cell is-head">Status</div>',
+        '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">Dp</span>LIB-60 Test Dep</div><div class="oboard-dashboard-preview-cell">&ndash; / &ge; 100</div><div class="oboard-dashboard-preview-cell">0%</div><div class="oboard-dashboard-preview-cell">NOT STARTED</div>',
+        '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KPI</span>LIB-59 test KPI</div><div class="oboard-dashboard-preview-cell">0 / 100</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">12%</div><div class="oboard-dashboard-preview-cell oboard-dashboard-preview-bad">AT RISK</div>',
+        '<div class="oboard-dashboard-preview-cell"><span class="oboard-dashboard-preview-kpi">KR</span>LIB-12 Reduce infrastructure costs</div><div class="oboard-dashboard-preview-cell">25 / 100</div><div class="oboard-dashboard-preview-cell">25%</div><div class="oboard-dashboard-preview-cell">BEHIND</div>',
+        '</div>',
+        '</div>'
+      ].join('');
+    }
     return [
       '<div class="oboard-dashboard-preview-path">Custom dashboards <span>/</span> <strong>' + safeName + '</strong></div>',
       '<div class="oboard-dashboard-preview-title">' + safeName + '</div>',
@@ -6973,8 +7911,9 @@ img.ProseMirror-separator {
   }
 
   function showPreview(item) {
+    if (previewPointerDown || document.body.classList.contains('oboard-reordering')) return;
     previewSource = item;
-    preview.innerHTML = previewHtml(item.name);
+    preview.innerHTML = previewHtml(item.name, item.type || 'dashboard');
     preview.classList.toggle('oboard-dashboard-preview-small', item.mode === 'favorite');
     positionPreview(item);
     preview.classList.add('oboard-dashboard-preview-visible');
@@ -6988,6 +7927,13 @@ img.ProseMirror-separator {
     preview.classList.remove('oboard-dashboard-preview-small');
   }
 
+  document.addEventListener('pointerup', () => {
+    previewPointerDown = false;
+  });
+  document.addEventListener('pointercancel', () => {
+    previewPointerDown = false;
+  });
+
   function attachDashboardPreview() {
     rowOrder.forEach(item => {
       if (item.row.dataset.oboardPreviewReady === 'true') return;
@@ -6998,7 +7944,8 @@ img.ProseMirror-separator {
       });
       item.row.addEventListener('mouseleave', hidePreview);
       item.row.addEventListener('pointerdown', event => {
-        if (event.target.closest('.oboard-drag-handle')) hidePreview();
+        previewPointerDown = true;
+        hidePreview();
       });
     });
   }
@@ -7009,14 +7956,16 @@ img.ProseMirror-separator {
       if (item.dataset.oboardPreviewReady === 'true') return;
       const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
       if (!name) return;
+      const type = item.dataset.favoriteType || 'dashboard';
       item.dataset.oboardPreviewReady = 'true';
       item.addEventListener('mouseenter', () => {
         window.clearTimeout(previewTimer);
-        previewTimer = window.setTimeout(() => showPreview({ name, row: item, sourceElement: item, mode: 'favorite' }), 1000);
+        previewTimer = window.setTimeout(() => showPreview({ name, row: item, sourceElement: item, mode: 'favorite', type }), 1000);
       });
       item.addEventListener('mouseleave', hidePreview);
       item.addEventListener('pointerdown', event => {
-        if (event.target.closest('.oboard-drag-handle')) hidePreview();
+        previewPointerDown = true;
+        hidePreview();
       });
     });
   }
@@ -7055,12 +8004,151 @@ img.ProseMirror-separator {
         cell.style.overflow = 'hidden';
       });
     }
+    styleGroupedCollectionBundleClone(clone, item);
+  }
+
+  function groupedCollectionChildRows(collectionRow) {
+    const host = collectionRow?.closest('.oboard-grouped-list');
+    if (!host || !collectionRow?.classList.contains('oboard-grouped-collection')) return [];
+    if (collectionRow.classList.contains('is-collapsed')) return [];
+    const collection = collectionRow.dataset.collection || '';
+    if (!collection) return [];
+    return Array.from(host.querySelectorAll(':scope > .oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]'))
+      .filter(row => !row.hidden);
+  }
+
+  function groupedCollectionBundleRect(collectionRow, childRows = groupedCollectionChildRows(collectionRow)) {
+    if (!collectionRow) return null;
+    const firstRect = collectionRow.getBoundingClientRect();
+    if (!childRows.length) return firstRect;
+    const lastRect = childRows[childRows.length - 1].getBoundingClientRect();
+    return {
+      left: firstRect.left,
+      right: firstRect.right,
+      top: firstRect.top,
+      bottom: lastRect.bottom,
+      width: firstRect.width,
+      height: Math.max(firstRect.height, lastRect.bottom - firstRect.top)
+    };
+  }
+
+  function prepareGroupedCollectionBundleDrag(collectionRow) {
+    const childRows = groupedCollectionChildRows(collectionRow);
+    if (!collectionRow || !childRows.length) return null;
+    const rect = groupedCollectionBundleRect(collectionRow, childRows);
+    const height = Math.round(rect.height);
+    const rowHeight = Math.round(collectionRow.getBoundingClientRect().height || parseFloat(getComputedStyle(collectionRow).getPropertyValue('--oboard-dashboard-row-height')) || 44);
+    collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
+    const inlineRows = childRows.map(row => groupedCollectionBundleChildClone(row, 'oboard-grouped-bundle-inline-child'));
+    activeGroupedCollectionBundleDrag = {
+      id: String(++groupedCollectionBundleDragId),
+      collectionRow,
+      childRows,
+      inlineRows,
+      height,
+      rowHeight,
+      rect
+    };
+    collectionRow.classList.add('oboard-grouped-bundle-dragging');
+    collectionRow.style.setProperty('--oboard-grouped-bundle-height', height + 'px');
+    inlineRows.forEach(row => collectionRow.appendChild(row));
+    childRows.forEach(row => row.classList.add('oboard-grouped-bundle-child-dragging'));
+    return activeGroupedCollectionBundleDrag;
+  }
+
+  function groupedCollectionBundleChildClone(row, className) {
+    const rowClone = row.cloneNode(true);
+    rowClone.hidden = false;
+    rowClone.removeAttribute('hidden');
+    rowClone.classList.remove(
+      'oboard-grouped-bundle-child-dragging',
+      'sortable-chosen',
+      'original-chosen',
+      'oboard-sortable-drag',
+      'oboard-dragging',
+      'is-related-hover',
+      'is-navigation-highlight',
+      'is-hover-demo'
+    );
+    rowClone.classList.add(className);
+    rowClone.style.height = '';
+    rowClone.style.minHeight = '';
+    rowClone.style.maxHeight = '';
+    rowClone.style.overflow = '';
+    rowClone.style.opacity = '1';
+    rowClone.style.visibility = 'visible';
+    rowClone.style.display = 'block';
+    return rowClone;
+  }
+
+  function styleGroupedCollectionBundleClone(clone, item) {
+    const bundle = activeGroupedCollectionBundleDrag;
+    if (!clone || !item || !bundle || bundle.collectionRow !== item) return;
+    const isReady = clone.dataset.oboardGroupedBundleId === bundle.id;
+    const page = item.closest('.dp-MainContent-CustomDashboardList');
+    const pageStyle = page ? getComputedStyle(page) : null;
+    [
+      '--page-left-padding',
+      '--page-right-padding',
+      '--oboard-dashboard-reorder-gutter',
+      '--oboard-dashboard-row-start-gutter',
+      '--oboard-dashboard-service-column',
+      '--oboard-dashboard-collections-column',
+      '--oboard-dashboard-owner-column',
+      '--oboard-dashboard-visibility-icon-column',
+      '--oboard-dashboard-visibility-text-column',
+      '--oboard-dashboard-action-column',
+      '--oboard-dashboard-visibility-column',
+      '--oboard-dashboard-row-height',
+      '--oboard-dashboard-grid-columns'
+    ].forEach(property => {
+      const value = pageStyle?.getPropertyValue(property);
+      if (value) clone.style.setProperty(property, value.trim());
+    });
+    clone.classList.add('oboard-grouped-collection-bundle-ghost');
+    clone.style.width = Math.round(bundle.rect.width) + 'px';
+    clone.style.height = bundle.height + 'px';
+    clone.style.minHeight = bundle.height + 'px';
+    clone.style.maxHeight = bundle.height + 'px';
+    clone.style.overflow = 'hidden';
+    clone.style.boxSizing = 'border-box';
+    clone.style.setProperty('--oboard-grouped-bundle-height', bundle.height + 'px');
+    if (isReady) return;
+
+    clone.dataset.oboardGroupedBundleId = bundle.id;
+    clone.querySelectorAll('.oboard-grouped-bundle-inline-child, .oboard-grouped-bundle-cloned-child').forEach(row => row.remove());
+
+    bundle.childRows.forEach(row => {
+      clone.appendChild(groupedCollectionBundleChildClone(row, 'oboard-grouped-bundle-cloned-child'));
+    });
+  }
+
+  function groupedSortableLockRect(event) {
+    const item = event?.item;
+    if (activeGroupedCollectionBundleDrag?.collectionRow === item) {
+      return activeGroupedCollectionBundleDrag.rect;
+    }
+    return item?.getBoundingClientRect();
+  }
+
+  function finishGroupedCollectionBundleDrag() {
+    const bundle = activeGroupedCollectionBundleDrag;
+    if (!bundle) return;
+    bundle.collectionRow.classList.remove('oboard-grouped-bundle-dragging');
+    bundle.collectionRow.style.removeProperty('--oboard-grouped-bundle-height');
+    bundle.collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
+    bundle.childRows.forEach(row => row.classList.remove('oboard-grouped-bundle-child-dragging'));
+    groupedSortable?.option?.('fallbackOffset', { x: 0, y: 0 });
+    activeGroupedCollectionBundleDrag = null;
   }
 
   function lockSortableFallback() {
     if (!activeSortableLock) return;
     const clone = document.querySelector('.sortable-fallback');
     if (!clone) return;
+    if (activeGroupedCollectionBundleDrag?.collectionRow) {
+      styleGroupedCollectionBundleClone(clone, activeGroupedCollectionBundleDrag.collectionRow);
+    }
     const transform = getComputedStyle(clone).transform;
     let translateY = 0;
     if (transform && transform !== 'none') {
@@ -7072,7 +8160,9 @@ img.ProseMirror-separator {
         if (matrix && matrix.length === 6) translateY = matrix[5] || 0;
       }
     }
+    clone.style.position = 'fixed';
     clone.style.left = activeSortableLock.left + 'px';
+    clone.style.top = activeSortableLock.top + 'px';
     clone.style.width = activeSortableLock.width + 'px';
     clone.style.maxWidth = activeSortableLock.width + 'px';
     clone.style.height = activeSortableLock.height + 'px';
@@ -7095,6 +8185,7 @@ img.ProseMirror-separator {
     const rect = lockRectFor(event);
     activeSortableLock = rect ? {
       left: Math.round(rect.left),
+      top: Math.round(rect.top),
       width: Math.round(rect.width),
       height: Math.round(rect.height)
     } : null;
@@ -7127,6 +8218,7 @@ img.ProseMirror-separator {
       scrollSpeed: 12,
       onChoose: hidePreview,
       onStart(event) {
+        previewPointerDown = true;
         hidePreview();
         document.body.classList.add('oboard-reordering');
         styleSortableClone(event);
@@ -7135,6 +8227,7 @@ img.ProseMirror-separator {
       onClone: styleSortableClone,
       onEnd(event) {
         stopSortableLock();
+        previewPointerDown = false;
         document.body.classList.remove('oboard-reordering');
         onEnd(event);
       },
@@ -7156,12 +8249,30 @@ img.ProseMirror-separator {
     syncSidebar();
   }
 
-  function syncFavoriteDataFromDom() {
+  function syncFavoriteDataFromDom(event) {
     if (!dashboardChildren) return;
-    favoriteOrder = Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item'))
-      .map(item => item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim())
-      .filter(Boolean);
+    const draggedItem = event?.item;
+    if (draggedItem && !favoriteItemSitsInsideOwnSection(draggedItem)) {
+      if (favoriteSectionSwitchCommitted) {
+        if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
+        saveFavoriteSectionOrder();
+        saveFavoriteOrder();
+      } else {
+        restoreFavoriteDragSnapshot();
+      }
+      favoriteDragSnapshot = null;
+      favoriteSectionSwitchCommitted = false;
+      attachFavoritePreview();
+      return;
+    }
+
+    const groups = favoriteDomTypeGroups();
+    favoriteOrder = favoriteSectionOrder.flatMap(type => groups[type] || []);
+    if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
     saveFavoriteOrder();
+    saveFavoriteSectionOrder();
+    favoriteDragSnapshot = null;
+    favoriteSectionSwitchCommitted = false;
     attachFavoritePreview();
   }
 
@@ -7181,11 +8292,28 @@ img.ProseMirror-separator {
   function initFavoriteSortable() {
     if (!window.Sortable || !dashboardChildren) return;
     favoriteSortable?.destroy();
+    const favoriteSortableOptions = sortableBaseOptions(event => {
+      clearFavoriteSectionSwitchTimer();
+      syncFavoriteDataFromDom(event);
+    }, event => event.item.getBoundingClientRect());
+    const baseFavoriteOnStart = favoriteSortableOptions.onStart;
+    const baseFavoriteOnEnd = favoriteSortableOptions.onEnd;
     favoriteSortable = window.Sortable.create(dashboardChildren, {
-      ...sortableBaseOptions(event => {
-        if (event.oldIndex !== event.newIndex) syncFavoriteDataFromDom();
-      }, event => event.item.getBoundingClientRect()),
-      draggable: '.amnl-List_Item'
+      ...favoriteSortableOptions,
+      draggable: '.amnl-List_Item:not(.oboard-favorites-section-separator)',
+      onStart(event) {
+        clearFavoriteSectionSwitchTimer();
+        captureFavoriteDragSnapshot(event.item?.dataset.dashboardName || '');
+        baseFavoriteOnStart(event);
+      },
+      onMove(event, originalEvent) {
+        handleFavoriteSectionDragMove(event, originalEvent);
+        return true;
+      },
+      onEnd(event) {
+        clearFavoriteSectionSwitchTimer();
+        baseFavoriteOnEnd(event);
+      }
     });
   }
 
@@ -7194,19 +8322,176 @@ img.ProseMirror-separator {
     const host = document.querySelector('.oboard-grouped-list');
     if (!host) return;
     groupedSortable?.destroy();
+    const groupedSortableOptions = sortableBaseOptions(event => {
+      placeGroupedRowFromDrop(event);
+    }, groupedSortableLockRect);
+    const baseGroupedOnChoose = groupedSortableOptions.onChoose;
+    const baseGroupedOnStart = groupedSortableOptions.onStart;
+    const baseGroupedOnEnd = groupedSortableOptions.onEnd;
+    const baseGroupedOnClone = groupedSortableOptions.onClone;
     groupedSortable = window.Sortable.create(host, {
-      ...sortableBaseOptions(event => {
-        placeGroupedDashboardFromDrop(event);
-      }, event => event.item.getBoundingClientRect()),
-      draggable: '.oboard-grouped-dashboard',
-      filter: '.oboard-grouped-collection, .oboard-grouped-head',
+      ...groupedSortableOptions,
+      draggable: '.oboard-grouped-row',
+      filter: '.oboard-grouped-head',
       preventOnFilter: false,
+      onChoose(event) {
+        const bundle = prepareGroupedCollectionBundleDrag(event.item);
+        groupedSortable?.option?.('fallbackOffset', { x: 0, y: 0 });
+        baseGroupedOnChoose(event);
+      },
+      onStart(event) {
+        baseGroupedOnStart(event);
+        beginGroupedDashboardCopyDrag(event);
+        scheduleGroupedDuplicateHint(event);
+      },
+      onClone(event) {
+        baseGroupedOnClone(event);
+        styleGroupedCollectionBundleClone(event.clone, event.item);
+      },
+      onEnd(event) {
+        hideGroupedDuplicateHint();
+        if (activeGroupedDashboardCopyDrag) {
+          stopSortableLock();
+          document.body.classList.remove('oboard-reordering');
+          finishGroupedCollectionBundleDrag();
+          finishGroupedDashboardCopyDrag(event);
+          return;
+        }
+        finishGroupedCollectionBundleDrag();
+        baseGroupedOnEnd(event);
+      },
       onMove(event, originalEvent) {
         if (originalEvent?.clientX) groupedDragClientX = originalEvent.clientX;
         if (originalEvent?.clientY) groupedDragClientY = originalEvent.clientY;
+        updateGroupedDuplicateHint(originalEvent);
         return true;
       }
     });
+  }
+
+  function isGroupedDashboardCopyGesture(event) {
+    const originalEvent = event?.originalEvent;
+    return Boolean(originalEvent?.altKey || originalEvent?.metaKey);
+  }
+
+  function beginGroupedDashboardCopyDrag(event) {
+    const item = event?.item;
+    if (!item?.classList.contains('oboard-grouped-dashboard') || !isGroupedDashboardCopyGesture(event)) return;
+    activeGroupedDashboardCopyDrag = {
+      dashboardName: item.dataset.dashboardName || '',
+      sourceCollection: item.dataset.collection || '',
+      sourceRow: item
+    };
+    item.classList.add('oboard-copy-anchor');
+    item.classList.remove('original-chosen');
+  }
+
+  function copyGroupedDashboardToCollection(dashboardName, collectionName) {
+    if (!dashboardName || !collectionName) return false;
+    const selected = dashboardCollections.get(dashboardName) || [];
+    if (selected.includes(collectionName)) return false;
+    dashboardCollections.set(dashboardName, [...selected, collectionName]);
+    saveDashboardCollections();
+    renderAllDashboardCollectionCells();
+    return true;
+  }
+
+  function rowsForGroupedDashboard(host, dashboardName) {
+    if (!host || !dashboardName) return [];
+    return Array.from(host.querySelectorAll('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"]'))
+      .filter(row => !row.hidden);
+  }
+
+  function targetGroupedCollectionFromPointer(clientX, clientY, draggedItem) {
+    if (!clientY) return null;
+    const element = clientX ? document.elementFromPoint(clientX, clientY) : null;
+    const row = element?.closest?.('.oboard-grouped-row');
+    if (row?.classList.contains('oboard-grouped-collection')) return row;
+    if (row?.classList.contains('oboard-grouped-dashboard')) {
+      const collection = row.dataset.collection || '';
+      return collection
+        ? row.closest('.oboard-grouped-list')?.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collection) + '"]') || null
+        : null;
+    }
+    return getGroupedCollectionUnderPointer(clientX, clientY, draggedItem);
+  }
+
+  function finishGroupedDashboardCopyDrag(event) {
+    const copy = activeGroupedDashboardCopyDrag;
+    activeGroupedDashboardCopyDrag = null;
+    const sourceEvent = event?.originalEvent || {};
+    const clientX = sourceEvent.clientX || groupedDragClientX;
+    const clientY = sourceEvent.clientY || groupedDragClientY;
+    const targetCollectionRow = targetGroupedCollectionFromPointer(clientX, clientY, event?.item);
+    const targetCollection = targetCollectionRow?.dataset.collection || '';
+    const shouldCopy = targetCollection && targetCollection !== copy.sourceCollection;
+    const copied = shouldCopy && copyGroupedDashboardToCollection(copy.dashboardName, targetCollection);
+    const host = initGroupedList();
+    if (!host) return;
+    if (copied) {
+      clearGroupedRelatedHover(host);
+      clearGroupedNavigationHighlight(host);
+      runGroupedNavigationHighlight(host, rowsForGroupedDashboard(host, copy.dashboardName));
+    }
+  }
+
+  function hideGroupedDuplicateHint() {
+    window.clearTimeout(groupedDuplicateHintTimer);
+    groupedDuplicateHintTimer = null;
+    groupedDuplicateHintState = null;
+    groupedDuplicateHint?.classList.remove('is-visible');
+    if (groupedDuplicateHint) {
+      window.setTimeout(() => groupedDuplicateHint?.remove(), 120);
+      groupedDuplicateHint = null;
+    }
+  }
+
+  function showGroupedDuplicateHint(row) {
+    if (!row || groupedDuplicateHint) return;
+    const rect = row.getBoundingClientRect();
+    const tooltip = document.createElement('div');
+    tooltip.className = 'oboard-duplicate-drag-tooltip';
+    tooltip.textContent = 'Hold “Alt” to duplicate';
+    document.body.appendChild(tooltip);
+    const tipRect = tooltip.getBoundingClientRect();
+    tooltip.style.left = Math.round(rect.left + 96) + 'px';
+    tooltip.style.top = Math.round(rect.top + rect.height - 6) + 'px';
+    tooltip.style.maxWidth = Math.max(220, Math.min(420, window.innerWidth - rect.left - 120)) + 'px';
+    groupedDuplicateHint = tooltip;
+    requestAnimationFrame(() => tooltip.classList.add('is-visible'));
+  }
+
+  function scheduleGroupedDuplicateHint(event) {
+    hideGroupedDuplicateHint();
+    const item = event?.item;
+    if (!item?.classList.contains('oboard-grouped-dashboard') || isGroupedDashboardCopyGesture(event)) return;
+    const rect = item.getBoundingClientRect();
+    const originalEvent = event.originalEvent || {};
+    groupedDuplicateHintState = {
+      row: item,
+      rect,
+      clientX: originalEvent.clientX || 0,
+      clientY: originalEvent.clientY || 0
+    };
+    groupedDuplicateHintTimer = window.setTimeout(() => {
+      const state = groupedDuplicateHintState;
+      if (!state) return;
+      const x = state.clientX;
+      const y = state.clientY;
+      if (x >= state.rect.left && x <= state.rect.right && y >= state.rect.top && y <= state.rect.bottom) {
+        showGroupedDuplicateHint(state.row);
+      }
+    }, 1000);
+  }
+
+  function updateGroupedDuplicateHint(originalEvent) {
+    if (!groupedDuplicateHintState || !originalEvent?.clientX || !originalEvent?.clientY) return;
+    groupedDuplicateHintState.clientX = originalEvent.clientX;
+    groupedDuplicateHintState.clientY = originalEvent.clientY;
+    const rect = groupedDuplicateHintState.rect;
+    if (originalEvent.clientX < rect.left || originalEvent.clientX > rect.right || originalEvent.clientY < rect.top || originalEvent.clientY > rect.bottom) {
+      hideGroupedDuplicateHint();
+    }
   }
 
   function getGroupedCollectionUnderPointer(clientX, clientY, draggedItem) {
@@ -7296,6 +8581,19 @@ img.ProseMirror-separator {
     normalizeGroupedDashboardCollections(host);
   }
 
+  function placeGroupedRowFromDrop(event) {
+    const host = document.querySelector('.oboard-grouped-list');
+    const item = event?.item;
+    if (!host || !item) return;
+
+    if (item.classList.contains('oboard-grouped-collection')) {
+      reorderGroupedDashboardCollections(host);
+      return;
+    }
+
+    placeGroupedDashboardFromDrop(event);
+  }
+
   function svgIcon(id, className = '') {
     return '<svg data-target-id="' + id + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon ' + className + '"><use xlink:href="#' + id + '" href="#' + id + '"></use></svg>';
   }
@@ -7309,6 +8607,15 @@ img.ProseMirror-separator {
       '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-label">',
       '<span>' + label + '</span>',
       tableHeaderSortIcon(sorted ? 'icon-arrow-up-next' : 'icon-sort-two-ways-next', sorted ? '' : 'cdth-HeaderCell_DefaultStateSorting'),
+      '</div>'
+    ].join('');
+  }
+
+  function groupedNameHeaderLabel() {
+    return [
+      '<div class="oboard-grouped-head-name">',
+      '<div class="cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-favorite">' + svgIcon(EMPTY) + '</div>',
+      groupedHeaderLabel('Name', true),
       '</div>'
     ].join('');
   }
@@ -7341,7 +8648,10 @@ img.ProseMirror-separator {
   ];
 
   function dashboardOwner(item) {
-    return item.row.querySelector('.unc-Name')?.textContent?.trim() || 'Viacheslav Makhankov';
+    return dashboardOwners.get(item.name)
+      || item.row.dataset.dashboardOwner
+      || item.row.querySelector('.unc-Name')?.textContent?.trim()
+      || 'Viacheslav Makhankov';
   }
 
   function dashboardIsPrivate(item) {
@@ -7400,6 +8710,11 @@ img.ProseMirror-separator {
 
   function clearGroupedRelatedHover(host) {
     host?.querySelectorAll('.is-related-hover').forEach(row => row.classList.remove('is-related-hover'));
+    host?.querySelectorAll('.is-tooltip-open').forEach(badge => badge.classList.remove('is-tooltip-open'));
+  }
+
+  function clearAllGroupedRelatedHover() {
+    document.querySelectorAll('.oboard-grouped-list').forEach(host => clearGroupedRelatedHover(host));
   }
 
   function applyGroupedRelatedHover(badge) {
@@ -7408,6 +8723,14 @@ img.ProseMirror-separator {
     if (!host || !currentRow) return;
 
     clearGroupedRelatedHover(host);
+    badge.classList.add('is-tooltip-open');
+    groupedRowsForCollectionBadge(badge, false).forEach(row => row.classList.add('is-related-hover'));
+  }
+
+  function groupedRowsForCollectionBadge(badge, includeCurrent = true) {
+    const host = badge?.closest('.oboard-grouped-list');
+    const currentRow = badge?.closest('.oboard-grouped-dashboard');
+    if (!host || !currentRow) return [];
     const dashboardName = badge.dataset.dashboardName || currentRow.dataset.dashboardName || '';
     const relatedCollections = (badge.dataset.relatedCollections || '')
       .split('|')
@@ -7419,35 +8742,265 @@ img.ProseMirror-separator {
           return value;
         }
       });
+    const rows = [];
+    if (includeCurrent) rows.push(currentRow);
 
     relatedCollections.forEach(collectionName => {
       const dashboardRow = host.querySelector(
         '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
       );
       if (dashboardRow && !dashboardRow.hidden) {
-        dashboardRow.classList.add('is-related-hover');
+        rows.push(dashboardRow);
         return;
       }
 
       const collectionRow = host.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collectionName) + '"]');
-      collectionRow?.classList.add('is-related-hover');
+      const firstDashboard = collectionRow
+        ? host.querySelector('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]')
+        : null;
+      if (firstDashboard) rows.push(firstDashboard);
+    });
+    return rows;
+  }
+
+  function hoveredGroupedCollectionBadge() {
+    return document.querySelector('.oboard-grouped-collection-badge:hover');
+  }
+
+  function syncGroupedRelatedHover() {
+    const badge = hoveredGroupedCollectionBadge();
+    if (!badge) {
+      clearAllGroupedRelatedHover();
+      return;
+    }
+    if (badge.classList.contains('is-click-suppressed')) {
+      clearGroupedRelatedHover(badge.closest('.oboard-grouped-list'));
+      return;
+    }
+    if (!badge.classList.contains('is-tooltip-open')) {
+      applyGroupedRelatedHover(badge);
+    }
+    document.querySelectorAll('.oboard-grouped-collection-badge.is-tooltip-open').forEach(openBadge => {
+      if (openBadge !== badge) {
+        clearGroupedRelatedHover(openBadge.closest('.oboard-grouped-list'));
+      }
+    });
+  }
+
+  function bindGroupedRelatedHoverCleanup(host) {
+    if (!host) return;
+
+    const clearIfOutsideBadge = event => {
+      const target = event.target;
+      if (target?.closest?.('.oboard-grouped-collection-badge')) return;
+      clearAllGroupedRelatedHover();
+    };
+
+    if (host.dataset.oboardRelatedHoverCleanup !== 'true') {
+      host.dataset.oboardRelatedHoverCleanup = 'true';
+      host.addEventListener('pointermove', clearIfOutsideBadge);
+      host.addEventListener('mousemove', clearIfOutsideBadge);
+      host.addEventListener('mouseleave', () => clearGroupedRelatedHover(host));
+    }
+
+    if (groupedRelatedHoverCleanupBound) return;
+    groupedRelatedHoverCleanupBound = true;
+    document.addEventListener('pointermove', syncGroupedRelatedHover, true);
+    document.addEventListener('mousemove', syncGroupedRelatedHover, true);
+    document.addEventListener('pointerdown', clearIfOutsideBadge, true);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') clearAllGroupedRelatedHover();
+    });
+    window.addEventListener('scroll', clearAllGroupedRelatedHover, true);
+    window.addEventListener('blur', clearAllGroupedRelatedHover);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clearAllGroupedRelatedHover();
     });
   }
 
   function bindGroupedRelatedHoverBadges(host) {
+    bindGroupedRelatedHoverCleanup(host);
     host.querySelectorAll('.oboard-grouped-collection-badge').forEach(badge => {
       const clearIfLeavingBadge = event => {
         if (badge.contains(event.relatedTarget)) return;
+        badge.classList.remove('is-click-suppressed');
         clearGroupedRelatedHover(host);
       };
-      badge.addEventListener('pointerenter', () => applyGroupedRelatedHover(badge));
-      badge.addEventListener('mouseenter', () => applyGroupedRelatedHover(badge));
-      badge.addEventListener('mouseover', () => applyGroupedRelatedHover(badge));
+      const applyIfNotSuppressed = () => {
+        if (!badge.classList.contains('is-click-suppressed')) applyGroupedRelatedHover(badge);
+      };
+      badge.addEventListener('pointerenter', applyIfNotSuppressed);
+      badge.addEventListener('mouseenter', applyIfNotSuppressed);
+      badge.addEventListener('mouseover', applyIfNotSuppressed);
+      badge.addEventListener('pointerdown', () => {
+        badge.classList.add('is-click-suppressed');
+        badge.blur();
+        clearGroupedRelatedHover(host);
+      });
+      badge.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        badge.classList.add('is-click-suppressed');
+        badge.blur();
+        const highlightRows = groupedRowsForCollectionBadge(badge, true);
+        clearGroupedRelatedHover(host);
+        clearGroupedNavigationHighlight(host);
+        runGroupedNavigationHighlight(host, highlightRows);
+      });
       badge.addEventListener('pointerleave', clearIfLeavingBadge);
       badge.addEventListener('mouseleave', clearIfLeavingBadge);
       badge.addEventListener('mouseout', clearIfLeavingBadge);
-      badge.addEventListener('focus', () => applyGroupedRelatedHover(badge));
       badge.addEventListener('blur', () => clearGroupedRelatedHover(host));
+    });
+  }
+
+  function clearGroupedNavigationHighlight(host) {
+    window.clearTimeout(groupedNavigationHighlightTimer);
+    groupedNavigationHighlightTimer = null;
+    if (groupedNavigationHoverUnlock) {
+      window.removeEventListener('pointermove', groupedNavigationHoverUnlock, true);
+      window.removeEventListener('mousemove', groupedNavigationHoverUnlock, true);
+      groupedNavigationHoverUnlock = null;
+    }
+    host?.classList.remove('is-navigation-opening', 'is-navigation-hover-locked');
+    host?.querySelectorAll('.is-navigation-highlight').forEach(row => row.classList.remove('is-navigation-highlight'));
+  }
+
+  function releaseGroupedNavigationHoverLock(host) {
+    if (groupedNavigationHoverUnlock) {
+      window.removeEventListener('pointermove', groupedNavigationHoverUnlock, true);
+      window.removeEventListener('mousemove', groupedNavigationHoverUnlock, true);
+      groupedNavigationHoverUnlock = null;
+    }
+    host?.classList.remove('is-navigation-hover-locked');
+  }
+
+  function holdGroupedNavigationHoverUntilPointerMove(host) {
+    if (!host) return;
+    host.classList.add('is-navigation-hover-locked');
+    if (groupedNavigationHoverUnlock) {
+      window.removeEventListener('pointermove', groupedNavigationHoverUnlock, true);
+      window.removeEventListener('mousemove', groupedNavigationHoverUnlock, true);
+    }
+
+    groupedNavigationHoverUnlock = () => releaseGroupedNavigationHoverLock(host);
+    window.addEventListener('pointermove', groupedNavigationHoverUnlock, true);
+    window.addEventListener('mousemove', groupedNavigationHoverUnlock, true);
+  }
+
+  function setGroupedCollectionCollapsed(host, collectionRow, collapsed) {
+    if (!host || !collectionRow) return;
+    const collection = collectionRow.dataset.collection;
+    const button = collectionRow.querySelector('.oboard-grouped-chevrons');
+    collectionRow.classList.remove('is-related-hover');
+    collectionRow.classList.toggle('is-collapsed', collapsed);
+    button?.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
+    host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
+      row.classList.remove('is-related-hover', 'is-navigation-highlight');
+      row.hidden = collapsed;
+    });
+  }
+
+  function revealGroupedRows(rows) {
+    const rowHeight = getComputedStyle(document.querySelector('.dp-MainContent-CustomDashboardList') || document.documentElement)
+      .getPropertyValue('--oboard-dashboard-row-height')
+      .trim() || '44px';
+
+    rows.forEach(row => {
+      row.hidden = false;
+      row.style.overflow = 'hidden';
+      row.style.height = '0px';
+      row.style.opacity = '0';
+      row.style.transform = 'translateY(-4px)';
+      row.style.transition = 'none';
+    });
+
+    rows.forEach(row => row.getBoundingClientRect());
+
+    requestAnimationFrame(() => {
+      rows.forEach(row => {
+        row.style.transition = 'height 300ms ease-in-out, opacity 300ms ease-in-out, transform 300ms ease-in-out';
+        row.style.height = rowHeight;
+        row.style.opacity = '1';
+        row.style.transform = 'translateY(0)';
+      });
+    });
+
+    return new Promise(resolve => {
+      window.setTimeout(() => {
+        rows.forEach(row => {
+          row.style.overflow = '';
+          row.style.height = '';
+          row.style.opacity = '';
+          row.style.transform = '';
+          row.style.transition = '';
+        });
+        resolve();
+      }, GROUPED_NAVIGATION_OPEN_MS);
+    });
+  }
+
+  function openGroupedCollectionForNavigation(host, collectionRow) {
+    if (!host || !collectionRow) return [];
+    const collection = collectionRow.dataset.collection;
+    const button = collectionRow.querySelector('.oboard-grouped-chevrons');
+    collectionRow.classList.remove('is-collapsed', 'is-related-hover');
+    button?.setAttribute('aria-label', 'Collapse collection');
+    const rows = Array.from(host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]'));
+    rows.forEach(row => row.classList.remove('is-related-hover', 'is-navigation-highlight'));
+    return rows;
+  }
+
+  function runGroupedNavigationHighlight(host, rows) {
+    rows.forEach(row => row.classList.remove('is-navigation-highlight'));
+    rows.forEach(row => row.getBoundingClientRect());
+    rows.forEach(row => row.classList.add('is-navigation-highlight'));
+
+    groupedNavigationHighlightTimer = window.setTimeout(() => {
+      rows.forEach(row => row.classList.remove('is-navigation-highlight'));
+      host?.classList.remove('is-navigation-opening');
+      holdGroupedNavigationHoverUntilPointerMove(host);
+      groupedNavigationHighlightTimer = null;
+    }, GROUPED_NAVIGATION_HIGHLIGHT_MS);
+  }
+
+  function focusGroupedDashboardCollections(dashboardName, collections) {
+    const selectedCollections = (collections || dashboardCollections.get(dashboardName) || []).filter(Boolean);
+    if (!dashboardName || !selectedCollections.length) return;
+
+    selectDashboardMode('grouped', { animate: false });
+    const host = initGroupedList();
+    if (!host) return;
+
+    closeCollectionMenu();
+    clearGroupedRelatedHover(host);
+    clearGroupedNavigationHighlight(host);
+    host.classList.add('is-navigation-opening');
+
+    const targetCollections = new Set(selectedCollections);
+    host.querySelectorAll(':scope > .oboard-grouped-collection').forEach(collectionRow => {
+      setGroupedCollectionCollapsed(host, collectionRow, true);
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const revealRows = [];
+        targetCollections.forEach(collectionName => {
+          const collectionRow = host.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collectionName) + '"]');
+          revealRows.push(...openGroupedCollectionForNavigation(host, collectionRow));
+        });
+
+        const highlightedRows = selectedCollections
+          .map(collection => host.querySelector(
+            '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collection) + '"]'
+          ))
+          .filter(Boolean);
+
+        highlightedRows[0]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        revealGroupedRows(revealRows).then(() => {
+          runGroupedNavigationHighlight(host, highlightedRows);
+        });
+      });
     });
   }
 
@@ -7482,6 +9035,7 @@ img.ProseMirror-separator {
   function groupedCollectionRow(collection) {
     return [
       '<div class="oboard-grouped-row oboard-grouped-collection' + (collection.hover ? ' is-hover-demo' : '') + '" data-collection="' + escapeHtml(collection.name) + '">',
+      '<button class="oboard-drag-handle oboard-grouped-drag-handle oboard-grouped-collection-drag-handle" type="button" aria-label="Reorder collection">' + svgIcon(DRAG) + '</button>',
       '<div class="oboard-grouped-row-inner">',
       '<div class="oboard-grouped-service-cell">',
       '<button class="oboard-grouped-chevrons" type="button" aria-label="Collapse collection">' + svgIcon('icon-arrow-down-simple-next') + '</button>',
@@ -7492,8 +9046,8 @@ img.ProseMirror-separator {
       '</div>',
       '<div class="oboard-grouped-collections-cell"></div>',
       ownerCell(collection.owner),
-      '<div class="oboard-grouped-visibility-cell">' + groupedCollectionActions(collection) + '</div>',
-      '<span></span>',
+      '<div class="oboard-grouped-visibility-cell"></div>',
+      groupedCollectionActions(collection),
       '</div>',
       '</div>'
     ].join('');
@@ -7546,6 +9100,19 @@ img.ProseMirror-separator {
     button.setAttribute('aria-expanded', 'true');
   }
 
+  function showGroupedCopyLinkCopied(button) {
+    if (!button) return;
+    const label = button.querySelector('.oboard-grouped-copy-link-text');
+    window.clearTimeout(groupedCopyLinkResetTimers.get(button));
+    button.classList.add('is-copied');
+    if (label) label.textContent = 'Link copied';
+    groupedCopyLinkResetTimers.set(button, window.setTimeout(() => {
+      button.classList.remove('is-copied');
+      if (label) label.textContent = 'Copy link';
+      groupedCopyLinkResetTimers.delete(button);
+    }, 1200));
+  }
+
   function bindCollectionMenuEvents() {
     if (collectionMenuEventsBound) return;
     collectionMenuEventsBound = true;
@@ -7564,8 +9131,8 @@ img.ProseMirror-separator {
     const groupedCollections = buildGroupedCollections();
     return [
       '<div class="oboard-grouped-head">',
-      '<div class="cdth-HeaderCell-sorting cdth-HeaderCell cdl-TableHeaderCell oboard-grouped-head-favorite">' + svgIcon(EMPTY) + tableHeaderSortIcon('icon-sort-two-ways-next', 'cdth-HeaderCell_DefaultStateSorting') + '</div>',
-      groupedHeaderLabel('Name', true),
+      '<div class="oboard-grouped-head-service"></div>',
+      groupedNameHeaderLabel(),
       groupedHeaderLabel('Collections'),
       groupedHeaderLabel('Owner'),
       '<div class="oboard-grouped-visibility-cell">' + groupedHeaderLabel('Visibility') + '</div>',
@@ -7589,16 +9156,10 @@ img.ProseMirror-separator {
     host.querySelectorAll('.oboard-grouped-collection').forEach(collectionRow => {
       const button = collectionRow.querySelector('.oboard-grouped-chevrons');
       button?.addEventListener('click', () => {
-        const collection = collectionRow.dataset.collection;
         const collapsed = !collectionRow.classList.contains('is-collapsed');
         clearGroupedRelatedHover(host);
-        collectionRow.classList.remove('is-related-hover');
-        collectionRow.classList.toggle('is-collapsed', collapsed);
-        button.setAttribute('aria-label', collapsed ? 'Expand collection' : 'Collapse collection');
-        host.querySelectorAll('.oboard-grouped-dashboard[data-collection="' + CSS.escape(collection) + '"]').forEach(row => {
-          row.classList.remove('is-related-hover');
-          row.hidden = collapsed;
-        });
+        clearGroupedNavigationHighlight(host);
+        setGroupedCollectionCollapsed(host, collectionRow, collapsed);
         button.blur();
       });
     });
@@ -7619,6 +9180,8 @@ img.ProseMirror-separator {
         const copyLink = event.target.closest('.oboard-grouped-copy-link');
         if (copyLink) {
           event.preventDefault();
+          event.stopPropagation();
+          showGroupedCopyLinkCopied(copyLink);
           return;
         }
         const menuButton = event.target.closest('.oboard-grouped-collection-more');
@@ -7637,6 +9200,7 @@ img.ProseMirror-separator {
   const MODE_TRANSITION_DURATION = 520;
   const MODE_BRANCH_DURATION = 360;
   const MODE_TRANSITION_EASING = 'cubic-bezier(0.2, 0, 0, 1)';
+  let dashboardModeTransitioning = false;
 
   function transitionCloneForRow(item, rect) {
     const clone = item.row.cloneNode(true);
@@ -7648,6 +9212,29 @@ img.ProseMirror-separator {
     clone.style.width = rect.width + 'px';
     clone.style.height = rect.height + 'px';
     return { clone, rect };
+  }
+
+  function transitionCloneForNode(node, rect) {
+    const clone = node.cloneNode(true);
+    clone.classList.add('oboard-mode-transition-row');
+    clone.style.margin = '0';
+    clone.style.pointerEvents = 'none';
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    return { clone, rect };
+  }
+
+  function rectLike(rect, overrides = {}) {
+    return {
+      left: overrides.left ?? rect.left,
+      top: overrides.top ?? rect.top,
+      width: overrides.width ?? rect.width,
+      height: overrides.height ?? rect.height,
+      right: overrides.right ?? (overrides.left ?? rect.left) + (overrides.width ?? rect.width),
+      bottom: overrides.bottom ?? (overrides.top ?? rect.top) + (overrides.height ?? rect.height)
+    };
   }
 
   function groupedTargetForDashboard(name, collectionName) {
@@ -7697,15 +9284,17 @@ img.ProseMirror-separator {
   function animateCloneToTarget(clone, sourceRect, targetRect, options = {}) {
     const x = targetRect.left - sourceRect.left;
     const y = targetRect.top - sourceRect.top;
+    const fromOpacity = options.fromOpacity ?? 1;
+    const toOpacity = options.toOpacity ?? 1;
     return clone.animate([
       {
-        opacity: 1,
+        opacity: fromOpacity,
         transform: 'translate3d(0, 0, 0)',
         width: sourceRect.width + 'px',
         height: sourceRect.height + 'px'
       },
       {
-        opacity: 1,
+        opacity: toOpacity,
         transform: 'translate3d(' + x + 'px, ' + y + 'px, 0)',
         width: targetRect.width + 'px',
         height: targetRect.height + 'px'
@@ -7739,9 +9328,39 @@ img.ProseMirror-separator {
     }).finished.catch(() => {});
   }
 
+  function animateCloneOutRight(clone, distance = 72, options = {}) {
+    return clone.animate([
+      { opacity: options.fromOpacity ?? 1, transform: 'translate3d(0, 0, 0)' },
+      { opacity: 0, transform: 'translate3d(' + distance + 'px, 0, 0)' }
+    ], {
+      duration: options.duration || 300,
+      delay: options.delay || 0,
+      easing: MODE_TRANSITION_EASING,
+      fill: 'forwards'
+    }).finished.catch(() => {});
+  }
+
+  function groupedDashboardSourceRows(host) {
+    const map = new Map();
+    host.querySelectorAll('.oboard-grouped-dashboard').forEach(row => {
+      const name = row.dataset.dashboardName;
+      if (!name) return;
+      if (!map.has(name)) map.set(name, []);
+      map.get(name).push(row);
+    });
+    return map;
+  }
+
+  function tableTargetRectsForUngrouped(page) {
+    page.classList.remove('oboard-grouped-mode');
+    const rects = new Map(rowOrder.map(item => [item.name, item.row.getBoundingClientRect()]));
+    page.classList.add('oboard-grouped-mode');
+    return rects;
+  }
+
   function animateUngroupedToGrouped() {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
-    if (!page || page.classList.contains('oboard-grouped-mode')) return Promise.resolve();
+    if (!page || page.classList.contains('oboard-grouped-mode') || dashboardModeTransitioning) return Promise.resolve();
     const host = initGroupedList();
     if (!host) return Promise.resolve();
 
@@ -7756,6 +9375,7 @@ img.ProseMirror-separator {
       return Promise.resolve();
     }
 
+    dashboardModeTransitioning = true;
     page.classList.add('oboard-mode-transitioning');
     host.getBoundingClientRect();
 
@@ -7763,44 +9383,147 @@ img.ProseMirror-separator {
     overlay.className = 'oboard-mode-transition-overlay';
     document.body.appendChild(overlay);
 
-    const settledClones = [];
-    const rowAnimations = sourceStates.map(state => {
+    const visibleTargetRects = sourceStates.flatMap(state => groupedTargetsForDashboard(state.item.name, state.memberships).map(target => target.node.getBoundingClientRect()));
+    const lastTargetBottom = visibleTargetRects.length
+      ? Math.max(...visibleTargetRects.map(rect => rect.bottom))
+      : (host.getBoundingClientRect().top + 44);
+    const hostRect = host.getBoundingClientRect();
+    let orphanIndex = 0;
+
+    const stackAnimations = sourceStates.flatMap(state => {
       const targets = groupedTargetsForDashboard(state.item.name, state.memberships);
-      const target = targets[0]?.node || groupedTargetForDashboard(state.item.name, state.primaryMembership);
-      const { clone, rect } = transitionCloneForRow(state.item, state.rect);
-      overlay.appendChild(clone);
-      if (!target || !state.memberships.length) {
-        return animateCloneOut(clone);
+      if (!targets.length) {
+        const { clone, rect } = transitionCloneForRow(state.item, state.rect);
+        const targetRect = rectLike(rect, {
+          left: hostRect.left,
+          top: lastTargetBottom + 16 + orphanIndex * rect.height,
+          width: hostRect.width,
+          height: rect.height
+        });
+        orphanIndex += 1;
+        overlay.appendChild(clone);
+        return [animateCloneToTarget(clone, rect, targetRect, { toOpacity: 0.28, duration: 420 }).then(() => {
+          clone.dataset.oboardTransitionOrphan = 'true';
+        })];
       }
-      const targetRect = target.getBoundingClientRect();
-      return animateCloneToTarget(clone, rect, targetRect).then(() => {
-        settleCloneAtRect(clone, targetRect);
-        settledClones.push({ state, clone, primaryRect: targetRect, targets: targets.slice(1) });
+
+      return targets.map((target, index) => {
+        const targetRect = target.node.getBoundingClientRect();
+        const { clone, rect } = transitionCloneForRow(state.item, state.rect);
+        overlay.appendChild(clone);
+        return animateCloneToTarget(clone, rect, targetRect, {
+          duration: MODE_TRANSITION_DURATION,
+          delay: index * 48
+        }).then(() => settleCloneAtRect(clone, targetRect));
       });
     });
 
-    return Promise.all(rowAnimations).then(() => {
-      const branchAnimations = settledClones.flatMap(entry => entry.targets.map((target, index) => {
-        const targetRect = target.node.getBoundingClientRect();
-        const duplicate = entry.state.item.row.cloneNode(true);
-        duplicate.classList.add('oboard-mode-transition-row');
-        duplicate.style.margin = '0';
-        duplicate.style.pointerEvents = 'none';
-        duplicate.style.left = entry.primaryRect.left + 'px';
-        duplicate.style.top = entry.primaryRect.top + 'px';
-        duplicate.style.width = entry.primaryRect.width + 'px';
-        duplicate.style.height = entry.primaryRect.height + 'px';
-        overlay.appendChild(duplicate);
-        return animateCloneToTarget(duplicate, entry.primaryRect, targetRect, {
-          duration: MODE_BRANCH_DURATION,
-          delay: index * 48
-        }).then(() => settleCloneAtRect(duplicate, targetRect));
-      }));
-      return Promise.all(branchAnimations);
-    }).then(() => Promise.all(animateGroupedScaffold(host, 40))).then(() => {
+    return Promise.all(stackAnimations)
+      .then(() => Promise.all(Array.from(overlay.querySelectorAll('[data-oboard-transition-orphan="true"]')).map(clone => animateCloneOut(clone))))
+      .then(() => Promise.all(animateGroupedScaffold(host, 20)))
+      .then(() => {
       page.classList.add('oboard-grouped-mode');
       page.classList.remove('oboard-mode-transitioning');
       overlay.remove();
+      dashboardModeTransitioning = false;
+    }).catch(error => {
+      page.classList.add('oboard-grouped-mode');
+      page.classList.remove('oboard-mode-transitioning');
+      overlay.remove();
+      dashboardModeTransitioning = false;
+      throw error;
+    });
+  }
+
+  function animateGroupedToUngrouped() {
+    const page = document.querySelector('.dp-MainContent-CustomDashboardList');
+    const host = page?.querySelector('.oboard-grouped-list');
+    if (!page || !host || !page.classList.contains('oboard-grouped-mode') || dashboardModeTransitioning) return Promise.resolve();
+
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+      page.classList.remove('oboard-grouped-mode');
+      initDashboardCollectionColumn();
+      return Promise.resolve();
+    }
+
+    dashboardModeTransitioning = true;
+    const targetRects = tableTargetRectsForUngrouped(page);
+    const groupedRowsByName = groupedDashboardSourceRows(host);
+    const groupedContentRect = host.getBoundingClientRect();
+    const collectionSources = Array.from(host.querySelectorAll('.oboard-grouped-head, .oboard-grouped-collection')).map(node => ({
+      node,
+      rect: node.getBoundingClientRect()
+    }));
+
+    const overlay = document.createElement('div');
+    overlay.className = 'oboard-mode-transition-overlay';
+    document.body.appendChild(overlay);
+
+    const dashboardAnimations = [];
+    rowOrder.forEach((item, index) => {
+      const targetRect = targetRects.get(item.name);
+      if (!targetRect) return;
+      const sourceRows = groupedRowsByName.get(item.name) || [];
+      if (!sourceRows.length) {
+        const orphanSourceRect = rectLike(targetRect, {
+          left: groupedContentRect.left,
+          top: groupedContentRect.bottom + 16 + index * targetRect.height,
+          width: groupedContentRect.width,
+          height: targetRect.height
+        });
+        const { clone } = transitionCloneForRow(item, orphanSourceRect);
+        clone.style.opacity = '0.28';
+        overlay.appendChild(clone);
+        dashboardAnimations.push(animateCloneToTarget(clone, orphanSourceRect, targetRect, {
+          fromOpacity: 0.28,
+          toOpacity: 1,
+          duration: MODE_TRANSITION_DURATION,
+          delay: 220
+        }));
+        return;
+      }
+
+      sourceRows.forEach((row, rowIndex) => {
+        const sourceRect = row.getBoundingClientRect();
+        const { clone } = transitionCloneForNode(row, sourceRect);
+        overlay.appendChild(clone);
+        if (rowIndex === 0) {
+          dashboardAnimations.push(animateCloneToTarget(clone, sourceRect, targetRect, {
+            duration: MODE_TRANSITION_DURATION,
+            delay: 160
+          }));
+        } else {
+          dashboardAnimations.push(animateCloneToTarget(clone, sourceRect, targetRect, {
+            toOpacity: 0,
+            duration: MODE_BRANCH_DURATION,
+            delay: rowIndex * 36
+          }));
+        }
+      });
+    });
+
+    const collectionAnimations = collectionSources.map((entry, index) => {
+      const { clone } = transitionCloneForNode(entry.node, entry.rect);
+      overlay.appendChild(clone);
+      return animateCloneOutRight(clone, 80, {
+        duration: 300,
+        delay: index ? 40 + index * 24 : 0
+      });
+    });
+
+    page.classList.add('oboard-mode-transitioning');
+
+    return Promise.all([...collectionAnimations, ...dashboardAnimations]).then(() => {
+      page.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
+      initDashboardCollectionColumn();
+      overlay.remove();
+      dashboardModeTransitioning = false;
+    }).catch(error => {
+      page.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
+      initDashboardCollectionColumn();
+      overlay.remove();
+      dashboardModeTransitioning = false;
+      throw error;
     });
   }
 
@@ -7817,21 +9540,38 @@ img.ProseMirror-separator {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
     const createButton = document.querySelector('.cdl-DashboardHeader_NewReport');
     const grouped = mode === 'grouped';
+    dashboardModeTransitioning = false;
+    page?.classList.remove('oboard-mode-transitioning');
+    document.querySelectorAll('.oboard-mode-transition-overlay').forEach(overlay => overlay.remove());
     setButtonText(createButton, grouped ? 'Create collection' : 'Create dashboard');
     if (grouped) {
       hidePreview();
       closeDashboardCollectionPopover();
-      if (options.animate) {
-        animateUngroupedToGrouped();
-        return;
-      }
+      closeDashboardPageSizeMenu();
+      releaseGroupedNavigationHoverLock(document.querySelector('.oboard-grouped-list'));
       initGroupedList();
       page?.classList.add('oboard-grouped-mode');
     } else {
       closeCollectionMenu();
-      page?.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
+      clearGroupedNavigationHighlight(document.querySelector('.oboard-grouped-list'));
+      page?.classList.remove('oboard-grouped-mode');
       initDashboardCollectionColumn();
     }
+  }
+
+  function selectDashboardMode(mode, options = {}) {
+    const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
+    const switcher = document.querySelector('.oboard-dashboard-mode-switcher');
+    if (switcher) {
+      switcher.dataset.mode = normalizedMode;
+      switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
+        const active = option.dataset.mode === normalizedMode;
+        option.classList.toggle('is-active', active);
+        option.setAttribute('aria-checked', active ? 'true' : 'false');
+      });
+    }
+    window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
+    applyDashboardMode(normalizedMode, options);
   }
 
   function initDashboardGroupSwitcher() {
@@ -7847,27 +9587,18 @@ img.ProseMirror-separator {
       '<button type="button" class="oboard-dashboard-mode-option" role="radio" data-mode="grouped" aria-checked="false">' + layersIcon() + '<span>Grouped</span></button>'
     ].join('');
 
-    function setMode(mode) {
-      const normalizedMode = mode === 'grouped' ? 'grouped' : 'ungrouped';
-      const previousMode = switcher.dataset.mode || '';
-      switcher.dataset.mode = normalizedMode;
-      switcher.querySelectorAll('.oboard-dashboard-mode-option').forEach(option => {
-        const active = option.dataset.mode === normalizedMode;
-        option.classList.toggle('is-active', active);
-        option.setAttribute('aria-checked', active ? 'true' : 'false');
-      });
-      window.localStorage.setItem(DASHBOARD_MODE_STORAGE_KEY, normalizedMode);
-      applyDashboardMode(normalizedMode, { animate: false });
+    function setMode(mode, animate = true) {
+      selectDashboardMode(mode, { animate });
     }
 
     switcher.addEventListener('click', event => {
       const option = event.target.closest('.oboard-dashboard-mode-option');
       if (!option || !switcher.contains(option)) return;
-      setMode(option.dataset.mode);
+      setMode(option.dataset.mode, false);
     });
 
     headerLeft.insertBefore(switcher, headerLeft.firstElementChild);
-    setMode(window.localStorage.getItem(DASHBOARD_MODE_STORAGE_KEY) || 'ungrouped');
+    setMode(window.localStorage.getItem(DASHBOARD_MODE_STORAGE_KEY) || 'ungrouped', false);
   }
 
   function homeViewTemplate() {
@@ -8015,14 +9746,14 @@ img.ProseMirror-separator {
       home: { selector: '.amnl-List_Item-homePage > .amni-Item', url: '#/workspaces/23574', html: homeViewTemplate },
       checkins: { selector: '.amnl-List_Item-checkinsFeed > .amni-Item', url: '#/check-ins/feed', html: checkinsViewTemplate },
       objectives: { selector: '.amnl-List_Item-objectives > .amni-Item', url: '#/workspaces/23574/objectives/alignment/table?filterPreset=myGroup', html: objectivesViewTemplate },
-      dashboard: { selector: '.oboard-nav-section-favorites > .amnl-List_Item-dashboard > .amni-Item', url: '#/workspaces/23574/dashboard/custom-dashboard/list?ownerIds=[0]&sortBy=%22A-Z%22&sortField=%22name%22' }
+      dashboard: { selector: '.oboard-nav-section-primary .amnl-List_Item-dashboard > .amni-Item, .amnl-List_Item-dashboard > .amni-Item', url: '#/workspaces/23574/dashboard/custom-dashboard/list?ownerIds=[0]&sortBy=%22A-Z%22&sortField=%22name%22' }
     };
 
     function setActive(pageName) {
-      Object.values(pages).forEach(page => {
-        const link = document.querySelector(page.selector);
-        link?.classList.remove('amni-Item-exact-active');
-        link?.classList.remove('oboard-prototype-active');
+      const nav = document.querySelector('.amn-Nav.oboard-sidebar-sectioned') || document;
+      nav.querySelectorAll('.amni-Item-exact-active, .oboard-prototype-active').forEach(link => {
+        link.classList.remove('amni-Item-exact-active');
+        link.classList.remove('oboard-prototype-active');
       });
       const activeLink = document.querySelector(pages[pageName]?.selector);
       if (!activeLink) return;
@@ -8041,6 +9772,8 @@ img.ProseMirror-separator {
         dashboardPage.style.display = 'none';
       }
       setActive(pageName);
+      if (pageName === 'objectives') highlightFavoriteType('objective');
+      if (pageName === 'dashboard') highlightFavoriteType('dashboard');
       if (push) history.pushState({ oboardPage: pageName }, '', pages[pageName].url);
     }
 
@@ -8095,9 +9828,11 @@ img.ProseMirror-separator {
 
   restoreOrder();
   restoreFavoriteOrder();
+  restoreFavoriteSectionOrder();
   restoreDashboardCollections();
   initWorkspacePopover();
   initDashboardCollectionColumn();
+  renderDashboardFooter();
   attachTableDragHandlers();
   syncSidebar();
   initTableSortable();
