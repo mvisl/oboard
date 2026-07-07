@@ -1586,10 +1586,24 @@ img.ProseMirror-separator {
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) {
+    --oboard-grouped-projection-dash: 16px;
+    --oboard-grouped-projection-gap: 12px;
+    --oboard-grouped-projection-line: 2px;
+    --oboard-grouped-projection-color: rgba(var(--dark-2-rgb, 66,82,110), 0.38);
     opacity: 0.5;
-    outline: 2px dashed rgba(var(--dark-2-rgb, 66,82,110), 0.44);
-    outline-offset: -2px;
-    background: var(--surface-subtle, #f4f7fc);
+    background-color: var(--surface-subtle, #f4f7fc);
+    background-image:
+      repeating-linear-gradient(to right, var(--oboard-grouped-projection-color) 0 var(--oboard-grouped-projection-dash), transparent var(--oboard-grouped-projection-dash) calc(var(--oboard-grouped-projection-dash) + var(--oboard-grouped-projection-gap))),
+      repeating-linear-gradient(to right, var(--oboard-grouped-projection-color) 0 var(--oboard-grouped-projection-dash), transparent var(--oboard-grouped-projection-dash) calc(var(--oboard-grouped-projection-dash) + var(--oboard-grouped-projection-gap))),
+      repeating-linear-gradient(to bottom, var(--oboard-grouped-projection-color) 0 var(--oboard-grouped-projection-dash), transparent var(--oboard-grouped-projection-dash) calc(var(--oboard-grouped-projection-dash) + var(--oboard-grouped-projection-gap))),
+      repeating-linear-gradient(to bottom, var(--oboard-grouped-projection-color) 0 var(--oboard-grouped-projection-dash), transparent var(--oboard-grouped-projection-dash) calc(var(--oboard-grouped-projection-dash) + var(--oboard-grouped-projection-gap)));
+    background-position: top left, bottom left, top left, top right;
+    background-repeat: no-repeat;
+    background-size:
+      100% var(--oboard-grouped-projection-line),
+      100% var(--oboard-grouped-projection-line),
+      var(--oboard-grouped-projection-line) 100%,
+      var(--oboard-grouped-projection-line) 100%;
     box-shadow: none !important;
   }
 
@@ -1597,7 +1611,9 @@ img.ProseMirror-separator {
     opacity: 0 !important;
   }
 
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback))::after,
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback)::before,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback)::after,
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) > .oboard-grouped-bundle-inline-child::after {
     opacity: 0;
   }
