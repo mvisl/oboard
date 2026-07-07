@@ -83,9 +83,9 @@
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=55192ed">dashboard-working-temp.html?fix=55192ed</a></li>
-        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-55192ed.html">dashboard-working-temp-55192ed.html</a></li>
-        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-c74930e.html">dashboard-working-temp-c74930e.html</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=8dacc22">dashboard-working-temp.html?fix=8dacc22</a></li>
+        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-8dacc22.html">dashboard-working-temp-8dacc22.html</a></li>
+        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-55192ed.html">dashboard-working-temp-55192ed.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
         <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
         <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
@@ -101,7 +101,7 @@
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page update: <code>gh-pages 55192ed</code>; latest temp behavior commit: <code>55192ed</code>.</li>
+        <li>Current pushed commits before this handoff page update: <code>gh-pages 8dacc22</code>; latest temp behavior commit: <code>8dacc22</code>.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
     </section>
@@ -117,7 +117,7 @@
         <li>Some dashboards intentionally belong to multiple collections and appear more than once in Grouped.</li>
         <li>Grouped heart buttons toggle favorites and sync with Ungrouped rows plus the left dashboard list.</li>
         <li>In temp, Favorites contains <code>My objectives</code> and <code>My groups objectives</code>, plus dashboard favorites. Each item shows its section icon at 16×16 with 50% opacity; on hover it changes to a drag handle.</li>
-        <li>In temp, Favorites are grouped into objective and dashboard sections with a separator. Dragging an item across the other section boundary can reorder the sections after a short hold; static-page navigation highlights the matching section.</li>
+        <li>In temp, Favorites are grouped into objective and dashboard sections with a separator only when both sections are present. Items can reorder only inside their own section; dropping into the other section returns the item. Holding an item beyond the other section for about one second moves its whole section.</li>
         <li>In temp, hovering a grouped <code>+1</code> collection badge highlights the related dashboard row if visible, or the related collapsed collection row if the dashboard is hidden.</li>
         <li>In temp, clicking a collection badge in Ungrouped switches to Grouped, opens the relevant collection or collections, and highlights the matching dashboard rows with timed animation.</li>
         <li>In temp, dragging an open collection carries its visible child dashboard rows as one bundle and uses an elevation state without rounded corners.</li>
