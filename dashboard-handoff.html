@@ -83,9 +83,9 @@
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=e3a6c94">dashboard-working-temp.html?fix=e3a6c94</a></li>
-        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-e3a6c94.html">dashboard-working-temp-e3a6c94.html</a></li>
-        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-b5c90ff.html">dashboard-working-temp-b5c90ff.html</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=5a3e5f6">dashboard-working-temp.html?fix=5a3e5f6</a></li>
+        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-5a3e5f6.html">dashboard-working-temp-5a3e5f6.html</a></li>
+        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-e3a6c94.html">dashboard-working-temp-e3a6c94.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
         <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
         <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
@@ -101,7 +101,7 @@
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page update: <code>gh-pages e3a6c94</code>; latest temp behavior commit: <code>e3a6c94</code>.</li>
+        <li>Current pushed commits before this handoff page update: <code>gh-pages 5a3e5f6</code>; latest temp behavior commit: <code>5a3e5f6</code>.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
     </section>
@@ -118,12 +118,12 @@
         <li>Grouped heart buttons toggle favorites and sync with Ungrouped rows plus the left dashboard list.</li>
         <li>In temp, Favorites contains <code>My objectives</code> and <code>My groups objectives</code>, plus dashboard favorites. Each item shows its section icon at 16×16 with 50% opacity; on hover it changes to a drag handle.</li>
         <li>In temp, Favorites are grouped into objective and dashboard sections with a separator only when both sections are present. Items can reorder only inside their own section; dropping into the other section returns the item. Holding an item over the upper or lower half of the other section for about one second moves its whole section.</li>
-        <li>In temp, Favorites navigation highlight is rendered as one continuous section overlay, not as separate item highlights.</li>
+        <li>In temp, Favorites navigation highlight is rendered on the actual rows of the relevant section, with no separate overlay layer.</li>
         <li>In temp, hovering a grouped <code>+1</code> collection badge highlights the related dashboard row if visible, or the related collapsed collection row if the dashboard is hidden.</li>
         <li>In temp, clicking a collection badge in Ungrouped switches to Grouped, opens the relevant collection or collections, and highlights the matching dashboard rows with timed animation.</li>
         <li>In temp, dragging an open collection carries its visible child dashboard rows as one bundle and uses an elevation state without rounded corners.</li>
         <li>In temp, dragged open collection bundles keep a separator directly under the collection header row, before the first child dashboard row.</li>
-        <li>In temp, the source collection row stays one row tall while dragging, while the drag ghost keeps the full bundled height.</li>
+        <li>In temp, an open collection drags as a full bundle with its visible dashboard rows; the dragged bundle keeps the separator directly under the collection header.</li>
         <li>In temp, dragging a grouped dashboard while holding <code>Alt</code> or <code>Meta</code> copies it into the target collection instead of moving it. A duplicate hint appears when the gesture is available, and copied rows are highlighted after drop.</li>
         <li>In temp, grouped collection rows have <code>Copy link</code> and more-actions controls. Copy link switches to <code>Link copied</code> for 1.2 seconds, then returns to the normal or hover state.</li>
         <li>In temp, selected collections are disabled in the collection assignment popover to avoid adding a dashboard to the same collection twice.</li>
