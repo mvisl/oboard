@@ -754,6 +754,18 @@ img.ProseMirror-separator {
     background: var(--grey-2-next, #dfe1e6);
   }
 
+  .oboard-grouped-head + .oboard-grouped-row::before {
+    content: "";
+    position: absolute;
+    left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
+    right: 0;
+    top: 0;
+    z-index: 3;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
+  }
+
   .oboard-grouped-row-inner {
     height: var(--oboard-dashboard-row-height, 44px);
     padding-right: 0;
