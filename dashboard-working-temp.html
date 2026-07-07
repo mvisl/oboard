@@ -1567,6 +1567,7 @@ img.ProseMirror-separator {
   }
 
   .sortable-fallback {
+    position: fixed !important;
     pointer-events: none !important;
     z-index: 10001 !important;
     opacity: 0.96 !important;
@@ -1595,12 +1596,19 @@ img.ProseMirror-separator {
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost,
   .oboard-sortable-drag.oboard-grouped-collection-bundle-ghost {
-    position: relative !important;
     overflow: hidden !important;
     border: 1px solid var(--gray-blue-250, #dde2ea);
     border-radius: 0 !important;
     background: var(--white-color, #fff);
     box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+  }
+
+  .sortable-fallback.oboard-grouped-collection-bundle-ghost {
+    position: fixed !important;
+  }
+
+  .oboard-sortable-drag.oboard-grouped-collection-bundle-ghost:not(.sortable-fallback) {
+    position: relative !important;
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging::before,
@@ -1616,6 +1624,7 @@ img.ProseMirror-separator {
     pointer-events: none;
   }
 
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row {
     position: relative;
     display: block !important;
@@ -1626,6 +1635,24 @@ img.ProseMirror-separator {
     background: var(--white-color, #fff);
   }
 
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child {
+    left: 0;
+    right: 0;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-related-hover,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-navigation-highlight,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-hover-demo {
+    background: var(--white-color, #fff) !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-drag-handle,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-more {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-row-inner,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row-inner {
     display: grid !important;
     grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 112px 208px 160px 24px) !important;
@@ -1636,6 +1663,7 @@ img.ProseMirror-separator {
     padding-left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
   }
 
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child::after,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row::after {
     content: "";
     position: absolute;
@@ -7994,16 +8022,19 @@ img.ProseMirror-separator {
     const height = Math.round(rect.height);
     const rowHeight = Math.round(collectionRow.getBoundingClientRect().height || parseFloat(getComputedStyle(collectionRow).getPropertyValue('--oboard-dashboard-row-height')) || 44);
     collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
+    const inlineRows = childRows.map(row => groupedCollectionBundleChildClone(row, 'oboard-grouped-bundle-inline-child'));
     activeGroupedCollectionBundleDrag = {
       id: String(++groupedCollectionBundleDragId),
       collectionRow,
       childRows,
+      inlineRows,
       height,
       rowHeight,
       rect
     };
     collectionRow.classList.add('oboard-grouped-bundle-dragging');
     collectionRow.style.setProperty('--oboard-grouped-bundle-height', height + 'px');
+    inlineRows.forEach(row => collectionRow.appendChild(row));
     childRows.forEach(row => row.classList.add('oboard-grouped-bundle-child-dragging'));
     return activeGroupedCollectionBundleDrag;
   }
@@ -8112,7 +8143,9 @@ img.ProseMirror-separator {
         if (matrix && matrix.length === 6) translateY = matrix[5] || 0;
       }
     }
+    clone.style.position = 'fixed';
     clone.style.left = activeSortableLock.left + 'px';
+    clone.style.top = activeSortableLock.top + 'px';
     clone.style.width = activeSortableLock.width + 'px';
     clone.style.maxWidth = activeSortableLock.width + 'px';
     clone.style.height = activeSortableLock.height + 'px';
@@ -8135,6 +8168,7 @@ img.ProseMirror-separator {
     const rect = lockRectFor(event);
     activeSortableLock = rect ? {
       left: Math.round(rect.left),
+      top: Math.round(rect.top),
       width: Math.round(rect.width),
       height: Math.round(rect.height)
     } : null;
@@ -8285,10 +8319,7 @@ img.ProseMirror-separator {
       preventOnFilter: false,
       onChoose(event) {
         const bundle = prepareGroupedCollectionBundleDrag(event.item);
-        groupedSortable?.option?.('fallbackOffset', bundle
-          ? { x: 0, y: Math.max(0, Math.round((bundle.height - bundle.rowHeight) / 2)) }
-          : { x: 0, y: 0 }
-        );
+        groupedSortable?.option?.('fallbackOffset', { x: 0, y: 0 });
         baseGroupedOnChoose(event);
       },
       onStart(event) {
