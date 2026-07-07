@@ -767,7 +767,15 @@ img.ProseMirror-separator {
     position: relative;
     height: var(--oboard-dashboard-row-height, 44px);
     box-sizing: border-box;
-    transition: background-color 220ms ease-in-out, box-shadow 180ms ease-in-out;
+    transition: background-color 220ms ease-in-out, box-shadow 180ms ease-in-out, opacity 120ms ease-in-out;
+  }
+
+  .oboard-grouped-list {
+    --oboard-grouped-dim-opacity: 0.7;
+  }
+
+  .oboard-grouped-list.oboard-dim-other-collections .oboard-grouped-row.is-collection-dimmed {
+    opacity: var(--oboard-grouped-dim-opacity);
   }
 
   .oboard-grouped-head::after,
@@ -870,8 +878,17 @@ img.ProseMirror-separator {
     right: 0;
   }
 
+  .oboard-grouped-row.is-before-collection-elevation::after {
+    opacity: 0;
+  }
+
   .oboard-grouped-head:has(+ .oboard-grouped-collection.is-collection-elevation-active)::after,
-  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-collection-elevation-active)::after {
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-collection-elevation-active)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection:hover)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection:focus-within)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-hover-demo)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-related-hover)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-menu-open)::after {
     opacity: 0;
   }
 
@@ -1714,6 +1731,27 @@ img.ProseMirror-separator {
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
     opacity: 1 !important;
+  }
+
+  .oboard-grouped-collection-bundle-release {
+    position: fixed !important;
+    pointer-events: none !important;
+    z-index: 10000 !important;
+    overflow: hidden !important;
+    border: 1px solid var(--gray-blue-250, #dde2ea);
+    border-radius: 0 !important;
+    background: var(--white-color, #fff);
+    box-shadow:
+      rgba(9, 30, 66, 0.14) 0 0 2px 0,
+      rgba(9, 30, 66, 0.18) 0 10px 24px 0,
+      rgba(9, 30, 66, 0.28) 0 30px 72px 0;
+    box-sizing: border-box;
+    transform-origin: top left;
+    will-change: transform, opacity;
+  }
+
+  .oboard-grouped-release-hidden {
+    visibility: hidden !important;
   }
 
   .oboard-sortable-drag.oboard-grouped-collection-bundle-ghost:not(.sortable-fallback) {
@@ -6799,9 +6837,11 @@ img.ProseMirror-separator {
   let groupedDragClientY = 0;
   let groupedCollectionElevationFrame = 0;
   let groupedCollectionElevationRow = null;
+  const GROUPED_DIM_OTHER_COLLECTIONS_ON_HOVER = true;
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   let activeGroupedCollectionBundleDrag = null;
+  let groupedCollectionReleaseSnapshot = null;
   let groupedCollectionBundleDragId = 0;
   let activeGroupedDashboardCopyDrag = null;
   let groupedDuplicateHintTimer = null;
@@ -8150,8 +8190,12 @@ img.ProseMirror-separator {
     }
     groupedCollectionElevationRow = null;
     host?.querySelector(':scope > .oboard-grouped-collection-elevation')?.classList.remove('is-visible');
-    host?.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end').forEach(row => {
-      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end');
+    host?.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end, .is-before-collection-elevation').forEach(row => {
+      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end', 'is-before-collection-elevation');
+    });
+    host?.classList.remove('oboard-dim-other-collections');
+    host?.querySelectorAll('.is-collection-dimmed').forEach(row => {
+      row.classList.remove('is-collection-dimmed');
     });
   }
 
@@ -8166,6 +8210,28 @@ img.ProseMirror-separator {
     ) || null;
   }
 
+  function updateGroupedCollectionDimming(host, collectionRow) {
+    if (!host) return;
+    host.querySelectorAll('.is-collection-dimmed').forEach(row => {
+      row.classList.remove('is-collection-dimmed');
+    });
+    if (!GROUPED_DIM_OTHER_COLLECTIONS_ON_HOVER || !collectionRow) {
+      host.classList.remove('oboard-dim-other-collections');
+      return;
+    }
+    const activeCollection = collectionRow.dataset.collection || '';
+    if (!activeCollection) {
+      host.classList.remove('oboard-dim-other-collections');
+      return;
+    }
+    host.classList.add('oboard-dim-other-collections');
+    host.querySelectorAll(':scope > .oboard-grouped-row').forEach(row => {
+      if ((row.dataset.collection || '') !== activeCollection) {
+        row.classList.add('is-collection-dimmed');
+      }
+    });
+  }
+
   function updateGroupedCollectionElevation(host, collectionRow) {
     if (!host || !collectionRow || document.body.classList.contains('oboard-reordering')) {
       clearGroupedCollectionElevation(host);
@@ -8176,11 +8242,15 @@ img.ProseMirror-separator {
     const rect = groupedCollectionBundleRect(collectionRow, childRows);
     const hostRect = host.getBoundingClientRect();
     if (!layer || !rect || rect.height <= 0) return;
-    host.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end').forEach(row => {
-      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end');
+    host.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end, .is-before-collection-elevation').forEach(row => {
+      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end', 'is-before-collection-elevation');
     });
     collectionRow.classList.add('is-collection-elevation-active');
     (childRows[childRows.length - 1] || collectionRow).classList.add('is-collection-elevation-end');
+    const visibleRows = Array.from(host.querySelectorAll(':scope > .oboard-grouped-row')).filter(row => !row.hidden);
+    const collectionIndex = visibleRows.indexOf(collectionRow);
+    if (collectionIndex > 0) visibleRows[collectionIndex - 1].classList.add('is-before-collection-elevation');
+    updateGroupedCollectionDimming(host, collectionRow);
     layer.style.width = Math.round(rect.width) + 'px';
     layer.style.height = Math.round(rect.height) + 'px';
     layer.style.transform = 'translate3d(' + Math.round(rect.left - hostRect.left) + 'px, ' + Math.round(rect.top - hostRect.top) + 'px, 0)';
@@ -8321,6 +8391,92 @@ img.ProseMirror-separator {
     return item?.getBoundingClientRect();
   }
 
+  function rememberGroupedCollectionReleaseSnapshot(clone) {
+    const bundle = activeGroupedCollectionBundleDrag;
+    if (!clone || !bundle || !clone.classList.contains('oboard-grouped-collection-bundle-ghost')) return;
+    const rect = clone.getBoundingClientRect();
+    if (!rect || rect.width <= 0 || rect.height <= 0) return;
+    groupedCollectionReleaseSnapshot = {
+      collectionName: bundle.collectionRow?.dataset.collection || '',
+      fromRect: {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height
+      },
+      clone: clone.cloneNode(true)
+    };
+  }
+
+  function groupedBundleRowsForAnimation(collectionRow) {
+    if (!collectionRow) return [];
+    return [collectionRow, ...groupedCollectionChildRows(collectionRow)].filter(Boolean);
+  }
+
+  function captureGroupedCollectionReleaseAnimation(event) {
+    const bundle = activeGroupedCollectionBundleDrag;
+    const item = event?.item;
+    if (!bundle || !item || bundle.collectionRow !== item) return null;
+    const sourceClone = document.querySelector('.sortable-fallback.oboard-grouped-collection-bundle-ghost');
+    const fromRect = sourceClone?.getBoundingClientRect();
+    const snapshot = sourceClone && fromRect && fromRect.width > 0 && fromRect.height > 0
+      ? {
+          collectionName: item.dataset.collection || '',
+          fromRect: {
+            left: fromRect.left,
+            top: fromRect.top,
+            width: fromRect.width,
+            height: fromRect.height
+          },
+          clone: sourceClone.cloneNode(true)
+        }
+      : groupedCollectionReleaseSnapshot;
+    if (!snapshot?.clone || !snapshot.collectionName) return null;
+    const overlay = snapshot.clone;
+    overlay.classList.remove('sortable-fallback', 'oboard-sortable-drag');
+    overlay.classList.add('oboard-grouped-collection-bundle-release');
+    overlay.style.left = Math.round(snapshot.fromRect.left) + 'px';
+    overlay.style.top = Math.round(snapshot.fromRect.top) + 'px';
+    overlay.style.width = Math.round(snapshot.fromRect.width) + 'px';
+    overlay.style.height = Math.round(snapshot.fromRect.height) + 'px';
+    overlay.style.minHeight = Math.round(snapshot.fromRect.height) + 'px';
+    overlay.style.maxHeight = Math.round(snapshot.fromRect.height) + 'px';
+    overlay.style.transform = 'translate3d(0, 0, 0)';
+    document.body.appendChild(overlay);
+    return { overlay, collectionName: snapshot.collectionName, fromRect: snapshot.fromRect };
+  }
+
+  function playGroupedCollectionReleaseAnimation(animation) {
+    if (!animation?.overlay || !animation.collectionName) return;
+    const host = document.querySelector('.oboard-grouped-list');
+    const collectionRow = host?.querySelector(':scope > .oboard-grouped-collection[data-collection="' + CSS.escape(animation.collectionName) + '"]');
+    const rows = groupedBundleRowsForAnimation(collectionRow);
+    const rect = collectionRow ? groupedCollectionBundleRect(collectionRow, rows.slice(1)) : null;
+    if (!collectionRow || !rect || rect.height <= 0) {
+      animation.overlay.remove();
+      return;
+    }
+    rows.forEach(row => row.classList.add('oboard-grouped-release-hidden'));
+    const deltaX = Math.round(rect.left - animation.fromRect.left);
+    const deltaY = Math.round(rect.top - animation.fromRect.top);
+    const scaleX = rect.width && animation.fromRect.width ? rect.width / animation.fromRect.width : 1;
+    const scaleY = rect.height && animation.fromRect.height ? rect.height / animation.fromRect.height : 1;
+    const finish = () => {
+      rows.forEach(row => row.classList.remove('oboard-grouped-release-hidden'));
+      animation.overlay.remove();
+    };
+    const motion = animation.overlay.animate([
+      { transform: 'translate3d(0, 0, 0) scale(1, 1)', opacity: 0.96 },
+      { transform: 'translate3d(' + deltaX + 'px, ' + deltaY + 'px, 0) scale(' + scaleX + ', ' + scaleY + ')', opacity: 1 }
+    ], {
+      duration: 220,
+      easing: 'cubic-bezier(0.2, 0, 0, 1)',
+      fill: 'forwards'
+    });
+    motion.addEventListener('finish', finish, { once: true });
+    motion.addEventListener('cancel', finish, { once: true });
+  }
+
   function finishGroupedCollectionBundleDrag() {
     const bundle = activeGroupedCollectionBundleDrag;
     if (!bundle) return;
@@ -8330,6 +8486,7 @@ img.ProseMirror-separator {
     bundle.childRows.forEach(row => row.classList.remove('oboard-grouped-bundle-child-dragging'));
     groupedSortable?.option?.('fallbackOffset', { x: 0, y: 0 });
     activeGroupedCollectionBundleDrag = null;
+    groupedCollectionReleaseSnapshot = null;
   }
 
   function lockSortableFallback() {
@@ -8361,6 +8518,7 @@ img.ProseMirror-separator {
     clone.style.overflow = 'hidden';
     clone.style.setProperty('--oboard-sortable-row-height', activeSortableLock.height + 'px');
     clone.style.transform = 'translate3d(0px, ' + translateY + 'px, 0)';
+    rememberGroupedCollectionReleaseSnapshot(clone);
   }
 
   function scheduleSortableLock() {
@@ -8543,15 +8701,18 @@ img.ProseMirror-separator {
       onEnd(event) {
         hideGroupedDuplicateHint();
         clearGroupedCollectionElevation(host);
+        const releaseAnimation = captureGroupedCollectionReleaseAnimation(event);
         if (activeGroupedDashboardCopyDrag) {
           stopSortableLock();
           document.body.classList.remove('oboard-reordering');
           finishGroupedCollectionBundleDrag();
+          playGroupedCollectionReleaseAnimation(releaseAnimation);
           finishGroupedDashboardCopyDrag(event);
           return;
         }
         finishGroupedCollectionBundleDrag();
         baseGroupedOnEnd(event);
+        playGroupedCollectionReleaseAnimation(releaseAnimation);
       },
       onMove(event, originalEvent) {
         if (originalEvent?.clientX) groupedDragClientX = originalEvent.clientX;

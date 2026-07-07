@@ -870,8 +870,17 @@ img.ProseMirror-separator {
     right: 0;
   }
 
+  .oboard-grouped-row.is-before-collection-elevation::after {
+    opacity: 0;
+  }
+
   .oboard-grouped-head:has(+ .oboard-grouped-collection.is-collection-elevation-active)::after,
-  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-collection-elevation-active)::after {
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-collection-elevation-active)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection:hover)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection:focus-within)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-hover-demo)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-related-hover)::after,
+  .oboard-grouped-row:has(+ .oboard-grouped-collection.is-menu-open)::after {
     opacity: 0;
   }
 
@@ -1697,13 +1706,19 @@ img.ProseMirror-separator {
     border: 1px solid var(--gray-blue-250, #dde2ea);
     border-radius: 0 !important;
     background: var(--white-color, #fff);
-    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
+    box-shadow:
+      rgba(9, 30, 66, 0.14) 0 0 2px 0,
+      rgba(9, 30, 66, 0.18) 0 10px 24px 0,
+      rgba(9, 30, 66, 0.28) 0 30px 72px 0;
   }
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost {
     position: fixed !important;
     opacity: 0.96 !important;
-    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
+    box-shadow:
+      rgba(9, 30, 66, 0.14) 0 0 2px 0,
+      rgba(9, 30, 66, 0.18) 0 10px 24px 0,
+      rgba(9, 30, 66, 0.28) 0 30px 72px 0;
   }
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
@@ -8144,8 +8159,8 @@ img.ProseMirror-separator {
     }
     groupedCollectionElevationRow = null;
     host?.querySelector(':scope > .oboard-grouped-collection-elevation')?.classList.remove('is-visible');
-    host?.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end').forEach(row => {
-      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end');
+    host?.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end, .is-before-collection-elevation').forEach(row => {
+      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end', 'is-before-collection-elevation');
     });
   }
 
@@ -8170,11 +8185,14 @@ img.ProseMirror-separator {
     const rect = groupedCollectionBundleRect(collectionRow, childRows);
     const hostRect = host.getBoundingClientRect();
     if (!layer || !rect || rect.height <= 0) return;
-    host.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end').forEach(row => {
-      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end');
+    host.querySelectorAll('.is-collection-elevation-active, .is-collection-elevation-end, .is-before-collection-elevation').forEach(row => {
+      row.classList.remove('is-collection-elevation-active', 'is-collection-elevation-end', 'is-before-collection-elevation');
     });
     collectionRow.classList.add('is-collection-elevation-active');
     (childRows[childRows.length - 1] || collectionRow).classList.add('is-collection-elevation-end');
+    const visibleRows = Array.from(host.querySelectorAll(':scope > .oboard-grouped-row')).filter(row => !row.hidden);
+    const collectionIndex = visibleRows.indexOf(collectionRow);
+    if (collectionIndex > 0) visibleRows[collectionIndex - 1].classList.add('is-before-collection-elevation');
     layer.style.width = Math.round(rect.width) + 'px';
     layer.style.height = Math.round(rect.height) + 'px';
     layer.style.transform = 'translate3d(' + Math.round(rect.left - hostRect.left) + 'px, ' + Math.round(rect.top - hostRect.top) + 'px, 0)';
