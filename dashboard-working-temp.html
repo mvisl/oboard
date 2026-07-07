@@ -795,6 +795,10 @@ img.ProseMirror-separator {
     background: var(--grey-2-next, #dfe1e6);
   }
 
+  .oboard-grouped-row::after {
+    opacity: 0.5;
+  }
+
   .oboard-grouped-row-inner {
     height: var(--oboard-dashboard-row-height, 44px);
     padding-right: 0;
@@ -864,11 +868,13 @@ img.ProseMirror-separator {
   .oboard-grouped-row.is-collection-elevation-end::after {
     left: 0;
     right: 0;
+    opacity: 1;
   }
 
   .oboard-grouped-row.is-collection-boundary-end::after {
     left: 0;
     right: 0;
+    opacity: 1;
   }
 
   .oboard-grouped-row.is-before-collection-elevation::after {
