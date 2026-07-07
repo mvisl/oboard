@@ -9312,26 +9312,21 @@ img.ProseMirror-separator {
     const page = document.querySelector('.dp-MainContent-CustomDashboardList');
     const createButton = document.querySelector('.cdl-DashboardHeader_NewReport');
     const grouped = mode === 'grouped';
+    dashboardModeTransitioning = false;
+    page?.classList.remove('oboard-mode-transitioning');
+    document.querySelectorAll('.oboard-mode-transition-overlay').forEach(overlay => overlay.remove());
     setButtonText(createButton, grouped ? 'Create collection' : 'Create dashboard');
     if (grouped) {
       hidePreview();
       closeDashboardCollectionPopover();
       closeDashboardPageSizeMenu();
       releaseGroupedNavigationHoverLock(document.querySelector('.oboard-grouped-list'));
-      if (options.animate) {
-        animateUngroupedToGrouped();
-        return;
-      }
       initGroupedList();
       page?.classList.add('oboard-grouped-mode');
     } else {
       closeCollectionMenu();
       clearGroupedNavigationHighlight(document.querySelector('.oboard-grouped-list'));
-      if (options.animate) {
-        animateGroupedToUngrouped();
-        return;
-      }
-      page?.classList.remove('oboard-grouped-mode', 'oboard-mode-transitioning');
+      page?.classList.remove('oboard-grouped-mode');
       initDashboardCollectionColumn();
     }
   }
