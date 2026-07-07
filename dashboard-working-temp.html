@@ -1047,7 +1047,8 @@ img.ProseMirror-separator {
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
-    width: 100%;
+    justify-self: end;
+    width: max-content;
     min-width: 0;
     opacity: 0;
     pointer-events: none;
@@ -9045,8 +9046,8 @@ img.ProseMirror-separator {
       '</div>',
       '<div class="oboard-grouped-collections-cell"></div>',
       ownerCell(collection.owner),
-      '<div class="oboard-grouped-visibility-cell">' + groupedCollectionActions(collection) + '</div>',
-      '<span></span>',
+      '<div class="oboard-grouped-visibility-cell"></div>',
+      groupedCollectionActions(collection),
       '</div>',
       '</div>'
     ].join('');
