@@ -589,7 +589,12 @@ img.ProseMirror-separator {
     z-index: 20;
     height: 1px;
     background: var(--grey-2-next, #dfe1e6);
+    opacity: 0;
     pointer-events: none;
+  }
+
+  .oboard-reordering .oboard-grouped-list:has(.oboard-grouped-head + .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback))::before {
+    opacity: 1;
   }
 
   .oboard-grouped-collection-elevation {
