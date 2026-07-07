@@ -83,9 +83,9 @@
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=9373b02">dashboard-working-temp.html?fix=9373b02</a></li>
-        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-9373b02.html">dashboard-working-temp-9373b02.html</a></li>
-        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-a8fbf8c.html">dashboard-working-temp-a8fbf8c.html</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=84f2dfb">dashboard-working-temp.html?fix=84f2dfb</a></li>
+        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-84f2dfb.html">dashboard-working-temp-84f2dfb.html</a></li>
+        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-9373b02.html">dashboard-working-temp-9373b02.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
         <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
         <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
@@ -101,7 +101,7 @@
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page update: <code>gh-pages 9373b02</code>; latest temp behavior commit: <code>9373b02</code>.</li>
+        <li>Current pushed commits before this handoff page update: <code>gh-pages 84f2dfb</code>; latest temp behavior commit: <code>84f2dfb</code>.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
     </section>
@@ -126,6 +126,7 @@
         <li>In temp, an open collection drags as a full bundle with visible dashboard rows in both the source projection and fixed-position drag preview. The drag preview is anchored to the pointer near the collection header, keeps the drag handle visible, and keeps elevation without rounded corners. The source projection stays at 50% opacity, has no elevation, and hides the drag handle.</li>
         <li>In temp, dragging a grouped dashboard while holding <code>Alt</code> or <code>Meta</code> copies it into the target collection instead of moving it. A duplicate hint appears when the gesture is available, and copied rows are highlighted after drop.</li>
         <li>In temp, grouped collection rows have <code>Copy link</code> and more-actions controls. Copy link switches to <code>Link copied</code> for 1.2 seconds, then returns to the normal or hover state.</li>
+        <li>In temp, grouped collection action controls use the same right action column as dashboard row controls, so the collection more-actions button aligns with dashboard kebab buttons.</li>
         <li>In temp, selected collections are disabled in the collection assignment popover to avoid adding a dashboard to the same collection twice.</li>
         <li>In temp, the Ungrouped / Grouped switcher now changes state instantly; the earlier full mode-switch animation is disabled.</li>
         <li>In temp, related hover and tooltip state is force-cleared on pointer move away, scroll, click, blur, and visibility change to avoid stuck hover rows.</li>
