@@ -6588,6 +6588,8 @@ img.ProseMirror-separator {
   let favoriteSectionOrder = [...favoriteSectionTypes];
   let favoriteSectionSwitchTimer = null;
   let favoriteSectionSwitchKey = '';
+  let favoriteDragSnapshot = null;
+  let favoriteSectionSwitchCommitted = false;
   let favoritesTypeHighlightTimer = null;
   let tableSortable = null;
   let favoriteSortable = null;
@@ -7097,6 +7099,7 @@ img.ProseMirror-separator {
   }
 
   function applyFavoriteSectionOrder(nextOrder, leadName) {
+    favoriteSectionSwitchCommitted = true;
     favoriteSectionOrder = normalizeFavoriteSectionOrder(nextOrder);
     if (leadName) moveFavoriteNameToTypeStart(leadName);
     saveFavoriteSectionOrder();
@@ -7113,6 +7116,72 @@ img.ProseMirror-separator {
     const first = items[0].getBoundingClientRect();
     const last = items[items.length - 1].getBoundingClientRect();
     return { top: first.top, bottom: last.bottom };
+  }
+
+  function favoriteDomItems() {
+    if (!dashboardChildren) return [];
+    return Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)'));
+  }
+
+  function favoriteItemType(item) {
+    return favoriteTypeForName(item?.dataset.dashboardName || '');
+  }
+
+  function favoriteDomTypeGroups() {
+    const groups = {
+      objective: [],
+      dashboard: []
+    };
+    favoriteDomItems().forEach(item => {
+      const name = item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim();
+      const type = favoriteTypeForName(name || '');
+      if (name && groups[type]) groups[type].push(name);
+    });
+    return groups;
+  }
+
+  function favoriteItemSitsInsideOwnSection(item) {
+    if (!item?.parentNode) return true;
+    const type = favoriteItemType(item);
+    let hasSameTypeSibling = false;
+    let hasOtherTypeSibling = false;
+
+    for (let node = item.previousElementSibling; node; node = node.previousElementSibling) {
+      if (node.classList.contains('oboard-favorites-section-separator')) break;
+      if (!node.matches('.amnl-List_Item')) continue;
+      const siblingType = favoriteItemType(node);
+      if (siblingType === type) hasSameTypeSibling = true;
+      else hasOtherTypeSibling = true;
+    }
+
+    for (let node = item.nextElementSibling; node; node = node.nextElementSibling) {
+      if (node.classList.contains('oboard-favorites-section-separator')) break;
+      if (!node.matches('.amnl-List_Item')) continue;
+      const siblingType = favoriteItemType(node);
+      if (siblingType === type) hasSameTypeSibling = true;
+      else hasOtherTypeSibling = true;
+    }
+
+    if (hasOtherTypeSibling) return false;
+    return hasSameTypeSibling || favoriteDomItems().filter(candidate => favoriteItemType(candidate) === type).length <= 1;
+  }
+
+  function captureFavoriteDragSnapshot(sourceName = '') {
+    favoriteSectionSwitchCommitted = false;
+    favoriteDragSnapshot = {
+      sourceName,
+      order: favoriteOrder.slice(),
+      sectionOrder: favoriteSectionOrder.slice()
+    };
+  }
+
+  function restoreFavoriteDragSnapshot() {
+    if (!favoriteDragSnapshot) return;
+    favoriteSectionOrder = normalizeFavoriteSectionOrder(favoriteDragSnapshot.sectionOrder);
+    favoriteOrder = favoriteDragSnapshot.order.slice();
+    if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
+    saveFavoriteSectionOrder();
+    saveFavoriteOrder();
   }
 
   function scheduleFavoriteSectionSwitch(sourceName, nextOrder) {
@@ -7195,6 +7264,7 @@ img.ProseMirror-separator {
   }
 
   function reorderFavorites(sourceName, targetName, placeAfter = false) {
+    if (favoriteTypeForName(sourceName) !== favoriteTypeForName(targetName)) return false;
     const names = sidebarNames();
     const sourceIndex = names.indexOf(sourceName);
     const targetRawIndex = names.indexOf(targetName);
@@ -7209,6 +7279,7 @@ img.ProseMirror-separator {
   }
 
   function reorderFavoriteData(sourceName, targetName, placeAfter = false) {
+    if (favoriteTypeForName(sourceName) !== favoriteTypeForName(targetName)) return false;
     const names = sidebarNames();
     const sourceIndex = names.indexOf(sourceName);
     const targetRawIndex = names.indexOf(targetName);
@@ -8045,20 +8116,30 @@ img.ProseMirror-separator {
     syncSidebar();
   }
 
-  function syncFavoriteDataFromDom() {
+  function syncFavoriteDataFromDom(event) {
     if (!dashboardChildren) return;
-    const items = Array.from(dashboardChildren.querySelectorAll(':scope > .amnl-List_Item:not(.oboard-favorites-section-separator)'));
-    favoriteOrder = items
-      .map(item => item.dataset.dashboardName || item.querySelector('.amni-Item_Text')?.textContent?.trim())
-      .filter(Boolean);
-    const seenTypes = [];
-    items.forEach(item => {
-      const type = favoriteTypeForName(item.dataset.dashboardName || '');
-      if (!seenTypes.includes(type)) seenTypes.push(type);
-    });
-    favoriteSectionOrder = normalizeFavoriteSectionOrder(seenTypes);
+    const draggedItem = event?.item;
+    if (draggedItem && !favoriteItemSitsInsideOwnSection(draggedItem)) {
+      if (favoriteSectionSwitchCommitted) {
+        if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
+        saveFavoriteSectionOrder();
+        saveFavoriteOrder();
+      } else {
+        restoreFavoriteDragSnapshot();
+      }
+      favoriteDragSnapshot = null;
+      favoriteSectionSwitchCommitted = false;
+      attachFavoritePreview();
+      return;
+    }
+
+    const groups = favoriteDomTypeGroups();
+    favoriteOrder = favoriteSectionOrder.flatMap(type => groups[type] || []);
+    if (!reorderFavoriteDom(favoriteOrder)) syncSidebar();
     saveFavoriteOrder();
     saveFavoriteSectionOrder();
+    favoriteDragSnapshot = null;
+    favoriteSectionSwitchCommitted = false;
     attachFavoritePreview();
   }
 
@@ -8080,7 +8161,7 @@ img.ProseMirror-separator {
     favoriteSortable?.destroy();
     const favoriteSortableOptions = sortableBaseOptions(event => {
       clearFavoriteSectionSwitchTimer();
-      if (event.oldIndex !== event.newIndex) syncFavoriteDataFromDom();
+      syncFavoriteDataFromDom(event);
     }, event => event.item.getBoundingClientRect());
     const baseFavoriteOnStart = favoriteSortableOptions.onStart;
     const baseFavoriteOnEnd = favoriteSortableOptions.onEnd;
@@ -8089,6 +8170,7 @@ img.ProseMirror-separator {
       draggable: '.amnl-List_Item:not(.oboard-favorites-section-separator)',
       onStart(event) {
         clearFavoriteSectionSwitchTimer();
+        captureFavoriteDragSnapshot(event.item?.dataset.dashboardName || '');
         baseFavoriteOnStart(event);
       },
       onMove(event, originalEvent) {
