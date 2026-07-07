@@ -83,9 +83,9 @@
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=23358d9">dashboard-working-temp.html?fix=23358d9</a></li>
-        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-23358d9.html">dashboard-working-temp-23358d9.html</a></li>
-        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-b04f738.html">dashboard-working-temp-b04f738.html</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=2c8c41d">dashboard-working-temp.html?fix=2c8c41d</a></li>
+        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-2c8c41d.html">dashboard-working-temp-2c8c41d.html</a></li>
+        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-23358d9.html">dashboard-working-temp-23358d9.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
         <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
         <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
@@ -101,7 +101,7 @@
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page update: <code>gh-pages 23358d9</code>; latest temp behavior commit: <code>23358d9</code>.</li>
+        <li>Current pushed commits before this handoff page update: <code>gh-pages 2c8c41d</code>; latest temp behavior commit: <code>2c8c41d</code>.</li>
         <li>Stable working file was promoted from approved temp with the refined dashed projection: <code>fc6ea19</code>.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
@@ -125,7 +125,7 @@
         <li>In temp, dragging an open collection carries its visible child dashboard rows as one bundle and uses an elevation state without rounded corners.</li>
         <li>In temp, dragged open collection bundles keep a separator directly under the collection header row, before the first child dashboard row.</li>
         <li>In temp, an open collection drags as a full bundle with visible dashboard rows in both the source projection and fixed-position drag preview. The drag preview is anchored to the pointer near the collection header, keeps the drag handle visible, and keeps elevation without rounded corners. The source projection stays at 50% opacity, uses the row hover-blue background, has no elevation, hides the drag handle, uses a custom 8px dash / 6px gap / 1px line border pattern, and suppresses internal plus adjacent row separators while dragging, including the table-header separator when the projection sits directly under the header.</li>
-        <li>In temp, grouped collection rows now get a flat-corner elevation on hover/focus. The real drag preview uses the same elevation, while the source projection remains flat.</li>
+        <li>In temp, grouped collections use a separate flat-corner elevation layer on hover/focus that spans the full visible collection, from the collection header through its visible child rows. The row hover fill still appears only under the pointer. The real drag preview uses the same elevation, while the source projection remains flat.</li>
         <li>In temp, dragging a grouped dashboard while holding <code>Alt</code> or <code>Meta</code> copies it into the target collection instead of moving it. A duplicate hint appears when the gesture is available, and copied rows are highlighted after drop.</li>
         <li>In temp, grouped collection rows have <code>Copy link</code> and more-actions controls. Copy link switches to <code>Link copied</code> for 1.2 seconds, then returns to the normal or hover state.</li>
         <li>In temp, grouped collection action controls use the same right action column as dashboard row controls, so the collection more-actions button aligns with dashboard kebab buttons.</li>
