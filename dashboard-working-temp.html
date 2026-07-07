@@ -1587,13 +1587,19 @@ img.ProseMirror-separator {
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) {
     opacity: 0.5;
-    outline: 1px dashed rgba(var(--dark-2-rgb, 66,82,110), 0.44);
-    outline-offset: -1px;
+    outline: 2px dashed rgba(var(--dark-2-rgb, 66,82,110), 0.44);
+    outline-offset: -2px;
+    background: var(--surface-subtle, #f4f7fc);
     box-shadow: none !important;
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) > .oboard-grouped-drag-handle {
     opacity: 0 !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback)::before,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) > .oboard-grouped-bundle-inline-child::after {
+    opacity: 0;
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-drag-handle,
@@ -1663,6 +1669,10 @@ img.ProseMirror-separator {
   .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-navigation-highlight,
   .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-hover-demo {
     background: var(--white-color, #fff) !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging:not(.sortable-fallback) > .oboard-grouped-bundle-inline-child {
+    background: transparent !important;
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-drag-handle,
