@@ -1609,6 +1609,7 @@ img.ProseMirror-separator {
     pointer-events: none;
   }
 
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row {
     position: relative;
     display: block !important;
@@ -1619,6 +1620,24 @@ img.ProseMirror-separator {
     background: var(--white-color, #fff);
   }
 
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child {
+    left: 0;
+    right: 0;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-related-hover,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-navigation-highlight,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child.is-hover-demo {
+    background: var(--white-color, #fff) !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-drag-handle,
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-more {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child .oboard-grouped-row-inner,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row-inner {
     display: grid !important;
     grid-template-columns: var(--oboard-dashboard-grid-columns, 52px minmax(0, 1fr) 112px 208px 160px 24px) !important;
@@ -1629,6 +1648,7 @@ img.ProseMirror-separator {
     padding-left: var(--oboard-dashboard-row-start-gutter, var(--page-left-padding, 32px));
   }
 
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging > .oboard-grouped-bundle-inline-child::after,
   .oboard-grouped-collection-bundle-ghost .oboard-grouped-row::after {
     content: "";
     position: absolute;
@@ -7984,16 +8004,45 @@ img.ProseMirror-separator {
     if (!collectionRow || !childRows.length) return null;
     const rect = groupedCollectionBundleRect(collectionRow, childRows);
     const height = Math.round(rect.height);
+    collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
+    const inlineRows = childRows.map(row => groupedCollectionBundleChildClone(row, 'oboard-grouped-bundle-inline-child'));
     activeGroupedCollectionBundleDrag = {
       collectionRow,
       childRows,
+      inlineRows,
       height,
       rect
     };
     collectionRow.classList.add('oboard-grouped-bundle-dragging');
     collectionRow.style.setProperty('--oboard-grouped-bundle-height', height + 'px');
+    inlineRows.forEach(row => collectionRow.appendChild(row));
     childRows.forEach(row => row.classList.add('oboard-grouped-bundle-child-dragging'));
     return activeGroupedCollectionBundleDrag;
+  }
+
+  function groupedCollectionBundleChildClone(row, className) {
+    const rowClone = row.cloneNode(true);
+    rowClone.hidden = false;
+    rowClone.removeAttribute('hidden');
+    rowClone.classList.remove(
+      'oboard-grouped-bundle-child-dragging',
+      'sortable-chosen',
+      'original-chosen',
+      'oboard-sortable-drag',
+      'oboard-dragging',
+      'is-related-hover',
+      'is-navigation-highlight',
+      'is-hover-demo'
+    );
+    rowClone.classList.add(className);
+    rowClone.style.height = '';
+    rowClone.style.minHeight = '';
+    rowClone.style.maxHeight = '';
+    rowClone.style.overflow = '';
+    rowClone.style.opacity = '1';
+    rowClone.style.visibility = 'visible';
+    rowClone.style.display = 'block';
+    return rowClone;
   }
 
   function styleGroupedCollectionBundleClone(clone, item) {
@@ -8027,31 +8076,10 @@ img.ProseMirror-separator {
     clone.style.overflow = 'hidden';
     clone.style.boxSizing = 'border-box';
     clone.style.setProperty('--oboard-grouped-bundle-height', bundle.height + 'px');
-    clone.querySelectorAll('.oboard-grouped-bundle-cloned-child').forEach(row => row.remove());
+    clone.querySelectorAll('.oboard-grouped-bundle-inline-child, .oboard-grouped-bundle-cloned-child').forEach(row => row.remove());
 
     bundle.childRows.forEach(row => {
-      const rowClone = row.cloneNode(true);
-      rowClone.hidden = false;
-      rowClone.removeAttribute('hidden');
-      rowClone.classList.remove(
-        'oboard-grouped-bundle-child-dragging',
-        'sortable-chosen',
-        'original-chosen',
-        'oboard-sortable-drag',
-        'oboard-dragging',
-        'is-related-hover',
-        'is-navigation-highlight',
-        'is-hover-demo'
-      );
-      rowClone.classList.add('oboard-grouped-bundle-cloned-child');
-      rowClone.style.height = '';
-      rowClone.style.minHeight = '';
-      rowClone.style.maxHeight = '';
-      rowClone.style.overflow = '';
-      rowClone.style.opacity = '1';
-      rowClone.style.visibility = 'visible';
-      rowClone.style.display = 'block';
-      clone.appendChild(rowClone);
+      clone.appendChild(groupedCollectionBundleChildClone(row, 'oboard-grouped-bundle-cloned-child'));
     });
   }
 
@@ -8068,6 +8096,7 @@ img.ProseMirror-separator {
     if (!bundle) return;
     bundle.collectionRow.classList.remove('oboard-grouped-bundle-dragging');
     bundle.collectionRow.style.removeProperty('--oboard-grouped-bundle-height');
+    bundle.collectionRow.querySelectorAll(':scope > .oboard-grouped-bundle-inline-child').forEach(row => row.remove());
     bundle.childRows.forEach(row => row.classList.remove('oboard-grouped-bundle-child-dragging'));
     activeGroupedCollectionBundleDrag = null;
   }
