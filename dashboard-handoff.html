@@ -83,9 +83,9 @@
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=a8fbf8c">dashboard-working-temp.html?fix=a8fbf8c</a></li>
-        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-a8fbf8c.html">dashboard-working-temp-a8fbf8c.html</a></li>
-        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-1960c41.html">dashboard-working-temp-1960c41.html</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=9373b02">dashboard-working-temp.html?fix=9373b02</a></li>
+        <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-9373b02.html">dashboard-working-temp-9373b02.html</a></li>
+        <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-a8fbf8c.html">dashboard-working-temp-a8fbf8c.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
         <li>Favorites checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-favorites.html">dashboard-favorites.html</a></li>
         <li>Grouped checkpoint: <a href="https://mvisl.github.io/oboard/dashboard-working-grouped.html">dashboard-working-grouped.html</a></li>
@@ -101,7 +101,7 @@
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page update: <code>gh-pages a8fbf8c</code>; latest temp behavior commit: <code>a8fbf8c</code>.</li>
+        <li>Current pushed commits before this handoff page update: <code>gh-pages 9373b02</code>; latest temp behavior commit: <code>9373b02</code>.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
     </section>
@@ -123,7 +123,7 @@
         <li>In temp, clicking a collection badge in Ungrouped switches to Grouped, opens the relevant collection or collections, and highlights the matching dashboard rows with timed animation.</li>
         <li>In temp, dragging an open collection carries its visible child dashboard rows as one bundle and uses an elevation state without rounded corners.</li>
         <li>In temp, dragged open collection bundles keep a separator directly under the collection header row, before the first child dashboard row.</li>
-        <li>In temp, an open collection drags as a full bundle with visible dashboard rows in both the source placeholder and fixed-position drag preview. The drag preview is anchored to the pointer near the collection header, the drag handle stays on the header row, and the bundle keeps elevation without rounded corners.</li>
+        <li>In temp, an open collection drags as a full bundle with visible dashboard rows in both the source projection and fixed-position drag preview. The drag preview is anchored to the pointer near the collection header, keeps the drag handle visible, and keeps elevation without rounded corners. The source projection stays at 50% opacity, has no elevation, and hides the drag handle.</li>
         <li>In temp, dragging a grouped dashboard while holding <code>Alt</code> or <code>Meta</code> copies it into the target collection instead of moving it. A duplicate hint appears when the gesture is available, and copied rows are highlighted after drop.</li>
         <li>In temp, grouped collection rows have <code>Copy link</code> and more-actions controls. Copy link switches to <code>Link copied</code> for 1.2 seconds, then returns to the normal or hover state.</li>
         <li>In temp, selected collections are disabled in the collection assignment popover to avoid adding a dashboard to the same collection twice.</li>
