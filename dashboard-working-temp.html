@@ -878,6 +878,11 @@ img.ProseMirror-separator {
     right: 0;
   }
 
+  .oboard-grouped-row.is-collection-boundary-end::after {
+    left: 0;
+    right: 0;
+  }
+
   .oboard-grouped-row.is-before-collection-elevation::after {
     opacity: 0;
   }
@@ -8157,6 +8162,17 @@ img.ProseMirror-separator {
       .filter(row => !row.hidden);
   }
 
+  function updateGroupedCollectionBoundaryRows(host = document.querySelector('.oboard-grouped-list')) {
+    if (!host) return;
+    host.querySelectorAll('.is-collection-boundary-end').forEach(row => {
+      row.classList.remove('is-collection-boundary-end');
+    });
+    host.querySelectorAll(':scope > .oboard-grouped-collection').forEach(collectionRow => {
+      const childRows = groupedCollectionChildRows(collectionRow);
+      (childRows[childRows.length - 1] || collectionRow).classList.add('is-collection-boundary-end');
+    });
+  }
+
   function groupedCollectionBundleRect(collectionRow, childRows = groupedCollectionChildRows(collectionRow)) {
     if (!collectionRow) return null;
     const firstRect = collectionRow.getBoundingClientRect();
@@ -8888,6 +8904,7 @@ img.ProseMirror-separator {
           anchor = row;
         });
     });
+    updateGroupedCollectionBoundaryRows(host);
   }
 
   function normalizeGroupedDashboardCollections(host) {
@@ -9258,6 +9275,7 @@ img.ProseMirror-separator {
       row.classList.remove('is-related-hover', 'is-navigation-highlight');
       row.hidden = collapsed;
     });
+    updateGroupedCollectionBoundaryRows(host);
   }
 
   function revealGroupedRows(rows) {
@@ -9357,6 +9375,7 @@ img.ProseMirror-separator {
 
         highlightedRows[0]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
         revealGroupedRows(revealRows).then(() => {
+          updateGroupedCollectionBoundaryRows(host);
           runGroupedNavigationHighlight(host, highlightedRows);
         });
       });
@@ -9513,6 +9532,7 @@ img.ProseMirror-separator {
     }
     host.innerHTML = groupedListHtml();
     ensureGroupedCollectionElevationLayer(host);
+    updateGroupedCollectionBoundaryRows(host);
     bindGroupedCollectionElevation(host);
     host.querySelectorAll('.oboard-grouped-collection').forEach(collectionRow => {
       const button = collectionRow.querySelector('.oboard-grouped-chevrons');
