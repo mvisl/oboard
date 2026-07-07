@@ -602,7 +602,7 @@ img.ProseMirror-separator {
     pointer-events: none;
     opacity: 0;
     border-radius: 0;
-    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
+    box-shadow: rgba(0, 0, 0, 0.058) 0 -2px 16px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.13) 0 12px 30px 0;
     transform: translate3d(0, 0, 0);
     transition: opacity 120ms ease-in-out, transform 120ms ease-in-out, height 120ms ease-in-out;
   }
@@ -821,6 +821,10 @@ img.ProseMirror-separator {
   .oboard-grouped-collection:hover,
   .oboard-grouped-collection:focus-within {
     z-index: 14;
+    box-shadow:
+      0 -2px 12px rgba(9, 30, 66, 0.09),
+      0 8px 20px rgba(9, 30, 66, 0.13),
+      0 0 1px rgba(9, 30, 66, 0.18);
   }
 
   .oboard-grouped-collection.oboard-grouped-bundle-dragging,
@@ -829,6 +833,7 @@ img.ProseMirror-separator {
     z-index: 15;
   }
 
+  .oboard-grouped-collection.is-navigation-highlight,
   .oboard-grouped-dashboard.is-navigation-highlight {
     background: var(--bg-brand-primary_alt, #e5f0ff);
     animation: oboardGroupedNavigationHighlight 1200ms ease-in-out both;
@@ -846,6 +851,29 @@ img.ProseMirror-separator {
   .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):focus-within,
   .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-row:not(.is-navigation-highlight):hover {
     background: transparent;
+  }
+
+  .oboard-grouped-collection:hover::before,
+  .oboard-grouped-collection:focus-within::before,
+  .oboard-grouped-collection.is-hover-demo::before,
+  .oboard-grouped-collection.is-related-hover::before,
+  .oboard-grouped-collection.is-menu-open::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
+  }
+
+  .oboard-grouped-collection:hover::after,
+  .oboard-grouped-collection:focus-within::after,
+  .oboard-grouped-collection.is-hover-demo::after,
+  .oboard-grouped-collection.is-related-hover::after,
+  .oboard-grouped-collection.is-menu-open::after {
+    left: 0;
   }
 
   .oboard-grouped-service-cell,
@@ -892,6 +920,10 @@ img.ProseMirror-separator {
     line-height: 20px;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .oboard-grouped-collection .oboard-grouped-title {
+    font-weight: 400;
   }
 
   .oboard-grouped-chevrons {
@@ -6772,7 +6804,7 @@ img.ProseMirror-separator {
   let groupedDuplicateHintState = null;
   const collectionOptions = ['Collection 1', 'Collection 2', 'Collection 3', 'Collection 4'];
   const defaultDashboardCollections = new Map([
-    ['Team’s KPIs', ['Collection 1', 'Collection 4']],
+    ['Team’s KPIs', ['Collection 1', 'Collection 3', 'Collection 4']],
     ['Some new Dashboard', ['Collection 2']],
     ['Company focus 2026', ['Collection 3']],
     ['2026 Trial dashboard', ['Collection 1']],
@@ -8814,7 +8846,8 @@ img.ProseMirror-separator {
       favorite: item.favorite,
       private: dashboardIsPrivate(item),
       badge: otherCollections.length ? '+' + otherCollections.length : '',
-      badgeTitle: otherCollections.join(', ')
+      badgeTitle: otherCollections.join(', '),
+      relatedCollections: otherCollections
     };
   }
 
@@ -8845,7 +8878,9 @@ img.ProseMirror-separator {
 
   function collectionBadge(item) {
     if (!item.badge) return '';
-    const relatedCollections = (item.badgeTitle || '').split(', ').filter(Boolean);
+    const relatedCollections = Array.isArray(item.relatedCollections)
+      ? item.relatedCollections
+      : (item.badgeTitle || '').split(', ').filter(Boolean);
     return [
       '<span class="oboard-grouped-collection-badge" tabindex="0" data-dashboard-name="' + escapeHtml(item.name) + '" data-related-collections="' + escapeHtml(relatedCollections.map(encodeURIComponent).join('|')) + '">',
       layersIcon(),
@@ -8890,22 +8925,24 @@ img.ProseMirror-separator {
         }
       });
     const rows = [];
-    if (includeCurrent) rows.push(currentRow);
+    const addRow = row => {
+      if (row && !rows.includes(row)) rows.push(row);
+    };
+    if (includeCurrent) addRow(currentRow);
 
     relatedCollections.forEach(collectionName => {
       const dashboardRow = host.querySelector(
         '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
       );
-      if (dashboardRow && !dashboardRow.hidden) {
-        rows.push(dashboardRow);
+      if (!dashboardRow) return;
+
+      if (!dashboardRow.hidden) {
+        addRow(dashboardRow);
         return;
       }
 
       const collectionRow = host.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collectionName) + '"]');
-      const firstDashboard = collectionRow
-        ? host.querySelector('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]')
-        : null;
-      if (firstDashboard) rows.push(collectionRow);
+      addRow(collectionRow);
     });
     return rows;
   }
@@ -9737,7 +9774,7 @@ img.ProseMirror-separator {
       '<button type="button" class="oboard-dashboard-mode-option" role="radio" data-mode="grouped" aria-checked="false">' + layersIcon() + '<span>Grouped</span></button>'
     ].join('');
 
-    function setMode(mode, animate = true) {
+    function setMode(mode, animate = false) {
       selectDashboardMode(mode, { animate });
     }
 

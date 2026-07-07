@@ -77,13 +77,13 @@
 <body>
   <main>
     <h1>Oboard Dashboard Prototype Handoff</h1>
-    <p class="meta">Updated: 2026-07-07. Current working and temp prototypes for dashboard collections and favorites.</p>
+    <p class="meta">Updated: 2026-07-08. Current working and temp prototypes for dashboard collections and favorites.</p>
 
     <section>
       <h2>Links</h2>
       <ul>
         <li>Stable working prototype: <a href="https://mvisl.github.io/oboard/dashboard-working.html">dashboard-working.html</a></li>
-        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html?fix=2c8c41d">dashboard-working-temp.html?fix=2c8c41d</a></li>
+        <li>Temporary experiment prototype: <a href="https://mvisl.github.io/oboard/dashboard-working-temp.html">dashboard-working-temp.html</a></li>
         <li>Frozen temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-2c8c41d.html">dashboard-working-temp-2c8c41d.html</a></li>
         <li>Previous temp snapshot: <a href="https://mvisl.github.io/oboard/dashboard-working-temp-23358d9.html">dashboard-working-temp-23358d9.html</a></li>
         <li>Original snapshot, do not edit: <a href="https://mvisl.github.io/oboard/dashboard-original.html">dashboard-original.html</a></li>
@@ -97,13 +97,24 @@
     <section>
       <h2>Files And Branches</h2>
       <ul>
-        <li>Local source folder: <code>/Users/makhankov-vi/Documents/Oboard</code></li>
+        <li>Local source folder: <code>/Users/viacheslavmakhankov/Desktop/Oboard</code></li>
         <li>Publish repo folder: <code>/tmp/oboard-publish</code></li>
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
-        <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> only after approval.</li>
-        <li>Current pushed commits before this handoff page update: <code>gh-pages 2c8c41d</code>; latest temp behavior commit: <code>2c8c41d</code>.</li>
-        <li>Stable working file was promoted from approved temp with the refined dashed projection: <code>fc6ea19</code>.</li>
+        <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> after approval or when explicitly promoting a checked build.</li>
+        <li>Current branch: <code>gh-pages</code> in <code>/tmp/oboard-publish</code>.</li>
+        <li>Stable working file is synced from the latest checked temp build.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Latest Change Summary</h2>
+      <ul>
+        <li>Grouped collection badge clicks now highlight visible matching dashboard rows and collapsed collection header rows when matching dashboards are hidden inside collapsed collections.</li>
+        <li>Grouped collection hover uses one flat-corner elevation treatment with slightly stronger top shadow; top and bottom dividers extend across the full collection width.</li>
+        <li>Grouped collection titles use regular weight; dashboard titles remain stronger.</li>
+        <li>Grouped badge hover/tooltip state is cleared after click and when the pointer leaves, preventing stuck hover-like rows.</li>
+        <li>The Ungrouped / Grouped switcher remains instant. The previous mode-switch animation is intentionally disabled.</li>
       </ul>
     </section>
 
@@ -120,18 +131,18 @@
         <li>In temp, Favorites contains <code>My objectives</code> and <code>My groups objectives</code>, plus dashboard favorites. Each item shows its section icon at 16×16 with 70% opacity; on hover it changes to a drag handle.</li>
         <li>In temp, Favorites are grouped into objective and dashboard sections with a separator only when both sections are present. Items can reorder only inside their own section; dropping into the other section returns the item. Holding an item over the upper or lower half of the other section for about one second moves its whole section.</li>
         <li>In temp, Favorites navigation highlight is rendered on the actual rows of the relevant section, with no separate overlay layer.</li>
-        <li>In temp, hovering a grouped <code>+1</code> collection badge highlights the related dashboard row if visible, or the related collapsed collection row if the dashboard is hidden.</li>
+        <li>In temp and stable, hovering or clicking a grouped <code>+N</code> collection badge highlights the related dashboard row if visible, or the related collapsed collection header row if the dashboard is hidden inside a collapsed collection.</li>
         <li>In temp, clicking a collection badge in Ungrouped switches to Grouped, opens the relevant collection or collections, and highlights the matching dashboard rows with timed animation.</li>
         <li>In temp, dragging an open collection carries its visible child dashboard rows as one bundle and uses an elevation state without rounded corners.</li>
         <li>In temp, dragged open collection bundles keep a separator directly under the collection header row, before the first child dashboard row.</li>
         <li>In temp, an open collection drags as a full bundle with visible dashboard rows in both the source projection and fixed-position drag preview. The drag preview is anchored to the pointer near the collection header, keeps the drag handle visible, and keeps elevation without rounded corners. The source projection stays at 50% opacity, uses the row hover-blue background, has no elevation, hides the drag handle, uses a custom 8px dash / 6px gap / 1px line border pattern, and suppresses internal plus adjacent row separators while dragging, including the table-header separator when the projection sits directly under the header.</li>
-        <li>In temp, grouped collections use a separate flat-corner elevation layer on hover/focus that spans the full visible collection, from the collection header through its visible child rows. The row hover fill still appears only under the pointer. The real drag preview uses the same elevation, while the source projection remains flat.</li>
+        <li>In temp and stable, grouped collections use a separate flat-corner elevation layer on hover/focus that spans the full visible collection, from the collection header through its visible child rows. The row hover fill still appears only under the pointer. Top and bottom collection dividers run full-width, and the real drag preview uses the same elevation while the source projection remains flat.</li>
         <li>In temp, dragging a grouped dashboard while holding <code>Alt</code> or <code>Meta</code> copies it into the target collection instead of moving it. A duplicate hint appears when the gesture is available, and copied rows are highlighted after drop.</li>
         <li>In temp, grouped collection rows have <code>Copy link</code> and more-actions controls. Copy link switches to <code>Link copied</code> for 1.2 seconds, then returns to the normal or hover state.</li>
-        <li>In temp, grouped collection action controls use the same right action column as dashboard row controls, so the collection more-actions button aligns with dashboard kebab buttons.</li>
+        <li>In temp and stable, grouped collection action controls use the same right action column as dashboard row controls, so the collection more-actions button aligns with dashboard kebab buttons.</li>
         <li>In temp, selected collections are disabled in the collection assignment popover to avoid adding a dashboard to the same collection twice.</li>
-        <li>In temp, the Ungrouped / Grouped switcher now changes state instantly; the earlier full mode-switch animation is disabled.</li>
-        <li>In temp, related hover and tooltip state is force-cleared on pointer move away, scroll, click, blur, and visibility change to avoid stuck hover rows.</li>
+        <li>In temp and stable, the Ungrouped / Grouped switcher changes state instantly; the earlier full mode-switch animation is disabled.</li>
+        <li>In temp and stable, related hover and tooltip state is force-cleared on pointer move away, scroll, click, blur, and visibility change to avoid stuck hover rows.</li>
         <li>In temp, Grouped keeps its own header separator layer visible while collections are dragged or reordered; row separators still keep the same left offset as Ungrouped.</li>
         <li>In temp, dashboard/objective preview snapshots are suppressed while the pointer is down or an item is being dragged; previews are hover-only.</li>
         <li>Libertex workspace dropdown opens but has no selection behavior yet.</li>
@@ -153,7 +164,6 @@
     <section>
       <h2>Known Follow-ups</h2>
       <ul>
-        <li>Approve the latest temp build before copying it into <code>dashboard-working.html</code>.</li>
         <li>Collection bundle drag should be checked manually in a real browser after any grouped-row layout change.</li>
         <li>Grouped empty collections still need careful target affordance if that flow continues.</li>
         <li>Collection assignment popover should eventually match the production selector exactly, including search/create behavior.</li>

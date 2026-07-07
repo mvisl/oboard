@@ -592,6 +592,25 @@ img.ProseMirror-separator {
     pointer-events: none;
   }
 
+  .oboard-grouped-collection-elevation {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 13;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: 0;
+    box-shadow: rgba(0, 0, 0, 0.058) 0 -2px 16px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.13) 0 12px 30px 0;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 120ms ease-in-out, transform 120ms ease-in-out, height 120ms ease-in-out;
+  }
+
+  .oboard-grouped-collection-elevation.is-visible {
+    opacity: 1;
+  }
+
   .dp-MainContent-CustomDashboardList.oboard-grouped-mode .oboard-grouped-list {
     display: block;
   }
@@ -748,7 +767,7 @@ img.ProseMirror-separator {
     position: relative;
     height: var(--oboard-dashboard-row-height, 44px);
     box-sizing: border-box;
-    transition: background-color 220ms ease-in-out;
+    transition: background-color 220ms ease-in-out, box-shadow 180ms ease-in-out;
   }
 
   .oboard-grouped-head::after,
@@ -797,6 +816,24 @@ img.ProseMirror-separator {
     background: var(--surface-subtle, #f4f7fc);
   }
 
+  .oboard-grouped-collection.is-hover-demo,
+  .oboard-grouped-collection.is-related-hover,
+  .oboard-grouped-collection:hover,
+  .oboard-grouped-collection:focus-within {
+    z-index: 14;
+    box-shadow:
+      0 -2px 12px rgba(9, 30, 66, 0.09),
+      0 8px 20px rgba(9, 30, 66, 0.13),
+      0 0 1px rgba(9, 30, 66, 0.18);
+  }
+
+  .oboard-grouped-collection.oboard-grouped-bundle-dragging,
+  .oboard-grouped-collection.sortable-chosen,
+  .oboard-grouped-collection.sortable-ghost {
+    z-index: 15;
+  }
+
+  .oboard-grouped-collection.is-navigation-highlight,
   .oboard-grouped-dashboard.is-navigation-highlight {
     background: var(--bg-brand-primary_alt, #e5f0ff);
     animation: oboardGroupedNavigationHighlight 1200ms ease-in-out both;
@@ -814,6 +851,29 @@ img.ProseMirror-separator {
   .oboard-grouped-list.is-navigation-opening .oboard-grouped-row:not(.is-navigation-highlight):focus-within,
   .oboard-grouped-list.is-navigation-hover-locked .oboard-grouped-row:not(.is-navigation-highlight):hover {
     background: transparent;
+  }
+
+  .oboard-grouped-collection:hover::before,
+  .oboard-grouped-collection:focus-within::before,
+  .oboard-grouped-collection.is-hover-demo::before,
+  .oboard-grouped-collection.is-related-hover::before,
+  .oboard-grouped-collection.is-menu-open::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--gray, #dfe1e6);
+    pointer-events: none;
+  }
+
+  .oboard-grouped-collection:hover::after,
+  .oboard-grouped-collection:focus-within::after,
+  .oboard-grouped-collection.is-hover-demo::after,
+  .oboard-grouped-collection.is-related-hover::after,
+  .oboard-grouped-collection.is-menu-open::after {
+    left: 0;
   }
 
   .oboard-grouped-service-cell,
@@ -860,6 +920,10 @@ img.ProseMirror-separator {
     line-height: 20px;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .oboard-grouped-collection .oboard-grouped-title {
+    font-weight: 400;
   }
 
   .oboard-grouped-chevrons {
@@ -1634,13 +1698,13 @@ img.ProseMirror-separator {
     border: 1px solid var(--gray-blue-250, #dde2ea);
     border-radius: 0 !important;
     background: var(--white-color, #fff);
-    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost {
     position: fixed !important;
     opacity: 0.96 !important;
-    box-shadow: rgba(0, 0, 0, 0.05) 0 0 17px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.12) 0 14px 34px 0;
+    box-shadow: rgba(0, 0, 0, 0.042) 0 0 14px 0, rgba(var(--dark-2-rgb, 66,82,110), 0.096) 0 12px 28px 0;
   }
 
   .sortable-fallback.oboard-grouped-collection-bundle-ghost > .oboard-grouped-drag-handle {
@@ -6728,6 +6792,8 @@ img.ProseMirror-separator {
   let dashboardPageSizeEventsBound = false;
   let groupedDragClientX = 0;
   let groupedDragClientY = 0;
+  let groupedCollectionElevationFrame = 0;
+  let groupedCollectionElevationRow = null;
   let activeSortableLock = null;
   let sortableLockFrame = 0;
   let activeGroupedCollectionBundleDrag = null;
@@ -6738,7 +6804,7 @@ img.ProseMirror-separator {
   let groupedDuplicateHintState = null;
   const collectionOptions = ['Collection 1', 'Collection 2', 'Collection 3', 'Collection 4'];
   const defaultDashboardCollections = new Map([
-    ['Team’s KPIs', ['Collection 1', 'Collection 4']],
+    ['Team’s KPIs', ['Collection 1', 'Collection 3', 'Collection 4']],
     ['Some new Dashboard', ['Collection 2']],
     ['Company focus 2026', ['Collection 3']],
     ['2026 Trial dashboard', ['Collection 1']],
@@ -8061,6 +8127,87 @@ img.ProseMirror-separator {
     };
   }
 
+  function ensureGroupedCollectionElevationLayer(host) {
+    if (!host) return null;
+    let layer = host.querySelector(':scope > .oboard-grouped-collection-elevation');
+    if (!layer) {
+      layer = document.createElement('div');
+      layer.className = 'oboard-grouped-collection-elevation';
+      host.appendChild(layer);
+    }
+    return layer;
+  }
+
+  function clearGroupedCollectionElevation(host = document.querySelector('.oboard-grouped-list')) {
+    if (groupedCollectionElevationFrame) {
+      window.cancelAnimationFrame(groupedCollectionElevationFrame);
+      groupedCollectionElevationFrame = 0;
+    }
+    groupedCollectionElevationRow = null;
+    host?.querySelector(':scope > .oboard-grouped-collection-elevation')?.classList.remove('is-visible');
+  }
+
+  function groupedCollectionForHoverRow(row) {
+    if (!row?.classList?.contains('oboard-grouped-row')) return null;
+    if (row.classList.contains('oboard-grouped-collection')) return row;
+    if (!row.classList.contains('oboard-grouped-dashboard')) return null;
+    const collection = row.dataset.collection || '';
+    if (!collection) return null;
+    return row.closest('.oboard-grouped-list')?.querySelector(
+      ':scope > .oboard-grouped-collection[data-collection="' + CSS.escape(collection) + '"]'
+    ) || null;
+  }
+
+  function updateGroupedCollectionElevation(host, collectionRow) {
+    if (!host || !collectionRow || document.body.classList.contains('oboard-reordering')) {
+      clearGroupedCollectionElevation(host);
+      return;
+    }
+    const layer = ensureGroupedCollectionElevationLayer(host);
+    const rect = groupedCollectionBundleRect(collectionRow);
+    const hostRect = host.getBoundingClientRect();
+    if (!layer || !rect || rect.height <= 0) return;
+    layer.style.width = Math.round(rect.width) + 'px';
+    layer.style.height = Math.round(rect.height) + 'px';
+    layer.style.transform = 'translate3d(' + Math.round(rect.left - hostRect.left) + 'px, ' + Math.round(rect.top - hostRect.top) + 'px, 0)';
+    layer.classList.add('is-visible');
+  }
+
+  function scheduleGroupedCollectionElevation(host, collectionRow) {
+    if (!host || !collectionRow) {
+      clearGroupedCollectionElevation(host);
+      return;
+    }
+    groupedCollectionElevationRow = collectionRow;
+    if (groupedCollectionElevationFrame) return;
+    groupedCollectionElevationFrame = window.requestAnimationFrame(() => {
+      groupedCollectionElevationFrame = 0;
+      updateGroupedCollectionElevation(host, groupedCollectionElevationRow);
+    });
+  }
+
+  function syncGroupedCollectionElevationFromEvent(event) {
+    const host = event.currentTarget?.closest?.('.oboard-grouped-list') || event.currentTarget;
+    if (!host?.classList?.contains('oboard-grouped-list')) return;
+    const row = event.target.closest?.('.oboard-grouped-row');
+    const collectionRow = groupedCollectionForHoverRow(row);
+    if (!collectionRow) {
+      clearGroupedCollectionElevation(host);
+      return;
+    }
+    scheduleGroupedCollectionElevation(host, collectionRow);
+  }
+
+  function bindGroupedCollectionElevation(host) {
+    if (!host || host.dataset.oboardCollectionElevationBound === 'true') return;
+    host.dataset.oboardCollectionElevationBound = 'true';
+    host.addEventListener('pointerover', syncGroupedCollectionElevationFromEvent);
+    host.addEventListener('pointermove', syncGroupedCollectionElevationFromEvent);
+    host.addEventListener('pointerleave', () => clearGroupedCollectionElevation(host));
+    window.addEventListener('resize', () => clearGroupedCollectionElevation(host));
+    window.addEventListener('scroll', () => clearGroupedCollectionElevation(host), true);
+  }
+
   function prepareGroupedCollectionBundleDrag(collectionRow) {
     const childRows = groupedCollectionChildRows(collectionRow);
     if (!collectionRow || !childRows.length) return null;
@@ -8364,11 +8511,13 @@ img.ProseMirror-separator {
       filter: '.oboard-grouped-head',
       preventOnFilter: false,
       onChoose(event) {
+        clearGroupedCollectionElevation(host);
         const bundle = prepareGroupedCollectionBundleDrag(event.item);
         groupedSortable?.option?.('fallbackOffset', { x: 0, y: 0 });
         baseGroupedOnChoose(event);
       },
       onStart(event) {
+        clearGroupedCollectionElevation(host);
         baseGroupedOnStart(event);
         beginGroupedDashboardCopyDrag(event);
         scheduleGroupedDuplicateHint(event);
@@ -8379,6 +8528,7 @@ img.ProseMirror-separator {
       },
       onEnd(event) {
         hideGroupedDuplicateHint();
+        clearGroupedCollectionElevation(host);
         if (activeGroupedDashboardCopyDrag) {
           stopSortableLock();
           document.body.classList.remove('oboard-reordering');
@@ -8696,7 +8846,8 @@ img.ProseMirror-separator {
       favorite: item.favorite,
       private: dashboardIsPrivate(item),
       badge: otherCollections.length ? '+' + otherCollections.length : '',
-      badgeTitle: otherCollections.join(', ')
+      badgeTitle: otherCollections.join(', '),
+      relatedCollections: otherCollections
     };
   }
 
@@ -8727,7 +8878,9 @@ img.ProseMirror-separator {
 
   function collectionBadge(item) {
     if (!item.badge) return '';
-    const relatedCollections = (item.badgeTitle || '').split(', ').filter(Boolean);
+    const relatedCollections = Array.isArray(item.relatedCollections)
+      ? item.relatedCollections
+      : (item.badgeTitle || '').split(', ').filter(Boolean);
     return [
       '<span class="oboard-grouped-collection-badge" tabindex="0" data-dashboard-name="' + escapeHtml(item.name) + '" data-related-collections="' + escapeHtml(relatedCollections.map(encodeURIComponent).join('|')) + '">',
       layersIcon(),
@@ -8772,22 +8925,24 @@ img.ProseMirror-separator {
         }
       });
     const rows = [];
-    if (includeCurrent) rows.push(currentRow);
+    const addRow = row => {
+      if (row && !rows.includes(row)) rows.push(row);
+    };
+    if (includeCurrent) addRow(currentRow);
 
     relatedCollections.forEach(collectionName => {
       const dashboardRow = host.querySelector(
         '.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]'
       );
-      if (dashboardRow && !dashboardRow.hidden) {
-        rows.push(dashboardRow);
+      if (!dashboardRow) return;
+
+      if (!dashboardRow.hidden) {
+        addRow(dashboardRow);
         return;
       }
 
       const collectionRow = host.querySelector('.oboard-grouped-collection[data-collection="' + CSS.escape(collectionName) + '"]');
-      const firstDashboard = collectionRow
-        ? host.querySelector('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(dashboardName) + '"][data-collection="' + CSS.escape(collectionName) + '"]')
-        : null;
-      if (firstDashboard) rows.push(firstDashboard);
+      addRow(collectionRow);
     });
     return rows;
   }
@@ -9182,12 +9337,15 @@ img.ProseMirror-separator {
       table.insertAdjacentElement('afterend', host);
     }
     host.innerHTML = groupedListHtml();
+    ensureGroupedCollectionElevationLayer(host);
+    bindGroupedCollectionElevation(host);
     host.querySelectorAll('.oboard-grouped-collection').forEach(collectionRow => {
       const button = collectionRow.querySelector('.oboard-grouped-chevrons');
       button?.addEventListener('click', () => {
         const collapsed = !collectionRow.classList.contains('is-collapsed');
         clearGroupedRelatedHover(host);
         clearGroupedNavigationHighlight(host);
+        clearGroupedCollectionElevation(host);
         setGroupedCollectionCollapsed(host, collectionRow, collapsed);
         button.blur();
       });
@@ -9616,7 +9774,7 @@ img.ProseMirror-separator {
       '<button type="button" class="oboard-dashboard-mode-option" role="radio" data-mode="grouped" aria-checked="false">' + layersIcon() + '<span>Grouped</span></button>'
     ].join('');
 
-    function setMode(mode, animate = true) {
+    function setMode(mode, animate = false) {
       selectDashboardMode(mode, { animate });
     }
 
