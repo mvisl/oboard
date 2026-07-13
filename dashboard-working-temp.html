@@ -2695,6 +2695,176 @@ img.ProseMirror-separator {
     height: 20px;
   }
 
+  .oboard-home-workspace-filter {
+    position: relative;
+  }
+
+  .oboard-home-workspace-trigger {
+    cursor: pointer;
+  }
+
+  .oboard-home-workspace-trigger-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  .oboard-home-workspace-menu {
+    position: absolute;
+    z-index: 10000;
+    top: calc(100% + 2px);
+    left: 0;
+    width: 320px;
+    overflow: hidden;
+    border: 1px solid var(--grey-2-next);
+    border-radius: 8px;
+    background: var(--white-color);
+    box-shadow: 0 8px 20px rgba(var(--dark-2-rgb), 0.2);
+  }
+
+  .oboard-home-workspace-menu[hidden] {
+    display: none;
+  }
+
+  .oboard-home-workspace-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    border: 2px solid var(--primary-color-next);
+    border-radius: 8px;
+    color: var(--dark-2);
+  }
+
+  .oboard-home-workspace-search svg {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    margin-left: 14px;
+  }
+
+  .oboard-home-workspace-search input {
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 14px 0 12px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--dark-1);
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .oboard-home-workspace-search input::placeholder {
+    color: var(--grey-1-next);
+  }
+
+  .oboard-home-workspace-options {
+    max-height: 288px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+
+  .oboard-home-workspace-option {
+    display: grid;
+    grid-template-columns: 24px 32px 12px 32px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 6px 12px;
+    border: 0;
+    background: var(--white-color);
+    color: var(--dark-1);
+    font: inherit;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .oboard-home-workspace-option.is-workspace {
+    grid-template-columns: 24px 32px minmax(0, 1fr);
+  }
+
+  .oboard-home-workspace-option:hover,
+  .oboard-home-workspace-option.is-selected {
+    background: var(--grey-3-next);
+  }
+
+  .oboard-home-workspace-option[hidden] {
+    display: none;
+  }
+
+  .oboard-home-workspace-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--grey-semi-medium);
+    border-radius: 5px;
+    color: transparent;
+  }
+
+  .oboard-home-workspace-checkbox svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .oboard-home-workspace-option.is-selected .oboard-home-workspace-checkbox {
+    border-color: var(--primary-color-next);
+    background: var(--primary-color-next);
+    color: var(--white-color);
+  }
+
+  .oboard-home-workspace-tile,
+  .oboard-home-group-tile {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+
+  .oboard-home-workspace-parent-arrow {
+    width: 12px;
+    height: 12px;
+    color: var(--grey-semi-medium);
+  }
+
+  .oboard-home-workspace-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .oboard-home-workspace-clear {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: calc(100% - 24px);
+    height: 48px;
+    margin: 0 12px;
+    padding: 0 4px;
+    border: 0;
+    border-top: 1px solid var(--grey-2-next);
+    background: var(--white-color);
+    color: var(--grey-semi-medium);
+    font: inherit;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .oboard-home-workspace-clear svg {
+    width: 24px;
+    height: 24px;
+    color: var(--grey-1-next);
+  }
+
   .oboard-static-button-dark {
     background: var(--dark-2, #42526e);
     color: var(--white-color, #fff);
@@ -9984,6 +10154,20 @@ img.ProseMirror-separator {
       '<section class="oboard-static-view-inner oboard-static-home">',
       '<div class="oboard-static-toolbar">',
       '<div class="oboard-static-toolbar-left">',
+      '<div class="oboard-home-workspace-filter">',
+      '<button class="oboard-static-button oboard-static-button-dark oboard-home-workspace-trigger" type="button" aria-haspopup="listbox" aria-expanded="false"><img class="oboard-home-workspace-trigger-icon" src="assets/home-workspaces/workspace-trigger.png" alt=""><span>Libertex</span></button>',
+      '<div class="oboard-home-workspace-menu" role="dialog" aria-label="Workspaces" hidden>',
+      '<label class="oboard-home-workspace-search">' + svgIcon('icon-search-next') + '<input type="search" placeholder="Search" aria-label="Search workspaces"></label>',
+      '<div class="oboard-home-workspace-options" role="listbox" aria-multiselectable="true">',
+      '<button class="oboard-home-workspace-option is-workspace" type="button" role="option" aria-selected="false" data-workspace-name="Libertex"><span class="oboard-home-workspace-checkbox">' + svgIcon('icon-check') + '</span><img class="oboard-home-workspace-tile" src="assets/home-workspaces/workspace.png" alt=""><span class="oboard-home-workspace-label">Libertex</span></button>',
+      '<button class="oboard-home-workspace-option is-selected" type="button" role="option" aria-selected="true" data-workspace-name="Marketing"><span class="oboard-home-workspace-checkbox">' + svgIcon('icon-check') + '</span><img class="oboard-home-workspace-tile" src="assets/home-workspaces/workspace.png" alt="">' + svgIcon('icon-group-parent-arrow', 'oboard-home-workspace-parent-arrow') + '<img class="oboard-home-group-tile" src="assets/home-workspaces/marketing.png" alt=""><span class="oboard-home-workspace-label">Marketing</span></button>',
+      '<button class="oboard-home-workspace-option is-selected" type="button" role="option" aria-selected="true" data-workspace-name="Engineering"><span class="oboard-home-workspace-checkbox">' + svgIcon('icon-check') + '</span><img class="oboard-home-workspace-tile" src="assets/home-workspaces/workspace.png" alt="">' + svgIcon('icon-group-parent-arrow', 'oboard-home-workspace-parent-arrow') + '<img class="oboard-home-group-tile" src="assets/home-workspaces/engineering.png" alt=""><span class="oboard-home-workspace-label">Engineering</span></button>',
+      '<button class="oboard-home-workspace-option" type="button" role="option" aria-selected="false" data-workspace-name="Product"><span class="oboard-home-workspace-checkbox">' + svgIcon('icon-check') + '</span><img class="oboard-home-workspace-tile" src="assets/home-workspaces/workspace.png" alt="">' + svgIcon('icon-group-parent-arrow', 'oboard-home-workspace-parent-arrow') + '<img class="oboard-home-group-tile" src="assets/home-workspaces/product.png" alt=""><span class="oboard-home-workspace-label">Product</span></button>',
+      '<button class="oboard-home-workspace-option" type="button" role="option" aria-selected="false" data-workspace-name="IT Operations"><span class="oboard-home-workspace-checkbox">' + svgIcon('icon-check') + '</span><img class="oboard-home-workspace-tile" src="assets/home-workspaces/workspace.png" alt="">' + svgIcon('icon-group-parent-arrow', 'oboard-home-workspace-parent-arrow') + '<img class="oboard-home-group-tile" src="assets/home-workspaces/operations.png" alt=""><span class="oboard-home-workspace-label">IT Operations</span></button>',
+      '</div>',
+      '<button class="oboard-home-workspace-clear" type="button">' + svgIcon('icon-close-circle-next') + '<span>Clear selection</span></button>',
+      '</div>',
+      '</div>',
       '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-calendar-next') + 'Q3 2026</button>',
       '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-user-next') + 'Viacheslav Makhankov</button>',
       '</div>',
@@ -10017,6 +10201,71 @@ img.ProseMirror-separator {
       '</div>',
       '</section>'
     ].join('');
+  }
+
+  let homeWorkspaceFilterAbortController = null;
+
+  function initHomeWorkspaceFilter() {
+    homeWorkspaceFilterAbortController?.abort();
+    const host = document.querySelector('.oboard-home-workspace-filter');
+    const trigger = host?.querySelector('.oboard-home-workspace-trigger');
+    const menu = host?.querySelector('.oboard-home-workspace-menu');
+    const search = host?.querySelector('.oboard-home-workspace-search input');
+    const clear = host?.querySelector('.oboard-home-workspace-clear');
+    const options = host ? Array.from(host.querySelectorAll('.oboard-home-workspace-option')) : [];
+    if (!host || !trigger || !menu || !search || !clear || !options.length) return;
+
+    const controller = new AbortController();
+    homeWorkspaceFilterAbortController = controller;
+    const signal = controller.signal;
+
+    function closeMenu() {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function openMenu() {
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      search.focus({ preventScroll: true });
+    }
+
+    trigger.addEventListener('click', event => {
+      event.stopPropagation();
+      if (menu.hidden) openMenu();
+      else closeMenu();
+    }, { signal });
+
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        const selected = !option.classList.contains('is-selected');
+        option.classList.toggle('is-selected', selected);
+        option.setAttribute('aria-selected', selected ? 'true' : 'false');
+      }, { signal });
+    });
+
+    search.addEventListener('input', () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      options.forEach(option => {
+        option.hidden = Boolean(query) && !option.dataset.workspaceName.toLocaleLowerCase().includes(query);
+      });
+    }, { signal });
+
+    clear.addEventListener('click', () => {
+      options.forEach(option => {
+        option.classList.remove('is-selected');
+        option.setAttribute('aria-selected', 'false');
+      });
+    }, { signal });
+
+    document.addEventListener('click', event => {
+      if (!host.contains(event.target)) closeMenu();
+    }, { signal });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeMenu();
+    }, { signal });
+
   }
 
   function checkinsViewTemplate() {
@@ -10148,6 +10397,7 @@ img.ProseMirror-separator {
         staticHost.innerHTML = page.html();
         staticHost.hidden = false;
         dashboardPage.style.display = 'none';
+        if (pageName === 'home') initHomeWorkspaceFilter();
       }
       setActive(pageName);
       if (pageName === 'objectives') highlightFavoriteType('objective');
