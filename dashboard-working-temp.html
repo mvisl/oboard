@@ -2501,15 +2501,132 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-section-separator {
-    display: block;
+    display: none;
     flex: 0 0 auto;
     list-style: none;
-    height: 1px;
-    min-height: 1px;
-    margin: 10px 12px 10px 36px;
+    height: 0;
+    min-height: 0;
+    margin: 0;
     padding: 0;
-    background: var(--gray-blue-250, #dde2ea);
+    background: transparent;
     pointer-events: none;
+  }
+
+  .oboard-favorites-add-more {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    flex: 0 0 auto;
+    height: 32px;
+    margin: 4px 8px 4px 36px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--primary-color-next);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    cursor: pointer;
+  }
+
+  .oboard-favorites-add-more:hover,
+  .oboard-favorites-add-more:focus-visible {
+    text-decoration: underline;
+  }
+
+  .oboard-favorites-add-more:focus-visible {
+    outline: 2px solid var(--primary-color-next-150);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .oboard-favorites-picker {
+    position: fixed;
+    z-index: 10020;
+    width: 304px;
+    max-height: min(420px, calc(100vh - 24px));
+    overflow-y: auto;
+    padding: 4px 0;
+    border: 1px solid var(--grey-2-next);
+    border-radius: 8px;
+    background: var(--white-color);
+    box-shadow: 0 8px 20px rgba(var(--dark-2-rgb), 0.2);
+  }
+
+  .oboard-favorites-picker-section + .oboard-favorites-picker-section {
+    border-top: 1px solid var(--grey-2-next);
+  }
+
+  .oboard-favorites-picker-group,
+  .oboard-favorites-picker-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 0;
+    background: transparent;
+    color: var(--dark-2);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .oboard-favorites-picker-group {
+    font-weight: 600;
+  }
+
+  .oboard-favorites-picker-group:hover,
+  .oboard-favorites-picker-option:hover,
+  .oboard-favorites-picker-option.is-selected {
+    background: var(--grey-3-next);
+  }
+
+  .oboard-favorites-picker-group:focus-visible,
+  .oboard-favorites-picker-option:focus-visible {
+    outline: 2px solid var(--primary-color-next-150);
+    outline-offset: -2px;
+  }
+
+  .oboard-favorites-picker-group > .svg-icon:first-child {
+    width: 16px;
+    height: 16px;
+    transition: transform 120ms ease;
+  }
+
+  .oboard-favorites-picker-group[aria-expanded="false"] > .svg-icon:first-child {
+    transform: rotate(-90deg);
+  }
+
+  .oboard-favorites-picker-group > .svg-icon:nth-child(2),
+  .oboard-favorites-picker-option > .svg-icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+  }
+
+  .oboard-favorites-picker-children[hidden] {
+    display: none;
+  }
+
+  .oboard-favorites-picker-option {
+    padding-left: 44px;
+  }
+
+  .oboard-favorites-picker-option.is-selected {
+    color: var(--primary-color-next);
+    font-weight: 600;
+  }
+
+  .oboard-favorites-picker-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .oboard-favorites-drag-handle {
@@ -6824,11 +6941,19 @@ img.ProseMirror-separator {
     favoritesTitle.className = 'amnl-List_Item oboard-favorites-title-row';
     favoritesTitle.innerHTML = '<span class="amni-Item amni-Item-default">' + svgIcon(FILLED, 'amni-Item_Icon') + '<span class="amni-Item_Text">Favorites</span></span>';
 
+    const favoritesAddMore = document.createElement('button');
+    favoritesAddMore.type = 'button';
+    favoritesAddMore.className = 'oboard-favorites-add-more';
+    favoritesAddMore.textContent = 'Add more';
+    favoritesAddMore.setAttribute('aria-haspopup', 'tree');
+    favoritesAddMore.setAttribute('aria-expanded', 'false');
+
     objectivesChildren?.remove();
     originalFavorites.classList.add('oboard-favorites-list');
     primarySection.appendChild(rootList);
     favoritesSection.appendChild(favoritesTitle);
     favoritesSection.appendChild(originalFavorites);
+    favoritesSection.appendChild(favoritesAddMore);
     sections.appendChild(primarySection);
     sections.appendChild(favoritesSection);
     nav.appendChild(sections);
@@ -6987,6 +7112,7 @@ img.ProseMirror-separator {
   let favoriteDragSnapshot = null;
   let favoriteSectionSwitchCommitted = false;
   let favoritesTypeHighlightTimer = null;
+  let selectedFavoritePickerName = '';
   let tableSortable = null;
   let favoriteSortable = null;
   let groupedSortable = null;
@@ -7376,6 +7502,109 @@ img.ProseMirror-separator {
       }
     });
     return names;
+  }
+
+  function closeFavoritePicker() {
+    document.querySelector('.oboard-favorites-picker')?.remove();
+    document.querySelector('.oboard-favorites-add-more')?.setAttribute('aria-expanded', 'false');
+  }
+
+  function favoritePickerSectionHtml(type) {
+    const isObjective = type === 'objective';
+    const label = isObjective ? 'Objectives' : 'Dashboards';
+    const iconId = isObjective ? 'icon-menu-objectives' : 'icon-menu-dashboard';
+    const names = isObjective ? objectiveFavoriteNames : rowOrder.map(item => item.name);
+    const options = names.map(name => {
+      const selected = name === selectedFavoritePickerName;
+      return [
+        '<button class="oboard-favorites-picker-option' + (selected ? ' is-selected' : '') + '" type="button" role="treeitem" aria-selected="' + selected + '" data-favorite-name="' + escapeHtml(name) + '" data-favorite-type="' + type + '">',
+        svgIcon(iconId),
+        '<span class="oboard-favorites-picker-label">' + escapeHtml(name) + '</span>',
+        '</button>'
+      ].join('');
+    }).join('');
+    return [
+      '<div class="oboard-favorites-picker-section" data-picker-section="' + type + '">',
+      '<button class="oboard-favorites-picker-group" type="button" role="treeitem" aria-expanded="true" data-picker-toggle="' + type + '">',
+      svgIcon('icon-arrow-down-black-next'),
+      svgIcon(iconId),
+      '<span class="oboard-favorites-picker-label">' + label + '</span>',
+      '</button>',
+      '<div class="oboard-favorites-picker-children" role="group">' + options + '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function positionFavoritePicker(picker, button) {
+    const buttonRect = button.getBoundingClientRect();
+    const sectionRect = button.closest('.oboard-nav-section-favorites')?.getBoundingClientRect() || buttonRect;
+    const left = Math.min(sectionRect.right + 8, window.innerWidth - picker.offsetWidth - 12);
+    const top = Math.max(12, Math.min(buttonRect.top, window.innerHeight - picker.offsetHeight - 12));
+    picker.style.left = Math.max(12, left) + 'px';
+    picker.style.top = top + 'px';
+  }
+
+  function openFavoritePicker(button) {
+    closeFavoritePicker();
+    const picker = document.createElement('div');
+    picker.className = 'oboard-favorites-picker';
+    picker.setAttribute('role', 'tree');
+    picker.setAttribute('aria-label', 'Add to favorites');
+    picker.innerHTML = favoritePickerSectionHtml('dashboard') + favoritePickerSectionHtml('objective');
+    document.body.appendChild(picker);
+    button.setAttribute('aria-expanded', 'true');
+    positionFavoritePicker(picker, button);
+  }
+
+  function initFavoritePicker() {
+    const button = document.querySelector('.oboard-favorites-add-more');
+    if (!button || button.dataset.oboardFavoritePickerReady === 'true') return;
+    button.dataset.oboardFavoritePickerReady = 'true';
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (document.querySelector('.oboard-favorites-picker')) {
+        closeFavoritePicker();
+      } else {
+        openFavoritePicker(button);
+      }
+    });
+
+    document.addEventListener('click', event => {
+      const toggle = event.target.closest('.oboard-favorites-picker-group');
+      if (toggle) {
+        const expanded = toggle.getAttribute('aria-expanded') !== 'false';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        toggle.nextElementSibling.hidden = expanded;
+        return;
+      }
+
+      const option = event.target.closest('.oboard-favorites-picker-option');
+      if (option) {
+        const picker = option.closest('.oboard-favorites-picker');
+        picker.querySelectorAll('.oboard-favorites-picker-option').forEach(item => {
+          const selected = item === option;
+          item.classList.toggle('is-selected', selected);
+          item.setAttribute('aria-selected', String(selected));
+        });
+        selectedFavoritePickerName = option.dataset.favoriteName || '';
+        if (option.dataset.favoriteType === 'dashboard') {
+          const dashboard = rowOrder.find(item => item.name === selectedFavoritePickerName);
+          if (dashboard && !dashboard.favorite) {
+            if (!favoriteOrder.includes(selectedFavoritePickerName)) favoriteOrder.push(selectedFavoritePickerName);
+            updateDashboardFavorite(selectedFavoritePickerName, true);
+          }
+        }
+        return;
+      }
+
+      if (!event.target.closest('.oboard-favorites-picker')) closeFavoritePicker();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeFavoritePicker();
+    });
+    window.addEventListener('resize', closeFavoritePicker);
   }
 
   function groupedFavoriteNames(names = favoriteBaseNames()) {
@@ -10459,6 +10688,7 @@ img.ProseMirror-separator {
   restoreFavoriteSectionOrder();
   restoreDashboardCollections();
   initWorkspacePopover();
+  initFavoritePicker();
   initDashboardCollectionColumn();
   renderDashboardFooter();
   attachTableDragHandlers();
