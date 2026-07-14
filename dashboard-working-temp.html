@@ -3373,9 +3373,307 @@ img.ProseMirror-separator {
     overflow-x: auto;
   }
 
+  .oboard-home-widget-grid {
+    display: grid;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .oboard-home-widget-grid.layout-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oboard-home-widget-grid.layout-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .oboard-home-widget-grid.layout-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .oboard-home-widget-grid.layout-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .oboard-home-widget-grid.layout-workspace-one {
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  }
+
+  .oboard-home-widget-grid.layout-workspace-stacked {
+    grid-template-columns: repeat(var(--oboard-home-group-columns, 3), minmax(0, 1fr));
+  }
+
+  .oboard-home-widget-grid.layout-workspace-stacked > .oboard-home-widget.is-workspace {
+    grid-column: 1 / -1;
+  }
+
+  .oboard-home-widget {
+    min-width: 0;
+    overflow: hidden;
+    padding: 24px;
+    border: 1px solid var(--grey-2-next);
+    border-radius: 12px;
+    background: var(--white-color);
+  }
+
+  .oboard-home-widget-tabs {
+    display: flex;
+    gap: 24px;
+    min-width: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--grey-2-next);
+    color: var(--dark-2);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22px;
+  }
+
+  .oboard-home-widget-tab {
+    min-width: 0;
+    padding-bottom: 8px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .oboard-home-widget-tab.is-active {
+    color: var(--primary-color-next);
+    border-bottom: 2px solid var(--primary-color-next);
+  }
+
+  .oboard-home-widget-master-tabs {
+    margin-bottom: 16px;
+  }
+
+  .oboard-home-widget-overview {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.2fr) 160px minmax(180px, 0.8fr);
+    gap: 28px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .oboard-home-widget-chart {
+    height: 176px;
+    border-bottom: 1px solid var(--grey-2-next);
+    background:
+      linear-gradient(to bottom, transparent 24%, var(--grey-3-next) 24%, var(--grey-3-next) calc(24% + 1px), transparent calc(24% + 1px)),
+      linear-gradient(to bottom, transparent 49%, var(--grey-3-next) 49%, var(--grey-3-next) calc(49% + 1px), transparent calc(49% + 1px)),
+      linear-gradient(to bottom, transparent 74%, var(--grey-3-next) 74%, var(--grey-3-next) calc(74% + 1px), transparent calc(74% + 1px));
+  }
+
+  .oboard-home-widget-chart svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .oboard-home-widget-summary {
+    text-align: center;
+  }
+
+  .oboard-home-widget-number {
+    color: var(--primary-color-next);
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 64px;
+  }
+
+  .oboard-home-widget-change {
+    color: var(--grey-semi-medium);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+
+  .oboard-home-widget-statuses {
+    display: grid;
+    gap: 8px;
+  }
+
+  .oboard-home-widget-status {
+    display: grid;
+    gap: 4px;
+    color: var(--dark-2);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 14px;
+  }
+
+  .oboard-home-widget-status-track {
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--grey-2-next);
+  }
+
+  .oboard-home-widget-status-track span {
+    display: block;
+    width: var(--oboard-status-width, 0%);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--oboard-status-color, var(--grey-semi-medium));
+  }
+
+  .oboard-home-widget-objectives-head,
+  .oboard-home-widget-objective {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 52px 32px;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .oboard-home-widget-objectives-head {
+    min-height: 36px;
+    border-bottom: 1px solid var(--grey-2-next);
+    color: var(--dark-1);
+    font-weight: 700;
+  }
+
+  .oboard-home-widget-objectives-head span:last-child {
+    grid-column: 3;
+    color: var(--grey-semi-medium);
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .oboard-home-widget-objective {
+    min-height: 48px;
+    border-bottom: 1px solid var(--grey-2-next);
+    color: var(--dark-1);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .oboard-home-widget-objective:last-child {
+    border-bottom: 0;
+  }
+
+  .oboard-home-widget-objective-main {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .oboard-home-widget-objective-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .oboard-home-widget-objective-progress {
+    color: var(--dark-1);
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .oboard-home-widget-objective-progress.is-risk {
+    color: var(--grade-low-color-next);
+  }
+
+  .oboard-home-widget-objective-progress.is-behind {
+    color: var(--grade-medium-color-next);
+  }
+
+  .oboard-home-widget-objective-progress.is-good {
+    color: var(--grade-high-color-next);
+  }
+
+  .oboard-home-widget .oboard-avatar {
+    justify-self: end;
+  }
+
+  .oboard-home-widget.is-medium {
+    padding: 20px;
+  }
+
+  .oboard-home-widget.is-medium .oboard-home-widget-overview {
+    grid-template-columns: minmax(0, 1fr) 120px;
+    gap: 16px;
+  }
+
+  .oboard-home-widget.is-medium .oboard-home-widget-statuses {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .oboard-home-widget.is-medium .oboard-home-widget-chart {
+    height: 140px;
+  }
+
+  .oboard-home-widget.is-medium .oboard-home-widget-number {
+    font-size: 44px;
+    line-height: 52px;
+  }
+
+  .oboard-home-widget.is-compact {
+    padding: 16px;
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-chart {
+    height: 112px;
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-number {
+    font-size: 40px;
+    line-height: 46px;
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-statuses {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-objectives-head,
+  .oboard-home-widget.is-compact .oboard-home-widget-objective {
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 8px;
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-objectives-head span:last-child,
+  .oboard-home-widget.is-compact .oboard-home-widget-objective .oboard-avatar {
+    display: none;
+  }
+
+  .oboard-home-widget-empty {
+    display: flex;
+    min-height: 220px;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--grey-2-next);
+    border-radius: 12px;
+    color: var(--grey-semi-medium);
+    font-weight: 600;
+  }
+
   @media (max-width: 1100px) {
     .oboard-progress-body {
       grid-template-columns: 1fr;
+    }
+
+    .oboard-home-widget-grid.layout-two,
+    .oboard-home-widget-grid.layout-three,
+    .oboard-home-widget-grid.layout-four,
+    .oboard-home-widget-grid.layout-workspace-one,
+    .oboard-home-widget-grid.layout-workspace-stacked {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .oboard-home-widget-grid.layout-workspace-stacked > .oboard-home-widget.is-workspace {
+      grid-column: auto;
     }
   }
 </style>
@@ -10429,6 +10727,141 @@ img.ProseMirror-separator {
     setMode(window.localStorage.getItem(DASHBOARD_MODE_STORAGE_KEY) || 'ungrouped', false);
   }
 
+  let homeWidgetMode = 'objectives';
+
+  const homeWidgetData = {
+    Libertex: {
+      objectiveProgress: 29,
+      metricProgress: 0,
+      points: '10,150 96,150 180,150 260,96 342,104 424,118 510,120',
+      statuses: [['NOT STARTED', 0, 0, 'var(--grey-semi-medium)'], ['AT RISK', 0, 0, 'var(--grade-low-color-next)'], ['BEHIND', 1, 28, 'var(--grade-medium-color-next)'], ['ON TRACK', 0, 0, 'var(--grade-high-color-next)'], ['CLOSED', 0, 0, 'var(--dark-2)'], ['ABANDONED', 0, 0, 'var(--grey-semi-medium)']],
+      objectives: [['C', 'LIB-3', 'Improve Operational Efficiency and Scalability', 12], ['C', 'LIB-2', 'Elevate Product Excellence to Unprecedented Levels', 86], ['C', 'LIB-1', 'Become the market leader in AI calendar assistance', 40]]
+    },
+    Marketing: {
+      objectiveProgress: 24,
+      metricProgress: 70,
+      points: '10,150 92,96 176,78 260,84 344,86 426,88 510,88',
+      statuses: [['NOT STARTED', 1, 34, 'var(--grey-semi-medium)'], ['AT RISK', 1, 100, 'var(--grade-low-color-next)'], ['BEHIND', 1, 34, 'var(--grade-medium-color-next)'], ['ON TRACK', 0, 0, 'var(--grade-high-color-next)'], ['CLOSED', 0, 0, 'var(--dark-2)'], ['ABANDONED', 0, 0, 'var(--grey-semi-medium)']],
+      objectives: [['Dp', 'LIB-9', 'Establish Strong Brand Presence and Drive Market Awareness', 56], ['T', 'LIB-25', 'Execute Effective Marketing Campaigns', 15], ['T', 'LIB-58', 'Test', 0]]
+    },
+    Engineering: {
+      objectiveProgress: 62,
+      metricProgress: 48,
+      points: '10,154 92,132 176,102 260,88 344,62 426,66 510,54',
+      statuses: [['NOT STARTED', 1, 24, 'var(--grey-semi-medium)'], ['AT RISK', 0, 0, 'var(--grade-low-color-next)'], ['BEHIND', 1, 32, 'var(--grade-medium-color-next)'], ['ON TRACK', 2, 76, 'var(--grade-high-color-next)'], ['CLOSED', 0, 0, 'var(--dark-2)'], ['ABANDONED', 0, 0, 'var(--grey-semi-medium)']],
+      objectives: [['T', 'LIB-30', 'Implement Change management process', 0], ['KR', 'LIB-45', 'Finish up 12 teams training', 0], ['Dp', 'LIB-16', 'Ensure system reliability and performance', 92]]
+    },
+    Product: {
+      objectiveProgress: 48,
+      metricProgress: 55,
+      points: '10,146 92,118 176,124 260,92 344,78 426,86 510,70',
+      statuses: [['NOT STARTED', 0, 0, 'var(--grey-semi-medium)'], ['AT RISK', 1, 30, 'var(--grade-low-color-next)'], ['BEHIND', 1, 42, 'var(--grade-medium-color-next)'], ['ON TRACK', 1, 58, 'var(--grade-high-color-next)'], ['CLOSED', 0, 0, 'var(--dark-2)'], ['ABANDONED', 0, 0, 'var(--grey-semi-medium)']],
+      objectives: [['C', 'LIB-2', 'Elevate Product Excellence to Unprecedented Levels', 86], ['KR', 'LIB-23', 'Improve our Net Promoter Score from 60 to 90', 33], ['T', 'LIB-58', 'Test', 0]]
+    },
+    'IT Operations': {
+      objectiveProgress: 71,
+      metricProgress: 66,
+      points: '10,148 92,138 176,108 260,82 344,64 426,48 510,58',
+      statuses: [['NOT STARTED', 0, 0, 'var(--grey-semi-medium)'], ['AT RISK', 0, 0, 'var(--grade-low-color-next)'], ['BEHIND', 0, 0, 'var(--grade-medium-color-next)'], ['ON TRACK', 3, 88, 'var(--grade-high-color-next)'], ['CLOSED', 0, 0, 'var(--dark-2)'], ['ABANDONED', 0, 0, 'var(--grey-semi-medium)']],
+      objectives: [['Dp', 'LIB-16', 'Ensure system reliability and performance', 92], ['KR', 'LIB-35', 'Decrease the average incident resolution time', 90], ['KR', 'LIB-36', 'Reduce the time for backup data recovery', 93]]
+    }
+  };
+
+  function homeWidgetStatusTemplate(status) {
+    const [label, count, width, color] = status;
+    return [
+      '<div class="oboard-home-widget-status">',
+      '<span>' + label + ': ' + count + '</span>',
+      '<div class="oboard-home-widget-status-track"><span style="--oboard-status-width:' + width + '%;--oboard-status-color:' + color + '"></span></div>',
+      '</div>'
+    ].join('');
+  }
+
+  function homeWidgetObjectiveTemplate(objective) {
+    const [badge, code, title, progress] = objective;
+    const progressClass = progress <= 20 ? ' is-risk' : progress < 70 ? ' is-behind' : ' is-good';
+    return [
+      '<div class="oboard-home-widget-objective">',
+      '<div class="oboard-home-widget-objective-main">',
+      '<span class="oboard-badge">' + badge + '</span>',
+      '<span class="oboard-home-widget-objective-title"><span class="oboard-static-code">' + code + '</span> ' + title + '</span>',
+      '</div>',
+      '<span class="oboard-home-widget-objective-progress' + progressClass + '">' + progress + '%</span>',
+      '<span class="oboard-avatar">V</span>',
+      '</div>'
+    ].join('');
+  }
+
+  function homeProgressWidgetTemplate(name, density) {
+    const data = homeWidgetData[name] || homeWidgetData.Libertex;
+    const progress = homeWidgetMode === 'metrics' ? data.metricProgress : data.objectiveProgress;
+    const classes = ['oboard-home-widget'];
+    if (name === 'Libertex') classes.push('is-workspace');
+    if (density) classes.push('is-' + density);
+    return [
+      '<article class="' + classes.join(' ') + '" data-home-widget="' + escapeHtml(name) + '">',
+      '<div class="oboard-home-widget-overview">',
+      '<div class="oboard-home-widget-chart"><svg viewBox="0 0 520 176" preserveAspectRatio="none"><polyline points="' + data.points + '" fill="none" stroke="var(--primary-color-next)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline><circle cx="510" cy="' + data.points.split(' ').at(-1).split(',')[1] + '" r="5" fill="var(--primary-color-next)"></circle></svg></div>',
+      '<div class="oboard-home-widget-summary"><div class="oboard-home-widget-number">' + progress + '%</div><div class="oboard-home-widget-change">0% last week change</div></div>',
+      '<div class="oboard-home-widget-statuses">' + data.statuses.map(homeWidgetStatusTemplate).join('') + '</div>',
+      '</div>',
+      '<div class="oboard-home-widget-objectives">',
+      '<div class="oboard-home-widget-objectives-head"><strong>' + escapeHtml(name) + ' objectives</strong><span>Check-in</span></div>',
+      data.objectives.map(homeWidgetObjectiveTemplate).join(''),
+      '</div>',
+      '</article>'
+    ].join('');
+  }
+
+  function renderHomeWidgets(options, trigger) {
+    const grid = document.querySelector('[data-home-widgets]');
+    if (!grid) return;
+    const selectedNames = options.filter(option => option.classList.contains('is-selected')).map(option => option.dataset.workspaceName);
+    const hasWorkspace = selectedNames.includes('Libertex');
+    const groups = selectedNames.filter(name => name !== 'Libertex');
+    let layout = 'layout-single';
+    const density = new Map();
+
+    if (hasWorkspace && groups.length === 1) {
+      layout = 'layout-workspace-one';
+      density.set(groups[0], 'compact');
+    } else if (hasWorkspace && groups.length >= 2) {
+      layout = 'layout-workspace-stacked';
+      groups.forEach(name => density.set(name, 'compact'));
+    } else if (!hasWorkspace && groups.length === 2) {
+      layout = 'layout-two';
+      groups.forEach(name => density.set(name, 'medium'));
+    } else if (!hasWorkspace && groups.length === 3) {
+      layout = 'layout-three';
+      groups.forEach(name => density.set(name, 'compact'));
+    } else if (!hasWorkspace && groups.length >= 4) {
+      layout = 'layout-four';
+      groups.forEach(name => density.set(name, 'medium'));
+    }
+
+    grid.className = 'oboard-home-widget-grid ' + layout;
+    grid.style.removeProperty('--oboard-home-group-columns');
+    if (layout === 'layout-workspace-stacked') {
+      grid.style.setProperty('--oboard-home-group-columns', String(Math.min(groups.length, 3)));
+    }
+    grid.innerHTML = selectedNames.length
+      ? selectedNames.map(name => homeProgressWidgetTemplate(name, density.get(name) || '')).join('')
+      : '<div class="oboard-home-widget-empty">Select a workspace or department</div>';
+
+    document.querySelectorAll('.oboard-home-widget-tab').forEach(tab => {
+      const active = tab.dataset.homeWidgetMode === homeWidgetMode;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+
+    const label = trigger?.querySelector('span');
+    if (!label) return;
+    if (!selectedNames.length) label.textContent = 'Workspaces';
+    else if (selectedNames.length === 1) label.textContent = selectedNames[0];
+    else if (hasWorkspace) label.textContent = 'Libertex +' + groups.length;
+    else label.textContent = groups[0] + ' +' + (groups.length - 1);
+  }
+
   function homeViewTemplate() {
     return [
       '<section class="oboard-static-view-inner oboard-static-home">',
@@ -10456,29 +10889,11 @@ img.ProseMirror-separator {
       '<button class="oboard-static-button oboard-static-button-primary" type="button">' + svgIcon('icon-plus-next') + 'Create</button>',
       '</div>',
       '</div>',
-      '<div class="oboard-static-card oboard-progress-card">',
-      '<div class="oboard-progress-tabs"><span class="is-active">Objectives’ progress 29%</span><span>Metrics progress 0%</span></div>',
-      '<div class="oboard-progress-body">',
-      '<div class="oboard-line-chart"><svg viewBox="0 0 520 210" preserveAspectRatio="none"><polyline points="10,178 92,178 172,178 250,120 330,126 410,142 510,144" fill="none" stroke="var(--primary-color-next, #0052cc)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline><circle cx="250" cy="120" r="5" fill="var(--primary-color-next, #0052cc)"></circle><circle cx="330" cy="126" r="5" fill="var(--primary-color-next, #0052cc)"></circle><circle cx="410" cy="142" r="5" fill="var(--primary-color-next, #0052cc)"></circle></svg></div>',
-      '<div class="oboard-progress-number">29%</div>',
-      '<div class="oboard-status-list">',
-      '<div class="oboard-status-line"><span>NOT STARTED&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
-      '<div class="oboard-status-line"><span>AT RISK&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
-      '<div class="oboard-status-line"><span>BEHIND&nbsp; 1</span><div class="oboard-status-track"><span style="width:28%"></span></div></div>',
-      '<div class="oboard-status-line"><span>ON TRACK&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
-      '<div class="oboard-status-line"><span>CLOSED&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
-      '<div class="oboard-status-line"><span>ABANDONED&nbsp; 0</span><div class="oboard-status-track"><span style="width:0%"></span></div></div>',
+      '<div class="oboard-home-widget-tabs oboard-home-widget-master-tabs" role="tablist" aria-label="Progress type">',
+      '<button class="oboard-home-widget-tab is-active" type="button" role="tab" aria-selected="true" data-home-widget-mode="objectives">Objectives’ progress</button>',
+      '<button class="oboard-home-widget-tab" type="button" role="tab" aria-selected="false" data-home-widget-mode="metrics">Metrics progress</button>',
       '</div>',
-      '</div>',
-      '</div>',
-      '<h2 class="oboard-static-subtitle">Viacheslav Makhankov’s objectives</h2>',
-      '<div class="oboard-static-list-card">',
-      '<div class="oboard-static-row"><div class="oboard-static-row-main"><span class="oboard-badge">Dp</span><span><span class="oboard-static-code">LIB-7</span> Make the Referral program one of our primary new customer acquisition channels</span></div><span class="oboard-progress-value is-good">29%</span><span class="oboard-avatar">V</span><span class="oboard-chip">2 months ago</span></div>',
-      '</div>',
-      '<h2 class="oboard-static-subtitle">Viacheslav Makhankov’s groups</h2>',
-      '<div class="oboard-static-list-card">',
-      '<div class="oboard-static-row"><div class="oboard-static-row-main"><span class="oboard-badge oboard-badge-group">' + svgIcon('icon-group-objective') + '</span><span>Libertex</span></div><span>Avg progress</span><span>Objectives <strong>0%</strong></span><span>Metrics <strong>0%</strong></span></div>',
-      '</div>',
+      '<div class="oboard-home-widget-grid" data-home-widgets></div>',
       '</section>'
     ].join('');
   }
@@ -10493,7 +10908,8 @@ img.ProseMirror-separator {
     const search = host?.querySelector('.oboard-home-workspace-search input');
     const clear = host?.querySelector('.oboard-home-workspace-clear');
     const options = host ? Array.from(host.querySelectorAll('.oboard-home-workspace-option')) : [];
-    if (!host || !trigger || !menu || !search || !clear || !options.length) return;
+    const progressTabs = Array.from(document.querySelectorAll('.oboard-home-widget-tab'));
+    if (!host || !trigger || !menu || !search || !clear || !options.length || !progressTabs.length) return;
 
     const controller = new AbortController();
     homeWorkspaceFilterAbortController = controller;
@@ -10521,6 +10937,14 @@ img.ProseMirror-separator {
         const selected = !option.classList.contains('is-selected');
         option.classList.toggle('is-selected', selected);
         option.setAttribute('aria-selected', selected ? 'true' : 'false');
+        renderHomeWidgets(options, trigger);
+      }, { signal });
+    });
+
+    progressTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        homeWidgetMode = tab.dataset.homeWidgetMode === 'metrics' ? 'metrics' : 'objectives';
+        renderHomeWidgets(options, trigger);
       }, { signal });
     });
 
@@ -10536,6 +10960,7 @@ img.ProseMirror-separator {
         option.classList.remove('is-selected');
         option.setAttribute('aria-selected', 'false');
       });
+      renderHomeWidgets(options, trigger);
     }, { signal });
 
     document.addEventListener('click', event => {
@@ -10545,6 +10970,8 @@ img.ProseMirror-separator {
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') closeMenu();
     }, { signal });
+
+    renderHomeWidgets(options, trigger);
 
   }
 
