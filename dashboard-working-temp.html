@@ -3691,7 +3691,7 @@ img.ProseMirror-separator {
   .oboard-home-widget-objectives-head,
   .oboard-home-widget-objective {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 52px 32px;
+    grid-template-columns: minmax(0, 1fr) 52px 64px;
     gap: 12px;
     align-items: center;
   }
@@ -3706,8 +3706,10 @@ img.ProseMirror-separator {
   .oboard-home-widget-objectives-head span:last-child {
     grid-column: 3;
     color: var(--grey-semi-medium);
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 16px;
     text-align: center;
+    white-space: nowrap;
   }
 
   .oboard-home-widget-objective {
