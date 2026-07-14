@@ -2619,12 +2619,14 @@ img.ProseMirror-separator {
 
   .oboard-favorites-add-more {
     display: inline-flex;
+    box-sizing: border-box;
     align-items: center;
     justify-content: center;
-    align-self: center;
+    align-self: stretch;
     flex: 0 0 auto;
+    width: calc(100% - 16px);
     height: 28px;
-    margin: 4px auto;
+    margin: 4px 8px 8px;
     gap: 4px;
     padding: 4px;
     border: 0;
@@ -2706,6 +2708,24 @@ img.ProseMirror-separator {
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
+  }
+
+  .oboard-favorites-picker-root.is-selected {
+    background: var(--grey-3-next);
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  button.oboard-favorites-picker-root { cursor: pointer; }
+
+  .oboard-favorites-picker-root .oboard-favorites-picker-workspace-icon {
+    position: relative;
+    z-index: 1;
+    box-sizing: content-box;
+    padding: 2px;
+    margin: -2px;
+    border-radius: 6px;
+    background: var(--white-color);
   }
 
   .oboard-favorites-picker-option:hover,
@@ -3936,6 +3956,11 @@ img.ProseMirror-separator {
     overflow-x: auto;
   }
 
+  .oboard-home-chart-mode-switcher .oboard-dashboard-mode-option {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
   .oboard-home-merged-chart {
     position: relative;
     height: 300px;
@@ -4117,6 +4142,57 @@ img.ProseMirror-separator {
       grid-template-columns: minmax(0, 1fr);
     }
   }
+
+  /* Home merged charts: comparison-first view with a shared legend. */
+  .oboard-home-merged-card { padding: 16px 24px 24px; }
+  .oboard-home-merged-toolbar { justify-content: space-between; gap: 16px; }
+  .oboard-home-merged-average-meta { margin-left: auto; color: var(--grey-semi-medium); font-size: 12px; font-weight: 600; line-height: 16px; white-space: nowrap; }
+  .oboard-home-merged-range-toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--dark-2); font-size: 12px; font-weight: 600; line-height: 16px; white-space: nowrap; cursor: pointer; }
+  .oboard-home-merged-range-toggle input { width: 16px; height: 16px; margin: 0; accent-color: var(--primary-color-next); }
+  .oboard-home-merged-chart-v2 { position: relative; height: 264px; overflow: hidden; border-bottom: 1px solid var(--grey-2-next); background: linear-gradient(to bottom, transparent 24%, var(--grey-3-next) 24%, var(--grey-3-next) calc(24% + 1px), transparent calc(24% + 1px)), linear-gradient(to bottom, transparent 49%, var(--grey-3-next) 49%, var(--grey-3-next) calc(49% + 1px), transparent calc(49% + 1px)), linear-gradient(to bottom, transparent 74%, var(--grey-3-next) 74%, var(--grey-3-next) calc(74% + 1px), transparent calc(74% + 1px)); animation: oboardMergedChartEnter 180ms ease-out both; }
+  @keyframes oboardMergedChartEnter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .oboard-home-merged-chart-v2 svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  .oboard-home-merged-chart-v2 .oboard-home-merged-series { stroke: var(--oboard-group-color, var(--grey-semi-medium)); stroke-width: 3; opacity: .9; transition: opacity 160ms ease, stroke-width 160ms ease; }
+  .oboard-home-merged-chart-v2.has-active .oboard-home-merged-series:not(.is-active) { opacity: .4; }
+  .oboard-home-merged-chart-v2 .oboard-home-merged-series.is-active { stroke-width: 5; opacity: 1; }
+  .oboard-home-merged-chart-v2 .oboard-home-merged-average { display: block; stroke: var(--primary-color-next); stroke-width: 5; opacity: 1; }
+  .oboard-home-merged-range { display: none; fill: var(--primary-color-next-100); stroke: var(--primary-color-next-150); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .75; }
+  .oboard-home-merged-chart-v2.is-showing-range .oboard-home-merged-range { display: block; }
+  .oboard-home-merged-chart-v2[data-chart-mode="average"] .oboard-home-merged-series { stroke: var(--grey-semi-medium); stroke-width: 2; opacity: .55; }
+  .oboard-home-merged-chart-v2[data-chart-mode="average"].has-active .oboard-home-merged-series.is-active { stroke: var(--dark-2); stroke-width: 3; opacity: 1; }
+  .oboard-home-merged-endpoint-label { position: absolute; top: var(--oboard-label-y); right: 4px; display: flex; align-items: center; gap: 6px; color: var(--oboard-group-color, var(--grey-semi-medium)); font-size: 12px; font-weight: 700; line-height: 16px; transform: translateY(-50%); pointer-events: none; white-space: nowrap; transition: opacity 160ms ease; }
+  .oboard-home-merged-chart-v2.has-active .oboard-home-merged-endpoint-label:not(.is-active) { opacity: .4; }
+  .oboard-home-merged-endpoint-marker, .oboard-home-merged-legend-marker, .oboard-home-merged-stack-marker { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: var(--oboard-group-color, var(--grey-semi-medium)); }
+  .oboard-home-merged-average-label { position: absolute; top: var(--oboard-average-label-y); right: 4px; display: none; align-items: center; gap: 6px; color: var(--primary-color-next); font-size: 12px; font-weight: 700; line-height: 16px; transform: translateY(-50%); white-space: nowrap; }
+  .oboard-home-merged-chart-v2[data-chart-mode="average"] .oboard-home-merged-average-label { display: flex; }
+  .oboard-home-merged-legend { margin-top: 20px; border-top: 1px solid var(--grey-2-next); }
+  .oboard-home-merged-legend-row { border-bottom: 1px solid var(--grey-2-next); }
+  .oboard-home-merged-legend-select { display: grid; width: 100%; min-height: 44px; grid-template-columns: minmax(160px, 1fr) 112px 96px 32px; align-items: center; gap: 12px; padding: 8px 8px 8px 0; border: 0; background: transparent; color: var(--dark-1); font: inherit; font-size: 13px; font-weight: 600; line-height: 20px; text-align: left; cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; }
+  .oboard-home-merged-legend-select:hover, .oboard-home-merged-legend-select:focus-visible, .oboard-home-merged-legend-row.is-active .oboard-home-merged-legend-select { background: var(--primary-color-next-50); box-shadow: inset 3px 0 0 var(--oboard-group-color, var(--primary-color-next)); }
+  .oboard-home-merged-legend-select:focus-visible { outline: 2px solid var(--primary-color-next-150); outline-offset: -2px; }
+  .oboard-home-merged-legend-name { display: flex; min-width: 0; align-items: center; gap: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .oboard-home-merged-legend-count, .oboard-home-merged-legend-progress { color: var(--dark-2); font-size: 12px; font-weight: 600; line-height: 16px; text-align: right; }
+  .oboard-home-merged-legend-progress { color: var(--oboard-group-color, var(--primary-color-next)); font-size: 14px; font-weight: 700; }
+  .oboard-home-merged-legend-expand { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--dark-2); cursor: pointer; }
+  .oboard-home-merged-legend-expand:hover, .oboard-home-merged-legend-expand:focus-visible { background: var(--grey-2-next); }
+  .oboard-home-merged-legend-expand .svg-icon { width: 16px; height: 16px; transition: transform 160ms ease; }
+  .oboard-home-merged-legend-row.is-expanded .oboard-home-merged-legend-expand .svg-icon { transform: rotate(180deg); }
+  .oboard-home-merged-legend-objectives { display: none; padding: 4px 16px 12px 24px; background: var(--white-color); }
+  .oboard-home-merged-legend-row.is-expanded .oboard-home-merged-legend-objectives { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 16px; }
+  .oboard-home-merged-legend-objective { display: flex; min-width: 0; align-items: center; gap: 6px; color: var(--dark-1); font-size: 11px; font-weight: 600; line-height: 16px; }
+  .oboard-home-merged-legend-objective span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .oboard-home-merged-stack { display: grid; gap: 0; margin-top: 4px; border-top: 1px solid var(--grey-2-next); animation: oboardMergedChartEnter 180ms ease-out both; }
+  .oboard-home-merged-stack-row { display: grid; min-height: 56px; grid-template-columns: minmax(144px, .7fr) minmax(180px, 1.7fr) 72px 100px; align-items: center; gap: 16px; border-bottom: 1px solid var(--grey-2-next); cursor: pointer; }
+  .oboard-home-merged-stack-row:hover, .oboard-home-merged-stack-row.is-active { background: var(--grey-3-next); box-shadow: inset 3px 0 0 var(--oboard-group-color, var(--primary-color-next)); }
+  .oboard-home-merged-stack-name { display: flex; min-width: 0; align-items: center; gap: 8px; padding-left: 12px; color: var(--dark-1); font-size: 13px; font-weight: 700; line-height: 20px; }
+  .oboard-home-merged-stack-sparkline { position: relative; height: 32px; }
+  .oboard-home-merged-stack-sparkline svg { width: 100%; height: 100%; }
+  .oboard-home-merged-stack-sparkline polyline { fill: none; stroke: var(--oboard-group-color, var(--primary-color-next)); stroke-width: 3; vector-effect: non-scaling-stroke; }
+  .oboard-home-merged-stack-progress { color: var(--oboard-group-color, var(--primary-color-next)); font-size: 18px; font-weight: 700; line-height: 24px; text-align: right; }
+  .oboard-home-merged-stack-delta { color: var(--grey-semi-medium); font-size: 12px; font-weight: 600; line-height: 16px; white-space: nowrap; }
+  .oboard-home-merged-tooltip { position: fixed; z-index: 10040; max-width: 260px; padding: 8px 10px; border: 1px solid var(--grey-2-next); border-radius: 6px; background: var(--dark-1); box-shadow: 0 6px 16px rgba(var(--dark-2-rgb), .24); color: var(--white-color); font-size: 12px; font-weight: 600; line-height: 16px; pointer-events: none; }
+  @media (max-width: 900px) { .oboard-home-merged-legend-select { grid-template-columns: minmax(0, 1fr) 88px 72px 32px; } .oboard-home-merged-stack-row { grid-template-columns: minmax(120px, .7fr) minmax(140px, 1.5fr) 60px 68px; gap: 10px; } .oboard-home-merged-legend-row.is-expanded .oboard-home-merged-legend-objectives { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .oboard-home-merged-card { padding: 12px; } .oboard-home-merged-toolbar { align-items: flex-start; flex-direction: column; } .oboard-home-merged-legend-select { grid-template-columns: minmax(0, 1fr) 64px 60px 28px; gap: 6px; } .oboard-home-merged-legend-row.is-expanded .oboard-home-merged-legend-objectives { grid-template-columns: minmax(0, 1fr); } .oboard-home-merged-stack-row { grid-template-columns: minmax(0, 1fr) 60px 64px; gap: 8px; } .oboard-home-merged-stack-sparkline { grid-column: 1 / -1; grid-row: 2; margin: -8px 12px 8px; } }
 
   .oboard-home-widget-empty {
     display: flex;
@@ -8350,10 +8426,10 @@ img.ProseMirror-separator {
       ].join('');
     }).join('');
     return [
-      '<div class="oboard-favorites-picker-root" role="treeitem">',
+      '<button class="oboard-favorites-picker-root' + (selectedFavoritePickerName === 'Some new Dashboard' ? ' is-selected' : '') + '" type="button" role="treeitem" aria-selected="' + String(selectedFavoritePickerName === 'Some new Dashboard') + '" data-favorite-name="Some new Dashboard">',
       '<img class="oboard-favorites-picker-workspace-icon" src="assets/home-workspaces/workspace.png" alt="">',
       '<span>Libertex</span>',
-      '</div>',
+      '</button>',
       '<div class="oboard-favorites-picker-children" role="group">' + options + '</div>',
     ].join('');
   }
@@ -8394,10 +8470,10 @@ img.ProseMirror-separator {
     });
 
     document.addEventListener('click', event => {
-      const option = event.target.closest('.oboard-favorites-picker-option');
+      const option = event.target.closest('.oboard-favorites-picker-option, .oboard-favorites-picker-root');
       if (option) {
         const picker = option.closest('.oboard-favorites-picker');
-        picker.querySelectorAll('.oboard-favorites-picker-option').forEach(item => {
+        picker.querySelectorAll('.oboard-favorites-picker-option, .oboard-favorites-picker-root').forEach(item => {
           const selected = item === option;
           item.classList.toggle('is-selected', selected);
           item.setAttribute('aria-selected', String(selected));
@@ -11381,6 +11457,9 @@ img.ProseMirror-separator {
   let homeWidgetMode = 'objectives';
   let homeMergeCharts = false;
   let homeMergedChartMode = 'lines';
+  let homeMergedSelectedSeries = null;
+  let homeMergedShowRange = false;
+  const homeMergedExpandedGroups = new Set();
 
   const homeWidgetData = {
     Libertex: {
@@ -11480,106 +11559,159 @@ img.ProseMirror-separator {
     ].join('');
   }
 
-  function homeMergedSeries(name, stackIndex = 0, stackCount = 1) {
+  const homeMergedGroupColors = {
+    Libertex: 'var(--primary-color-next)',
+    Marketing: 'var(--purple)',
+    Engineering: 'var(--grade-high-color-next)',
+    Product: 'var(--grade-medium-color-next)',
+    'IT Operations': 'var(--dark-2)'
+  };
+
+  function homeMergedColor(name) {
+    return homeMergedGroupColors[name] || 'var(--dark-2)';
+  }
+
+  function homeMergedSeries(name) {
     const data = homeWidgetData[name] || homeWidgetData.Libertex;
     const rawPoints = data.points.split(' ').map(point => point.split(',').map(Number));
     const points = rawPoints.map((point, index) => ({
       x: 5 + (index / Math.max(1, rawPoints.length - 1)) * 80,
-      y: 8 + (point[1] / 176) * 78
+      y: (point[1] / 176) * 82
     }));
-    const bandHeight = 100 / Math.max(1, stackCount);
-    const stackPoints = points.map(point => ({
-      x: point.x,
-      y: stackIndex * bandHeight + 4 + (point.y / 100) * Math.max(8, bandHeight - 8)
-    }));
-    return { name, data, points, stackPoints };
+    const progress = homeWidgetMode === 'metrics' ? data.metricProgress : data.objectiveProgress;
+    const delta = Math.round(((rawPoints.at(-2)?.[1] || rawPoints.at(-1)[1]) - rawPoints.at(-1)[1]) / 176 * 100);
+    return { name, data, points, progress, delta, color: homeMergedColor(name) };
   }
 
   function homeMergedPoints(points) {
     return points.map(point => point.x.toFixed(2) + ',' + point.y.toFixed(2)).join(' ');
   }
 
-  function homeMergedObjectiveColumn(series, active) {
+  function homeMergedLabelPositions(series) {
+    const labels = series.map(item => ({ name: item.name, y: item.points.at(-1).y })).sort((a, b) => a.y - b.y);
+    let previous = 4;
+    labels.forEach(label => { label.y = Math.max(label.y, previous + 9); previous = label.y; });
+    for (let index = labels.length - 1; index >= 0; index -= 1) {
+      const maxY = 94 - ((labels.length - 1 - index) * 9);
+      labels[index].y = Math.min(labels[index].y, maxY);
+    }
+    return new Map(labels.map(label => [label.name, label.y]));
+  }
+
+  function homeMergedLegendTemplate(item) {
+    const expanded = homeMergedExpandedGroups.has(item.name);
+    const active = homeMergedSelectedSeries === item.name;
+    const style = '--oboard-group-color:' + item.color;
     return [
-      '<section class="oboard-home-merged-objective-column' + (active ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(series.name) + '" tabindex="0">',
-      '<h3>' + escapeHtml(series.name) + ' objectives</h3>',
-      series.data.objectives.map(objective => '<div class="oboard-home-merged-objective-item"><span class="oboard-badge">' + objective[0] + '</span><span><span class="oboard-static-code">' + objective[1] + '</span> ' + escapeHtml(objective[2]) + '</span></div>').join(''),
-      '</section>'
+      '<div class="oboard-home-merged-legend-row' + (expanded ? ' is-expanded' : '') + (active ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" style="' + style + '">',
+      '<button type="button" class="oboard-home-merged-legend-select" data-home-merged-legend-select="' + escapeHtml(item.name) + '">',
+      '<span class="oboard-home-merged-legend-name"><span class="oboard-home-merged-legend-marker"></span><span>' + escapeHtml(item.name) + '</span></span>',
+      '<span class="oboard-home-merged-legend-count">' + item.data.objectives.length + ' objectives</span>',
+      '<span class="oboard-home-merged-legend-progress">' + item.progress + '%</span>',
+      '<span class="oboard-home-merged-legend-expand" role="button" tabindex="0" aria-label="Show ' + escapeHtml(item.name) + ' objectives" data-home-merged-legend-expand="' + escapeHtml(item.name) + '">' + svgIcon('icon-arrow-down-black-next') + '</span>',
+      '</button>',
+      '<div class="oboard-home-merged-legend-objectives">' + item.data.objectives.map(objective => '<div class="oboard-home-merged-legend-objective"><span class="oboard-badge">' + objective[0] + '</span><span><span class="oboard-static-code">' + objective[1] + '</span> ' + escapeHtml(objective[2]) + '</span></div>').join('') + '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function homeMergedStackTemplate(item) {
+    const active = homeMergedSelectedSeries === item.name;
+    const delta = (item.delta > 0 ? '+' : '') + item.delta + '%';
+    return [
+      '<div class="oboard-home-merged-stack-row' + (active ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" style="--oboard-group-color:' + item.color + '" tabindex="0">',
+      '<div class="oboard-home-merged-stack-name"><span class="oboard-home-merged-stack-marker"></span><span>' + escapeHtml(item.name) + '</span></div>',
+      '<div class="oboard-home-merged-stack-sparkline" data-home-merged-tooltip="' + escapeHtml(item.name + ': ' + item.progress + '% (' + delta + ' last week)') + '"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="' + escapeHtml(item.name) + ' progress"><polyline points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></div>',
+      '<div class="oboard-home-merged-stack-progress">' + item.progress + '%</div>',
+      '<div class="oboard-home-merged-stack-delta">' + delta + ' last week</div>',
+      '</div>'
     ].join('');
   }
 
   function homeMergedChartTemplate(selectedNames) {
-    const series = selectedNames.map((name, index) => homeMergedSeries(name, index, selectedNames.length));
+    const series = selectedNames.map(homeMergedSeries);
+    if (!series.some(item => item.name === homeMergedSelectedSeries)) homeMergedSelectedSeries = null;
     const pointCount = series[0]?.points.length || 0;
-    const averagePoints = Array.from({ length: pointCount }, (_, index) => ({
-      x: series[0].points[index].x,
-      y: series.reduce((sum, item) => sum + item.points[index].y, 0) / series.length
-    }));
-    const upperPoints = Array.from({ length: pointCount }, (_, index) => ({
-      x: series[0].points[index].x,
-      y: Math.min(...series.map(item => item.points[index].y))
-    }));
-    const lowerPoints = Array.from({ length: pointCount }, (_, index) => ({
-      x: series[0].points[index].x,
-      y: Math.max(...series.map(item => item.points[index].y))
-    }));
-    const ribbonPath = upperPoints.length
-      ? 'M ' + upperPoints.map(point => point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' L ') + ' L ' + lowerPoints.slice().reverse().map(point => point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' L ') + ' Z'
-      : '';
-    const modes = [
-      ['lines', 'Lines'],
-      ['average', 'Average'],
-      ['ribbon', 'Ribbon'],
-      ['stack', 'Stack'],
-      ['labels', 'Labels']
-    ];
+    const averagePoints = Array.from({ length: pointCount }, (_, index) => ({ x: series[0].points[index].x, y: series.reduce((sum, item) => sum + item.points[index].y, 0) / series.length }));
+    const rangeTop = Array.from({ length: pointCount }, (_, index) => ({ x: series[0].points[index].x, y: Math.min(...series.map(item => item.points[index].y)) }));
+    const rangeBottom = Array.from({ length: pointCount }, (_, index) => ({ x: series[0].points[index].x, y: Math.max(...series.map(item => item.points[index].y)) }));
+    const rangePath = pointCount ? 'M ' + rangeTop.map(point => point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' L ') + ' L ' + rangeBottom.slice().reverse().map(point => point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' L ') + ' Z' : '';
+    const averageProgress = Math.round(series.reduce((sum, item) => sum + item.progress, 0) / series.length);
+    const labelPositions = homeMergedLabelPositions(series);
+    const modes = [['lines', 'Lines'], ['average', 'Average'], ['stack', 'Stack']];
     const modeSwitcher = modes.map(mode => '<button type="button" class="oboard-dashboard-mode-option' + (homeMergedChartMode === mode[0] ? ' is-active' : '') + '" role="radio" aria-checked="' + String(homeMergedChartMode === mode[0]) + '" data-home-chart-mode="' + mode[0] + '"><span>' + mode[1] + '</span></button>').join('');
-    const seriesLines = series.map((item, index) => [
-      '<polyline class="oboard-home-merged-series' + (index === 0 ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>',
-      '<polyline class="oboard-home-merged-hit" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>'
-    ].join('')).join('');
-    const stackLines = series.map(item => '<polyline class="oboard-home-merged-stack-series" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.stackPoints) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>').join('');
-    const endpoints = series.map((item, index) => {
-      const lastPoint = item.points.at(-1);
-      const progress = homeWidgetMode === 'metrics' ? item.data.metricProgress : item.data.objectiveProgress;
-      return '<span class="oboard-home-merged-endpoint' + (index === 0 ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" style="--oboard-merged-point-x:' + lastPoint.x.toFixed(2) + '%;--oboard-merged-point-y:' + lastPoint.y.toFixed(2) + '%"><span class="oboard-home-merged-endpoint-dot"></span><span>' + progress + '%</span></span>';
-    }).join('');
+    const seriesLines = series.map(item => '<polyline class="oboard-home-merged-series' + (homeMergedSelectedSeries === item.name ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" style="--oboard-group-color:' + item.color + '" points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline><polyline class="oboard-home-merged-hit" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>').join('');
+    const endpoints = series.map(item => '<span class="oboard-home-merged-endpoint-label' + (homeMergedSelectedSeries === item.name ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" style="--oboard-group-color:' + item.color + ';--oboard-label-y:' + labelPositions.get(item.name).toFixed(2) + '%"><span class="oboard-home-merged-endpoint-marker"></span><span>' + escapeHtml(item.name) + ' ' + item.progress + '%</span></span>').join('');
+    const lastAveragePoint = averagePoints.at(-1) || { y: 50 };
+    const lastGroups = series.slice().sort((a, b) => a.points.at(-1).y - b.points.at(-1).y);
+    const rangeTooltip = lastGroups.length ? 'Highest: ' + lastGroups[0].name + '. Lowest: ' + lastGroups.at(-1).name + '.' : '';
+    const chart = homeMergedChartMode === 'stack'
+      ? '<div class="oboard-home-merged-stack">' + series.map(homeMergedStackTemplate).join('') + '</div>'
+      : '<div class="oboard-home-merged-chart-v2' + (homeMergedSelectedSeries ? ' has-active' : '') + (homeMergedShowRange ? ' is-showing-range' : '') + '" data-chart-mode="' + homeMergedChartMode + '" data-home-merged-tooltip="' + escapeHtml(homeMergedChartMode === 'average' ? 'Average: ' + averageProgress + '%. ' + rangeTooltip : '') + '"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Merged progress chart"><path class="oboard-home-merged-range" d="' + rangePath + '"></path><polyline class="oboard-home-merged-average" points="' + homeMergedPoints(averagePoints) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>' + seriesLines + '</svg>' + (homeMergedChartMode === 'lines' ? endpoints : '') + '<span class="oboard-home-merged-average-label" style="--oboard-average-label-y:' + lastAveragePoint.y.toFixed(2) + '%"><span class="oboard-home-merged-endpoint-marker" style="--oboard-group-color:var(--primary-color-next)"></span><span>Average ' + averageProgress + '%</span></span></div>';
     return [
       '<article class="oboard-home-merged-card">',
-      '<div class="oboard-home-merged-toolbar"><div class="oboard-dashboard-mode-switcher oboard-home-chart-mode-switcher" role="radiogroup" aria-label="Merged chart type">' + modeSwitcher + '</div></div>',
-      '<div class="oboard-home-merged-chart" data-chart-mode="' + homeMergedChartMode + '">',
-      '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Merged progress chart">',
-      '<path class="oboard-home-merged-ribbon" d="' + ribbonPath + '"></path>',
-      '<polyline class="oboard-home-merged-average" points="' + homeMergedPoints(averagePoints) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>',
-      seriesLines,
-      stackLines,
-      '</svg>',
-      endpoints,
+      '<div class="oboard-home-merged-toolbar"><div class="oboard-dashboard-mode-switcher oboard-home-chart-mode-switcher" role="radiogroup" aria-label="Merged chart type">' + modeSwitcher + '</div>',
+      homeMergedChartMode === 'average' ? '<span class="oboard-home-merged-average-meta">Across ' + series.length + ' objective groups</span><label class="oboard-home-merged-range-toggle"><input type="checkbox" data-home-merged-range' + (homeMergedShowRange ? ' checked' : '') + '><span>Show range</span></label>' : '<span class="oboard-home-merged-range-toggle">Across ' + series.length + ' objective groups</span>',
       '</div>',
-      '<div class="oboard-home-merged-objectives">' + series.map((item, index) => homeMergedObjectiveColumn(item, index === 0)).join('') + '</div>',
+      chart,
+      '<div class="oboard-home-merged-legend" role="list" aria-label="Objective groups">' + series.map(homeMergedLegendTemplate).join('') + '</div>',
       '</article>'
     ].join('');
   }
 
   function setHomeMergedActiveSeries(grid, name) {
-    grid.querySelectorAll('.oboard-home-merged-series, .oboard-home-merged-endpoint, .oboard-home-merged-objective-column').forEach(element => {
-      element.classList.toggle('is-active', element.dataset.mergedSeries === name);
-    });
+    grid.querySelectorAll('[data-merged-series]').forEach(element => element.classList.toggle('is-active', element.dataset.mergedSeries === name));
+    grid.querySelector('.oboard-home-merged-chart-v2')?.classList.toggle('has-active', Boolean(name));
+  }
+
+  function showHomeMergedTooltip(text, event) {
+    if (!text) return;
+    let tooltip = document.querySelector('.oboard-home-merged-tooltip');
+    if (!tooltip) { tooltip = document.createElement('div'); tooltip.className = 'oboard-home-merged-tooltip'; document.body.appendChild(tooltip); }
+    tooltip.textContent = text;
+    tooltip.style.left = Math.min(window.innerWidth - 272, event.clientX + 12) + 'px';
+    tooltip.style.top = Math.min(window.innerHeight - 44, event.clientY + 12) + 'px';
+  }
+
+  function hideHomeMergedTooltip() {
+    document.querySelector('.oboard-home-merged-tooltip')?.remove();
   }
 
   function bindHomeMergedChart(grid, selectedNames, options, trigger) {
-    const fallbackName = selectedNames[0];
-    grid.querySelectorAll('.oboard-home-merged-hit, .oboard-home-merged-objective-column').forEach(element => {
-      element.addEventListener('pointerenter', () => setHomeMergedActiveSeries(grid, element.dataset.mergedSeries));
-      element.addEventListener('focus', () => setHomeMergedActiveSeries(grid, element.dataset.mergedSeries));
+    const resetToSelection = () => { setHomeMergedActiveSeries(grid, homeMergedSelectedSeries); hideHomeMergedTooltip(); };
+    grid.querySelectorAll('.oboard-home-merged-hit, .oboard-home-merged-stack-row, .oboard-home-merged-legend-select').forEach(element => {
+      const name = element.dataset.mergedSeries || element.closest('[data-merged-series]')?.dataset.mergedSeries;
+      element.addEventListener('pointerenter', event => { setHomeMergedActiveSeries(grid, name); const series = homeMergedSeries(name); showHomeMergedTooltip(name + ': ' + series.progress + '%', event); });
+      element.addEventListener('pointerleave', resetToSelection);
+      element.addEventListener('focus', () => setHomeMergedActiveSeries(grid, name));
     });
-    grid.querySelector('.oboard-home-merged-chart')?.addEventListener('pointerleave', () => setHomeMergedActiveSeries(grid, fallbackName));
-    grid.querySelectorAll('[data-home-chart-mode]').forEach(button => {
-      button.addEventListener('click', () => {
-        homeMergedChartMode = button.dataset.homeChartMode || 'lines';
-        renderHomeWidgets(options, trigger);
+    grid.querySelectorAll('.oboard-home-merged-stack-sparkline').forEach(element => {
+      element.addEventListener('pointermove', event => {
+        const name = element.closest('[data-merged-series]')?.dataset.mergedSeries;
+        const series = homeMergedSeries(name);
+        const rect = element.getBoundingClientRect();
+        const index = Math.max(0, Math.min(series.points.length - 1, Math.round(((event.clientX - rect.left) / rect.width) * (series.points.length - 1))));
+        const value = index === series.points.length - 1 ? series.progress : Math.round(100 - ((series.points[index].y / 82) * 100));
+        showHomeMergedTooltip(name + ' · W' + (index + 1) + ': ' + value + '%', event);
       });
+      element.addEventListener('pointerleave', hideHomeMergedTooltip);
     });
+    grid.querySelectorAll('.oboard-home-merged-hit, .oboard-home-merged-stack-row, [data-home-merged-legend-select]').forEach(element => {
+      element.addEventListener('click', () => { const name = element.dataset.mergedSeries || element.closest('[data-merged-series]')?.dataset.mergedSeries; homeMergedSelectedSeries = name; setHomeMergedActiveSeries(grid, name); });
+    });
+    grid.querySelectorAll('[data-home-merged-legend-expand]').forEach(button => {
+      button.addEventListener('click', event => { event.stopPropagation(); const name = button.dataset.homeMergedLegendExpand; if (homeMergedExpandedGroups.has(name)) homeMergedExpandedGroups.delete(name); else homeMergedExpandedGroups.add(name); renderHomeWidgets(options, trigger); });
+      button.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); button.click(); } });
+    });
+    grid.querySelectorAll('[data-home-chart-mode]').forEach(button => button.addEventListener('click', () => { homeMergedChartMode = button.dataset.homeChartMode || 'lines'; renderHomeWidgets(options, trigger); }));
+    const rangeToggle = grid.querySelector('[data-home-merged-range]');
+    if (rangeToggle) rangeToggle.addEventListener('change', () => { homeMergedShowRange = rangeToggle.checked; renderHomeWidgets(options, trigger); });
+    const chart = grid.querySelector('.oboard-home-merged-chart-v2');
+    chart?.addEventListener('pointerenter', event => {
+      if (chart.dataset.chartMode !== 'average') return;
+      showHomeMergedTooltip(chart.dataset.homeMergedTooltip, event);
+    });
+    chart?.addEventListener('pointerleave', resetToSelection);
   }
 
   function renderHomeWidgets(options, trigger) {
