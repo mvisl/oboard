@@ -2361,13 +2361,18 @@ img.ProseMirror-separator {
   .am-Content_Body .amn-Nav.oboard-sidebar-sectioned {
     --oboard-sidebar-panel-bg: var(--gray-3-next, #f5f6f7);
     --oboard-sidebar-handle: var(--grey-1-next, #b5bbc5);
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
     height: 100%;
   }
 
   .oboard-sidebar-sections {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: 12px;
+    min-height: 0;
     width: 100%;
     height: 100%;
     overflow: visible;
@@ -2419,8 +2424,8 @@ img.ProseMirror-separator {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-    max-height: 100%;
-    min-height: 118px;
+    max-height: none;
+    min-height: 0;
     overflow: visible;
   }
 
@@ -2821,11 +2826,28 @@ img.ProseMirror-separator {
 
   .oboard-favorites-drag-handle .oboard-favorites-section-icon {
     position: absolute;
-    inset: 4px;
-    width: 16px;
-    height: 16px;
+    inset: 0;
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 6px;
     transition: opacity 120ms ease;
   }
+
+  .oboard-favorites-section-icon .svg-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .oboard-favorites-section-icon.is-blue { background: var(--primary-color-next-100); color: var(--primary-color-next); }
+  .oboard-favorites-section-icon.is-violet { background: #f1e9ff; color: var(--purple); }
+  .oboard-favorites-section-icon.is-green { background: #dff5ea; color: var(--grade-high-color-next); }
+  .oboard-favorites-section-icon.is-orange { background: #fff0e5; color: var(--grade-medium-color-next); }
+  .oboard-favorites-section-icon.is-rose { background: #ffe9ee; color: var(--grade-low-color-next); }
+  .oboard-favorites-section-icon.is-teal { background: #e1f6f4; color: #1f8f87; }
 
   .oboard-favorites-drag-handle .oboard-favorites-drag-icon {
     position: absolute;
@@ -2963,6 +2985,150 @@ img.ProseMirror-separator {
   .oboard-static-toolbar-right {
     gap: 12px;
     flex-wrap: wrap;
+  }
+
+  .oboard-static-home {
+    padding-top: 24px;
+  }
+
+  .oboard-home-header {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .oboard-home-header-row,
+  .oboard-home-header-actions,
+  .oboard-home-header-filters,
+  .oboard-home-header-controls,
+  .oboard-home-header-tabs {
+    display: flex;
+    align-items: center;
+  }
+
+  .oboard-home-header-row {
+    min-height: 32px;
+    gap: 24px;
+  }
+
+  .oboard-home-header-row-top {
+    justify-content: space-between;
+  }
+
+  .oboard-home-greeting {
+    margin: 0;
+    color: var(--dark-1);
+    font-family: var(--Font-UI, "SF Pro"), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 18px;
+    font-weight: 510;
+    line-height: 28px;
+  }
+
+  .oboard-home-header-actions {
+    flex: 0 0 auto;
+    gap: 24px;
+  }
+
+  .oboard-home-header-actions .oboard-static-button {
+    flex: 0 0 auto;
+  }
+
+  .oboard-home-header-icon-button {
+    width: 28px;
+    padding: 4px;
+    background: transparent;
+    color: var(--dark-2);
+  }
+
+  .oboard-home-header-icon-button:hover {
+    background: var(--grey-3-next);
+  }
+
+  .oboard-home-header-filters {
+    flex: 0 0 auto;
+    gap: 12px;
+  }
+
+  .oboard-home-header-tabs {
+    position: relative;
+    align-self: stretch;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 20px;
+    border-bottom: 2px solid var(--grey-3-next);
+  }
+
+  .oboard-home-header-tab {
+    position: relative;
+    align-self: stretch;
+    padding: 0 0 5px;
+    border: 0;
+    background: transparent;
+    color: var(--dark-2);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 590;
+    line-height: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .oboard-home-header-tab::after {
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: transparent;
+    content: '';
+  }
+
+  .oboard-home-header-tab:hover {
+    color: var(--primary-color-next);
+  }
+
+  .oboard-home-header-tab.is-active {
+    color: var(--primary-color-next);
+  }
+
+  .oboard-home-header-tab.is-active::after {
+    background: var(--primary-color-next);
+  }
+
+  .oboard-home-header-controls {
+    flex: 0 0 auto;
+    gap: 16px;
+  }
+
+  .oboard-home-header-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--grey-2-next);
+  }
+
+  .oboard-home-header-edit {
+    height: 28px;
+    padding: 4px 8px 4px 4px;
+    background: transparent;
+    color: var(--dark-2);
+    font-size: 14px;
+    font-weight: 590;
+  }
+
+  .oboard-home-header-edit:hover {
+    background: var(--grey-3-next);
+  }
+
+  @media (max-width: 900px) {
+    .oboard-home-header-row-bottom {
+      flex-wrap: wrap;
+    }
+
+    .oboard-home-header-tabs {
+      order: 3;
+      flex-basis: 100%;
+    }
   }
 
   .oboard-static-button {
@@ -3751,7 +3917,7 @@ img.ProseMirror-separator {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: var(--primary-color-next);
+    background: var(--oboard-chart-point-color, var(--primary-color-next));
     transform: translate(-50%, -50%);
   }
 
@@ -7943,11 +8109,28 @@ img.ProseMirror-separator {
     return handle;
   }
 
-  function createFavoriteDragHandle(type) {
-    const iconId = type === 'objective' ? 'icon-menu-objectives' : 'icon-menu-dashboard';
+  const favoriteDashboardVisuals = {
+    'Some new Dashboard': { icon: 'icon-dashboard-view', tone: 'blue' },
+    'Team’s KPIs': { icon: 'icon-result-type-start-target', tone: 'violet' },
+    'Customer Insights 2024': { icon: 'icon-chart-fullscreen', tone: 'teal' },
+    'Company focus 2026': { icon: 'icon-objective', tone: 'orange' },
+    'Market Trends 2025': { icon: 'icon-chart-fullscreen', tone: 'rose' },
+    'Website Traffic Analysis 2024': { icon: 'icon-dashboard-view', tone: 'green' },
+    '2026 Trial dashboard': { icon: 'icon-calendar-next', tone: 'violet' },
+    'Revenue Forecasts Q3': { icon: 'icon-chart-fullscreen', tone: 'orange' },
+    '7 Days deposit': { icon: 'icon-calendar-check', tone: 'teal' }
+  };
+
+  function favoriteVisual(name, type) {
+    if (type === 'objective') return { icon: 'icon-menu-objectives', tone: 'violet' };
+    return favoriteDashboardVisuals[name] || { icon: 'icon-menu-dashboard', tone: 'blue' };
+  }
+
+  function createFavoriteDragHandle(type, name) {
+    const visual = favoriteVisual(name, type);
     const handle = createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite item');
     handle.innerHTML = [
-      '<svg data-target-id="' + iconId + '" height="16" width="16" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-section-icon"><use xlink:href="#' + iconId + '" href="#' + iconId + '"></use></svg>',
+      '<span class="oboard-favorites-section-icon is-' + visual.tone + '">' + svgIcon(visual.icon) + '</span>',
       '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
     ].join('');
     return handle;
@@ -8403,7 +8586,7 @@ img.ProseMirror-separator {
     }
     const content = item.querySelector('.amni-Item');
     if (content && !content.querySelector('.oboard-favorites-drag-handle')) {
-      content.prepend(createFavoriteDragHandle(type));
+      content.prepend(createFavoriteDragHandle(type, name));
     }
     content?.querySelector('.amni-Item_Actions')?.remove();
     if (content) {
@@ -11438,7 +11621,7 @@ img.ProseMirror-separator {
     const pointList = series.points;
     const compactChart = density === 'compact';
     const lastChartPoint = pointList.at(-1);
-    const chartPointStyle = '--oboard-chart-point-x:' + lastChartPoint.x.toFixed(2) + '%;--oboard-chart-point-y:' + lastChartPoint.y.toFixed(2) + '%';
+    const chartPointStyle = '--oboard-chart-point-x:' + lastChartPoint.x.toFixed(2) + '%;--oboard-chart-point-y:' + lastChartPoint.y.toFixed(2) + '%;--oboard-chart-point-color:' + series.color + ';';
     const chartValue = compactChart
       ? '<span class="oboard-home-widget-chart-value" style="' + chartPointStyle + '">' + progress + '%</span>'
       : '';
@@ -11648,8 +11831,16 @@ img.ProseMirror-separator {
   function homeViewTemplate() {
     return [
       '<section class="oboard-static-view-inner oboard-static-home">',
-      '<div class="oboard-static-toolbar">',
-      '<div class="oboard-static-toolbar-left">',
+      '<header class="oboard-home-header">',
+      '<div class="oboard-home-header-row oboard-home-header-row-top">',
+      '<p class="oboard-home-greeting">Hello, Viacheslav!</p>',
+      '<div class="oboard-home-header-actions">',
+      '<button class="oboard-static-button oboard-home-header-icon-button" type="button" aria-label="Export PDF" title="Export PDF">' + svgIcon('icon-export-pdf') + '</button>',
+      '<button class="oboard-static-button oboard-static-button-primary" type="button">' + svgIcon('icon-plus-next') + 'Create</button>',
+      '</div>',
+      '</div>',
+      '<div class="oboard-home-header-row oboard-home-header-row-bottom">',
+      '<div class="oboard-home-header-filters">',
       '<div class="oboard-home-workspace-filter">',
       '<button class="oboard-static-button oboard-static-button-dark oboard-home-workspace-trigger" type="button" aria-haspopup="listbox" aria-expanded="false"><img class="oboard-home-workspace-trigger-icon" src="assets/home-workspaces/workspace-trigger.png" alt=""><span>Libertex</span></button>',
       '<div class="oboard-home-workspace-menu" role="dialog" aria-label="Workspaces" hidden>',
@@ -11665,13 +11856,20 @@ img.ProseMirror-separator {
       '</div>',
       '</div>',
       '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-calendar-next') + 'Q3 2026</button>',
-      '<button class="oboard-static-button oboard-static-button-dark" type="button">' + svgIcon('icon-user-next') + 'Viacheslav Makhankov</button>',
       '</div>',
-      '<div class="oboard-static-toolbar-right">',
-      '<button class="oboard-static-button" type="button">' + svgIcon('icon-export-pdf') + 'PDF</button>',
-      '<button class="oboard-static-button oboard-static-button-primary" type="button">' + svgIcon('icon-plus-next') + 'Create</button>',
+      '<nav class="oboard-home-header-tabs" aria-label="Workspace sections">',
+      '<button class="oboard-home-header-tab" type="button" data-home-header-tab="goals">Goals</button>',
+      '<button class="oboard-home-header-tab" type="button" data-home-header-tab="checkins">Check-ins</button>',
+      '<button class="oboard-home-header-tab is-active" type="button" data-home-header-tab="dashboards" aria-current="page">Dashboards</button>',
+      '<button class="oboard-home-header-tab" type="button" data-home-header-tab="members">Members</button>',
+      '</nav>',
+      '<div class="oboard-home-header-controls">',
+      '<button class="oboard-static-button oboard-home-header-icon-button" type="button" aria-label="Fullscreen" title="Fullscreen">' + svgIcon('icon-fullscreen-on') + '</button>',
+      '<span class="oboard-home-header-divider" aria-hidden="true"></span>',
+      '<button class="oboard-static-button oboard-home-header-edit" type="button">' + svgIcon('icon-edit-next') + 'Edit</button>',
       '</div>',
       '</div>',
+      '</header>',
       '<div class="oboard-home-content">',
       '<div class="oboard-home-widget-tabs oboard-home-widget-master-tabs" role="tablist" aria-label="Progress type">',
       '<button class="oboard-home-widget-tab is-active" type="button" role="tab" aria-selected="true" data-home-widget-mode="objectives">Objectives’ progress</button>',
@@ -11695,6 +11893,7 @@ img.ProseMirror-separator {
     const clear = host?.querySelector('.oboard-home-workspace-clear');
     const options = host ? Array.from(host.querySelectorAll('.oboard-home-workspace-option')) : [];
     const progressTabs = Array.from(document.querySelectorAll('.oboard-home-widget-tab'));
+    const headerTabs = Array.from(document.querySelectorAll('.oboard-home-header-tab'));
     const mergeToggle = document.querySelector('[data-home-merge-charts]');
     if (!host || !trigger || !menu || !search || !clear || !mergeToggle || !options.length || !progressTabs.length) return;
 
@@ -11732,6 +11931,16 @@ img.ProseMirror-separator {
       tab.addEventListener('click', () => {
         homeWidgetMode = tab.dataset.homeWidgetMode === 'metrics' ? 'metrics' : 'objectives';
         renderHomeWidgets(options, trigger);
+      }, { signal });
+    });
+
+    headerTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        headerTabs.forEach(item => {
+          const active = item === tab;
+          item.classList.toggle('is-active', active);
+          item.toggleAttribute('aria-current', active);
+        });
       }, { signal });
     });
 
