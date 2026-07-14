@@ -77,7 +77,7 @@
 <body>
   <main>
     <h1>Oboard Dashboard Prototype Handoff</h1>
-    <p class="meta">Updated: 2026-07-08. Current working and temp prototypes for dashboard collections and favorites.</p>
+    <p class="meta">Updated: 2026-07-14. Current working and temp prototypes for dashboard collections, Favorites, and Home experiments.</p>
 
     <section>
       <h2>Links</h2>
@@ -102,7 +102,7 @@
         <li>Stable client-facing file: <code>dashboard-working.html</code></li>
         <li>Temporary experiment file: <code>dashboard-working-temp.html</code>. Make risky UI changes here first, then copy to <code>dashboard-working.html</code> after approval or when explicitly promoting a checked build.</li>
         <li>Current branch: <code>gh-pages</code> in <code>/tmp/oboard-publish</code>.</li>
-        <li>Stable working file is synced from the latest checked temp build.</li>
+        <li>Stable working file is intentionally separate from the current Home experiment. Do not copy temp to stable until the Home layout is explicitly approved.</li>
         <li>Rule file to read before Oboard work: <code>docs/design/design-playbook.html</code></li>
       </ul>
     </section>
@@ -110,6 +110,10 @@
     <section>
       <h2>Latest Change Summary</h2>
       <ul>
+        <li>Current Home work exists in <code>dashboard-working-temp.html</code> only. It adds a workspace-first multi-select, a Favorites <code>Add more</code> picker, contextual Favorite actions, responsive workspace/department progress cards, and an optional <code>Merge charts</code> view. <code>dashboard-working.html</code> remains unchanged.</li>
+        <li>In Home temp, compact cards keep the large percentage beside the sparkline, reserve space between the line endpoint and the number, use HTML 10×10 endpoint dots so circles do not stretch, and keep the <code>Check-in</code> heading on one line.</li>
+        <li>In Home temp, <code>Merge charts</code> combines the selected workspace/departments into a single comparison chart. Modes are Lines, Average, Ribbon, Stack, and Labels. Hovering or focusing an objective column makes its corresponding line active; Ribbon uses the Oboard primary light-blue range and primary average line.</li>
+        <li>In Home temp, the Favorites <code>Add more</code> picker uses a non-interactive Libertex root row without a chevron. Dashboard favorites expose Rename and Remove from favorites; objective favorites expose Remove from favorites.</li>
         <li>Grouped collection badge clicks now highlight visible matching dashboard rows and collapsed collection header rows when matching dashboards are hidden inside collapsed collections.</li>
         <li>Grouped collection header hover and dashboard-row hover both activate the shared flat-corner collection elevation; the header row itself must not add its own extra shadow. Only the outer top and bottom contour of the active collection extends full-width to the far left and far right edges; the internal divider under the collection header keeps the normal row offset. Adjacent collapsed collection dividers are suppressed so no short duplicate line remains above a hovered collection, and the grouped table header uses only one divider line.</li>
         <li>The current temp build has been promoted to stable: <code>dashboard-working-temp.html</code> and <code>dashboard-working.html</code> now match. Stable includes the grouped collection drag-preview shadow, the 70% opacity focus effect for non-hovered collections, the 220ms drag-release glide into the final slot, full-width normal dividers at the end of each visible collection plus under the grouped header, 35% opacity internal grouped row dividers, and the 50% opacity first drag-bundle separator.</li>

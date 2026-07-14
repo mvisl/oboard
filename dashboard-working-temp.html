@@ -2503,7 +2503,7 @@ img.ProseMirror-separator {
     color: var(--dark-2);
     cursor: pointer;
     opacity: 0;
-    pointer-events: none;
+    pointer-events: auto;
     transform: translateY(-50%);
   }
 
@@ -2620,30 +2620,49 @@ img.ProseMirror-separator {
   .oboard-favorites-add-more {
     display: inline-flex;
     align-items: center;
-    align-self: flex-start;
+    justify-content: center;
+    align-self: center;
     flex: 0 0 auto;
-    height: 32px;
-    margin: 4px 8px 4px 36px;
-    padding: 0;
+    height: 28px;
+    margin: 4px auto;
+    gap: 4px;
+    padding: 4px;
     border: 0;
+    border-radius: 6px;
     background: transparent;
     color: var(--primary-color-next);
-    font: inherit;
+    font-family: var(--Font-UI, "SF Pro"), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 590;
     line-height: 20px;
+    white-space: nowrap;
     cursor: pointer;
   }
 
-  .oboard-favorites-add-more:hover,
-  .oboard-favorites-add-more:focus-visible {
-    text-decoration: underline;
+  .oboard-favorites-add-more .svg-icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+  }
+
+  .oboard-favorites-add-more:hover {
+    background: var(--primary-color-next-100);
+  }
+
+  .oboard-favorites-add-more:active,
+  .oboard-favorites-add-more[aria-expanded="true"] {
+    background: var(--primary-100);
   }
 
   .oboard-favorites-add-more:focus-visible {
     outline: 2px solid var(--primary-color-next-150);
     outline-offset: 2px;
-    border-radius: 2px;
+  }
+
+  .oboard-favorites-add-more:disabled {
+    color: var(--grey-semi-medium);
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 
   .oboard-favorites-picker {
@@ -2675,6 +2694,10 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-picker-root {
+    cursor: default;
+  }
+
+  .oboard-favorites-picker-root {
     box-sizing: border-box;
     height: 44px;
     min-height: 44px;
@@ -2685,7 +2708,6 @@ img.ProseMirror-separator {
     line-height: 20px;
   }
 
-  .oboard-favorites-picker-root:hover,
   .oboard-favorites-picker-option:hover,
   .oboard-favorites-picker-option.is-selected {
     background: var(--grey-3-next);
@@ -2697,17 +2719,6 @@ img.ProseMirror-separator {
     outline: 2px solid var(--primary-color-next-150);
     outline-offset: -2px;
     border-radius: 6px;
-  }
-
-  .oboard-favorites-picker-root > .svg-icon {
-    width: 16px;
-    height: 16px;
-    flex: 0 0 auto;
-    transition: transform 120ms ease;
-  }
-
-  .oboard-favorites-picker-root[aria-expanded="false"] > .svg-icon {
-    transform: rotate(-90deg);
   }
 
   .oboard-favorites-picker-workspace-icon,
@@ -3588,18 +3599,77 @@ img.ProseMirror-separator {
   }
 
   .oboard-home-widget-master-tabs {
+    align-items: center;
     margin-bottom: 16px;
+  }
+
+  .oboard-home-merge-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding-bottom: 8px;
+    color: var(--dark-2);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .oboard-home-merge-toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .oboard-home-merge-checkbox {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 2px solid var(--grey-semi-medium);
+    border-radius: 4px;
+    background: var(--white-color);
+    color: var(--white-color);
+  }
+
+  .oboard-home-merge-checkbox .svg-icon {
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+  }
+
+  .oboard-home-merge-toggle input:checked + .oboard-home-merge-checkbox {
+    border-color: var(--primary-color-next);
+    background: var(--primary-color-next);
+  }
+
+  .oboard-home-merge-toggle input:checked + .oboard-home-merge-checkbox .svg-icon {
+    opacity: 1;
+  }
+
+  .oboard-home-merge-toggle input:focus-visible + .oboard-home-merge-checkbox {
+    outline: 2px solid var(--primary-color-next-150);
+    outline-offset: 2px;
   }
 
   .oboard-home-widget-overview {
     display: grid;
     grid-template-columns: minmax(220px, 1.2fr) 160px minmax(180px, 0.8fr);
+    grid-template-areas: "chart summary statuses";
     gap: 28px;
     align-items: center;
     margin-bottom: 24px;
   }
 
   .oboard-home-widget-chart {
+    grid-area: chart;
     position: relative;
     height: 176px;
     border-bottom: 1px solid var(--grey-2-next);
@@ -3642,6 +3712,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-home-widget-summary {
+    grid-area: summary;
     text-align: center;
   }
 
@@ -3661,6 +3732,7 @@ img.ProseMirror-separator {
 
   .oboard-home-widget-statuses {
     display: grid;
+    grid-area: statuses;
     gap: 8px;
   }
 
@@ -3688,7 +3760,6 @@ img.ProseMirror-separator {
     background: var(--oboard-status-color, var(--grey-semi-medium));
   }
 
-  .oboard-home-widget-objectives-head,
   .oboard-home-widget-objective {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 52px 64px;
@@ -3697,14 +3768,18 @@ img.ProseMirror-separator {
   }
 
   .oboard-home-widget-objectives-head {
+    display: flex;
     min-height: 36px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
     border-bottom: 1px solid var(--grey-2-next);
     color: var(--dark-1);
     font-weight: 700;
   }
 
   .oboard-home-widget-objectives-head span:last-child {
-    grid-column: 3;
+    flex: 0 0 64px;
     color: var(--grey-semi-medium);
     font-size: 12px;
     line-height: 16px;
@@ -3766,6 +3841,9 @@ img.ProseMirror-separator {
 
   .oboard-home-widget.is-medium .oboard-home-widget-overview {
     grid-template-columns: minmax(0, 1fr) 120px;
+    grid-template-areas:
+      "chart summary"
+      "statuses statuses";
     gap: 16px;
   }
 
@@ -3789,12 +3867,30 @@ img.ProseMirror-separator {
 
   .oboard-home-widget.is-compact .oboard-home-widget-overview {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "chart"
+      "statuses";
     gap: 14px;
     margin-bottom: 16px;
   }
 
   .oboard-home-widget.is-compact .oboard-home-widget-chart {
     height: 112px;
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-chart svg {
+    width: calc(100% - 132px);
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-chart-dot {
+    left: calc(100% - 132px);
+  }
+
+  .oboard-home-widget.is-compact .oboard-home-widget-chart-value {
+    right: 0;
+    left: auto;
+    font-size: 40px;
+    line-height: 46px;
   }
 
   .oboard-home-widget.is-compact .oboard-home-widget-summary {
@@ -3810,7 +3906,6 @@ img.ProseMirror-separator {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .oboard-home-widget.is-compact .oboard-home-widget-objectives-head,
   .oboard-home-widget.is-compact .oboard-home-widget-objective {
     grid-template-columns: minmax(0, 1fr) 44px;
     gap: 8px;
@@ -3819,6 +3914,208 @@ img.ProseMirror-separator {
   .oboard-home-widget.is-compact .oboard-home-widget-objectives-head span:last-child,
   .oboard-home-widget.is-compact .oboard-home-widget-objective .oboard-avatar {
     display: none;
+  }
+
+  .oboard-home-merged-card {
+    min-width: 0;
+    padding: 16px 24px 24px;
+    border: 1px solid var(--grey-2-next);
+    border-radius: 12px;
+    background: var(--white-color);
+  }
+
+  .oboard-home-merged-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .oboard-home-chart-mode-switcher {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .oboard-home-merged-chart {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--grey-2-next);
+    background:
+      linear-gradient(to bottom, transparent 24%, var(--grey-3-next) 24%, var(--grey-3-next) calc(24% + 1px), transparent calc(24% + 1px)),
+      linear-gradient(to bottom, transparent 49%, var(--grey-3-next) 49%, var(--grey-3-next) calc(49% + 1px), transparent calc(49% + 1px)),
+      linear-gradient(to bottom, transparent 74%, var(--grey-3-next) 74%, var(--grey-3-next) calc(74% + 1px), transparent calc(74% + 1px));
+  }
+
+  .oboard-home-merged-chart svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .oboard-home-merged-series,
+  .oboard-home-merged-average,
+  .oboard-home-merged-stack-series {
+    fill: none;
+    stroke: var(--grey-semi-medium);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.45;
+    transition: opacity 140ms ease, stroke 140ms ease, stroke-width 140ms ease;
+  }
+
+  .oboard-home-merged-series.is-active {
+    stroke: var(--primary-color-next);
+    stroke-width: 4;
+    opacity: 1;
+  }
+
+  .oboard-home-merged-hit {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 18;
+    vector-effect: non-scaling-stroke;
+    pointer-events: stroke;
+    cursor: pointer;
+  }
+
+  .oboard-home-merged-average {
+    display: none;
+    stroke: var(--primary-color-next);
+    stroke-width: 5;
+    opacity: 1;
+  }
+
+  .oboard-home-merged-ribbon {
+    display: none;
+    fill: var(--primary-color-next-100);
+    stroke: var(--primary-color-next-150);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .oboard-home-merged-stack-series {
+    display: none;
+    stroke: var(--primary-color-next);
+    stroke-width: 3;
+    opacity: 1;
+  }
+
+  .oboard-home-merged-chart[data-chart-mode="average"] .oboard-home-merged-average,
+  .oboard-home-merged-chart[data-chart-mode="ribbon"] .oboard-home-merged-average,
+  .oboard-home-merged-chart[data-chart-mode="ribbon"] .oboard-home-merged-ribbon,
+  .oboard-home-merged-chart[data-chart-mode="stack"] .oboard-home-merged-stack-series {
+    display: block;
+  }
+
+  .oboard-home-merged-chart[data-chart-mode="ribbon"] .oboard-home-merged-series,
+  .oboard-home-merged-chart[data-chart-mode="ribbon"] .oboard-home-merged-hit,
+  .oboard-home-merged-chart[data-chart-mode="stack"] .oboard-home-merged-series,
+  .oboard-home-merged-chart[data-chart-mode="stack"] .oboard-home-merged-hit,
+  .oboard-home-merged-chart[data-chart-mode="stack"] .oboard-home-merged-average {
+    display: none;
+  }
+
+  .oboard-home-merged-endpoint {
+    position: absolute;
+    top: var(--oboard-merged-point-y);
+    left: var(--oboard-merged-point-x);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--grey-semi-medium);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    opacity: 0;
+    transform: translate(-5px, -50%);
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 140ms ease, color 140ms ease;
+  }
+
+  .oboard-home-merged-endpoint.is-active,
+  .oboard-home-merged-chart[data-chart-mode="labels"] .oboard-home-merged-endpoint {
+    color: var(--primary-color-next);
+    opacity: 1;
+  }
+
+  .oboard-home-merged-endpoint-dot {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .oboard-home-merged-chart[data-chart-mode="ribbon"] .oboard-home-merged-endpoint,
+  .oboard-home-merged-chart[data-chart-mode="stack"] .oboard-home-merged-endpoint {
+    display: none;
+  }
+
+  .oboard-home-merged-objectives {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .oboard-home-merged-objective-column {
+    min-width: 0;
+    padding: 12px;
+    border-left: 3px solid transparent;
+    background: transparent;
+    transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+  }
+
+  .oboard-home-merged-objective-column.is-active {
+    border-left-color: var(--primary-color-next);
+    background: var(--grey-3-next);
+    box-shadow: 0 4px 12px rgba(var(--dark-2-rgb), 0.12);
+  }
+
+  .oboard-home-merged-objective-column h3 {
+    margin: 0 0 8px;
+    overflow: hidden;
+    color: var(--dark-1);
+    font-size: 14px;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .oboard-home-merged-objective-item {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    border-top: 1px solid var(--grey-2-next);
+    color: var(--dark-1);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+
+  .oboard-home-merged-objective-item span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .oboard-home-merged-objectives {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .oboard-home-merged-objectives {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
   .oboard-home-widget-empty {
@@ -7426,6 +7723,7 @@ img.ProseMirror-separator {
   const ORDER_STORAGE_KEY = 'oboard-dashboard-row-order';
   const FAVORITE_ORDER_STORAGE_KEY = 'oboard-dashboard-favorite-order';
   const FAVORITE_SECTION_ORDER_STORAGE_KEY = 'oboard-dashboard-favorite-section-order';
+  const REMOVED_OBJECTIVE_FAVORITES_STORAGE_KEY = 'oboard-removed-objective-favorites';
   const DASHBOARD_MODE_STORAGE_KEY = 'oboard-dashboard-group-mode';
   const DASHBOARD_COLLECTIONS_STORAGE_KEY = 'oboard-dashboard-collections';
 
@@ -7461,7 +7759,7 @@ img.ProseMirror-separator {
     const favoritesAddMore = document.createElement('button');
     favoritesAddMore.type = 'button';
     favoritesAddMore.className = 'oboard-favorites-add-more';
-    favoritesAddMore.textContent = 'Add more';
+    favoritesAddMore.innerHTML = svgIcon('icon-plus-next') + '<span>Add more</span>';
     favoritesAddMore.setAttribute('aria-haspopup', 'tree');
     favoritesAddMore.setAttribute('aria-expanded', 'false');
 
@@ -7620,7 +7918,14 @@ img.ProseMirror-separator {
     const text = item.querySelector('.amni-Item_Text')?.textContent?.trim();
     return [text, item];
   }).filter(([text]) => text));
-  const objectiveFavoriteNames = Array.from(objectiveFavoriteTemplates.keys());
+  let removedObjectiveFavoriteNames = [];
+  try {
+    removedObjectiveFavoriteNames = JSON.parse(window.localStorage.getItem(REMOVED_OBJECTIVE_FAVORITES_STORAGE_KEY) || '[]');
+  } catch {
+    removedObjectiveFavoriteNames = [];
+  }
+  const removedObjectiveFavorites = new Set(Array.isArray(removedObjectiveFavoriteNames) ? removedObjectiveFavoriteNames : []);
+  const objectiveFavoriteNames = Array.from(objectiveFavoriteTemplates.keys()).filter(name => !removedObjectiveFavorites.has(name));
   let favoriteOrder = [...objectiveFavoriteNames, ...originalSidebarOrder];
   const favoriteSectionTypes = ['objective', 'dashboard'];
   let favoriteSectionOrder = [...favoriteSectionTypes];
@@ -8045,11 +8350,10 @@ img.ProseMirror-separator {
       ].join('');
     }).join('');
     return [
-      '<button class="oboard-favorites-picker-root" type="button" role="treeitem" aria-expanded="true" data-picker-toggle="workspace">',
-      svgIcon('icon-arrow-down-black-next'),
+      '<div class="oboard-favorites-picker-root" role="treeitem">',
       '<img class="oboard-favorites-picker-workspace-icon" src="assets/home-workspaces/workspace.png" alt="">',
       '<span>Libertex</span>',
-      '</button>',
+      '</div>',
       '<div class="oboard-favorites-picker-children" role="group">' + options + '</div>',
     ].join('');
   }
@@ -8090,14 +8394,6 @@ img.ProseMirror-separator {
     });
 
     document.addEventListener('click', event => {
-      const toggle = event.target.closest('.oboard-favorites-picker-root');
-      if (toggle) {
-        const expanded = toggle.getAttribute('aria-expanded') !== 'false';
-        toggle.setAttribute('aria-expanded', String(!expanded));
-        toggle.nextElementSibling.hidden = expanded;
-        return;
-      }
-
       const option = event.target.closest('.oboard-favorites-picker-option');
       if (option) {
         const picker = option.closest('.oboard-favorites-picker');
@@ -8182,16 +8478,23 @@ img.ProseMirror-separator {
       content.prepend(createFavoriteDragHandle(type));
     }
     content?.querySelector('.amni-Item_Actions')?.remove();
-    if (content && type === 'dashboard') {
+    if (content) {
       const actionsButton = document.createElement('button');
       actionsButton.type = 'button';
       actionsButton.className = 'oboard-favorites-actions-trigger';
       actionsButton.dataset.favoriteActionsName = name;
+      actionsButton.dataset.favoriteActionsType = type;
       actionsButton.setAttribute('aria-label', 'Actions for ' + name);
       actionsButton.setAttribute('aria-haspopup', 'menu');
       actionsButton.setAttribute('aria-expanded', 'false');
       actionsButton.innerHTML = svgIcon('icon-more');
-      content.appendChild(actionsButton);
+      actionsButton.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (activeFavoriteActionsMenu?.button === actionsButton) closeFavoriteActionsMenu();
+        else openFavoriteActionsMenu(actionsButton);
+      });
+      item.appendChild(actionsButton);
     }
     return item;
   }
@@ -8214,22 +8517,24 @@ img.ProseMirror-separator {
 
   function openFavoriteActionsMenu(button) {
     const name = button.dataset.favoriteActionsName;
+    const type = button.dataset.favoriteActionsType || 'dashboard';
     const item = button.closest('.amnl-List_Item');
     closeFavoriteActionsMenu();
     const menu = document.createElement('div');
     menu.className = 'oboard-favorites-actions-menu';
     menu.setAttribute('role', 'menu');
     menu.dataset.favoriteActionsName = name;
+    menu.dataset.favoriteActionsType = type;
     menu.innerHTML = [
-      '<button class="oboard-favorites-actions-menu-item" type="button" role="menuitem" data-favorite-action="rename">' + svgIcon('icon-rename-currentColor') + '<span>Rename</span></button>',
+      type === 'dashboard' ? '<button class="oboard-favorites-actions-menu-item" type="button" role="menuitem" data-favorite-action="rename">' + svgIcon('icon-rename-currentColor') + '<span>Rename</span></button>' : '',
       '<button class="oboard-favorites-actions-menu-item" type="button" role="menuitem" data-favorite-action="remove">' + svgIcon('icon-trash') + '<span>Remove from favorites</span></button>'
     ].join('');
     document.body.appendChild(menu);
     button.setAttribute('aria-expanded', 'true');
     item?.classList.add('is-actions-open');
-    activeFavoriteActionsMenu = { button, item, name };
+    activeFavoriteActionsMenu = { button, item, name, type };
     positionFavoriteActionsMenu(menu, button);
-    menu.querySelector('.oboard-favorites-actions-menu-item')?.focus();
+    menu.querySelector('.oboard-favorites-actions-menu-item')?.focus({ preventScroll: true });
   }
 
   function renameFavoriteDashboard(oldName, newName) {
@@ -8307,6 +8612,17 @@ img.ProseMirror-separator {
     });
   }
 
+  function removeObjectiveFavorite(name) {
+    const index = objectiveFavoriteNames.indexOf(name);
+    if (index < 0) return;
+    objectiveFavoriteNames.splice(index, 1);
+    removedObjectiveFavorites.add(name);
+    favoriteOrder = favoriteOrder.filter(itemName => itemName !== name);
+    window.localStorage.setItem(REMOVED_OBJECTIVE_FAVORITES_STORAGE_KEY, JSON.stringify(Array.from(removedObjectiveFavorites)));
+    saveFavoriteOrder();
+    syncSidebar();
+  }
+
   function bindFavoriteActionsEvents() {
     if (favoriteActionsEventsBound) return;
     favoriteActionsEventsBound = true;
@@ -8323,11 +8639,14 @@ img.ProseMirror-separator {
       const action = event.target.closest('.oboard-favorites-actions-menu-item');
       if (action) {
         event.preventDefault();
-        const name = activeFavoriteActionsMenu?.name || action.closest('.oboard-favorites-actions-menu')?.dataset.favoriteActionsName;
+        const menu = action.closest('.oboard-favorites-actions-menu');
+        const name = activeFavoriteActionsMenu?.name || menu?.dataset.favoriteActionsName;
+        const type = activeFavoriteActionsMenu?.type || menu?.dataset.favoriteActionsType || 'dashboard';
         const actionName = action.dataset.favoriteAction;
         closeFavoriteActionsMenu();
         if (actionName === 'rename') startFavoriteRename(name);
-        if (actionName === 'remove') updateDashboardFavorite(name, false);
+        if (actionName === 'remove' && type === 'objective') removeObjectiveFavorite(name);
+        if (actionName === 'remove' && type === 'dashboard') updateDashboardFavorite(name, false);
         return;
       }
 
@@ -11060,6 +11379,8 @@ img.ProseMirror-separator {
   }
 
   let homeWidgetMode = 'objectives';
+  let homeMergeCharts = false;
+  let homeMergedChartMode = 'lines';
 
   const homeWidgetData = {
     Libertex: {
@@ -11131,7 +11452,7 @@ img.ProseMirror-separator {
     const compactChart = density === 'compact';
     const chartPoints = pointList.map((point, index) => {
       const [rawX, rawY] = point.split(',').map(Number);
-      const x = compactChart && index === pointList.length - 1 ? 84 : (rawX / 520) * 100;
+      const x = compactChart && index === pointList.length - 1 ? 98 : (rawX / 520) * 100;
       const y = (rawY / 176) * 100;
       return x.toFixed(2) + ',' + y.toFixed(2);
     }).join(' ');
@@ -11157,6 +11478,108 @@ img.ProseMirror-separator {
       '</div>',
       '</article>'
     ].join('');
+  }
+
+  function homeMergedSeries(name, stackIndex = 0, stackCount = 1) {
+    const data = homeWidgetData[name] || homeWidgetData.Libertex;
+    const rawPoints = data.points.split(' ').map(point => point.split(',').map(Number));
+    const points = rawPoints.map((point, index) => ({
+      x: 5 + (index / Math.max(1, rawPoints.length - 1)) * 80,
+      y: 8 + (point[1] / 176) * 78
+    }));
+    const bandHeight = 100 / Math.max(1, stackCount);
+    const stackPoints = points.map(point => ({
+      x: point.x,
+      y: stackIndex * bandHeight + 4 + (point.y / 100) * Math.max(8, bandHeight - 8)
+    }));
+    return { name, data, points, stackPoints };
+  }
+
+  function homeMergedPoints(points) {
+    return points.map(point => point.x.toFixed(2) + ',' + point.y.toFixed(2)).join(' ');
+  }
+
+  function homeMergedObjectiveColumn(series, active) {
+    return [
+      '<section class="oboard-home-merged-objective-column' + (active ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(series.name) + '" tabindex="0">',
+      '<h3>' + escapeHtml(series.name) + ' objectives</h3>',
+      series.data.objectives.map(objective => '<div class="oboard-home-merged-objective-item"><span class="oboard-badge">' + objective[0] + '</span><span><span class="oboard-static-code">' + objective[1] + '</span> ' + escapeHtml(objective[2]) + '</span></div>').join(''),
+      '</section>'
+    ].join('');
+  }
+
+  function homeMergedChartTemplate(selectedNames) {
+    const series = selectedNames.map((name, index) => homeMergedSeries(name, index, selectedNames.length));
+    const pointCount = series[0]?.points.length || 0;
+    const averagePoints = Array.from({ length: pointCount }, (_, index) => ({
+      x: series[0].points[index].x,
+      y: series.reduce((sum, item) => sum + item.points[index].y, 0) / series.length
+    }));
+    const upperPoints = Array.from({ length: pointCount }, (_, index) => ({
+      x: series[0].points[index].x,
+      y: Math.min(...series.map(item => item.points[index].y))
+    }));
+    const lowerPoints = Array.from({ length: pointCount }, (_, index) => ({
+      x: series[0].points[index].x,
+      y: Math.max(...series.map(item => item.points[index].y))
+    }));
+    const ribbonPath = upperPoints.length
+      ? 'M ' + upperPoints.map(point => point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' L ') + ' L ' + lowerPoints.slice().reverse().map(point => point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' L ') + ' Z'
+      : '';
+    const modes = [
+      ['lines', 'Lines'],
+      ['average', 'Average'],
+      ['ribbon', 'Ribbon'],
+      ['stack', 'Stack'],
+      ['labels', 'Labels']
+    ];
+    const modeSwitcher = modes.map(mode => '<button type="button" class="oboard-dashboard-mode-option' + (homeMergedChartMode === mode[0] ? ' is-active' : '') + '" role="radio" aria-checked="' + String(homeMergedChartMode === mode[0]) + '" data-home-chart-mode="' + mode[0] + '"><span>' + mode[1] + '</span></button>').join('');
+    const seriesLines = series.map((item, index) => [
+      '<polyline class="oboard-home-merged-series' + (index === 0 ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>',
+      '<polyline class="oboard-home-merged-hit" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.points) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>'
+    ].join('')).join('');
+    const stackLines = series.map(item => '<polyline class="oboard-home-merged-stack-series" data-merged-series="' + escapeHtml(item.name) + '" points="' + homeMergedPoints(item.stackPoints) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>').join('');
+    const endpoints = series.map((item, index) => {
+      const lastPoint = item.points.at(-1);
+      const progress = homeWidgetMode === 'metrics' ? item.data.metricProgress : item.data.objectiveProgress;
+      return '<span class="oboard-home-merged-endpoint' + (index === 0 ? ' is-active' : '') + '" data-merged-series="' + escapeHtml(item.name) + '" style="--oboard-merged-point-x:' + lastPoint.x.toFixed(2) + '%;--oboard-merged-point-y:' + lastPoint.y.toFixed(2) + '%"><span class="oboard-home-merged-endpoint-dot"></span><span>' + progress + '%</span></span>';
+    }).join('');
+    return [
+      '<article class="oboard-home-merged-card">',
+      '<div class="oboard-home-merged-toolbar"><div class="oboard-dashboard-mode-switcher oboard-home-chart-mode-switcher" role="radiogroup" aria-label="Merged chart type">' + modeSwitcher + '</div></div>',
+      '<div class="oboard-home-merged-chart" data-chart-mode="' + homeMergedChartMode + '">',
+      '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Merged progress chart">',
+      '<path class="oboard-home-merged-ribbon" d="' + ribbonPath + '"></path>',
+      '<polyline class="oboard-home-merged-average" points="' + homeMergedPoints(averagePoints) + '" stroke-linecap="round" stroke-linejoin="round"></polyline>',
+      seriesLines,
+      stackLines,
+      '</svg>',
+      endpoints,
+      '</div>',
+      '<div class="oboard-home-merged-objectives">' + series.map((item, index) => homeMergedObjectiveColumn(item, index === 0)).join('') + '</div>',
+      '</article>'
+    ].join('');
+  }
+
+  function setHomeMergedActiveSeries(grid, name) {
+    grid.querySelectorAll('.oboard-home-merged-series, .oboard-home-merged-endpoint, .oboard-home-merged-objective-column').forEach(element => {
+      element.classList.toggle('is-active', element.dataset.mergedSeries === name);
+    });
+  }
+
+  function bindHomeMergedChart(grid, selectedNames, options, trigger) {
+    const fallbackName = selectedNames[0];
+    grid.querySelectorAll('.oboard-home-merged-hit, .oboard-home-merged-objective-column').forEach(element => {
+      element.addEventListener('pointerenter', () => setHomeMergedActiveSeries(grid, element.dataset.mergedSeries));
+      element.addEventListener('focus', () => setHomeMergedActiveSeries(grid, element.dataset.mergedSeries));
+    });
+    grid.querySelector('.oboard-home-merged-chart')?.addEventListener('pointerleave', () => setHomeMergedActiveSeries(grid, fallbackName));
+    grid.querySelectorAll('[data-home-chart-mode]').forEach(button => {
+      button.addEventListener('click', () => {
+        homeMergedChartMode = button.dataset.homeChartMode || 'lines';
+        renderHomeWidgets(options, trigger);
+      });
+    });
   }
 
   function renderHomeWidgets(options, trigger) {
@@ -11185,14 +11608,19 @@ img.ProseMirror-separator {
       groups.forEach(name => density.set(name, 'medium'));
     }
 
-    grid.className = 'oboard-home-widget-grid ' + layout;
+    grid.className = 'oboard-home-widget-grid ' + (homeMergeCharts ? 'layout-single is-merged' : layout);
     grid.style.removeProperty('--oboard-home-group-columns');
-    if (layout === 'layout-workspace-stacked') {
+    if (!homeMergeCharts && layout === 'layout-workspace-stacked') {
       grid.style.setProperty('--oboard-home-group-columns', String(Math.min(groups.length, 3)));
     }
     grid.innerHTML = selectedNames.length
-      ? selectedNames.map(name => homeProgressWidgetTemplate(name, density.get(name) || '')).join('')
+      ? (homeMergeCharts ? homeMergedChartTemplate(selectedNames) : selectedNames.map(name => homeProgressWidgetTemplate(name, density.get(name) || '')).join(''))
       : '<div class="oboard-home-widget-empty">Select a workspace or department</div>';
+
+    if (homeMergeCharts && selectedNames.length) bindHomeMergedChart(grid, selectedNames, options, trigger);
+
+    const mergeToggle = document.querySelector('[data-home-merge-charts]');
+    if (mergeToggle) mergeToggle.checked = homeMergeCharts;
 
     document.querySelectorAll('.oboard-home-widget-tab').forEach(tab => {
       const active = tab.dataset.homeWidgetMode === homeWidgetMode;
@@ -11239,6 +11667,7 @@ img.ProseMirror-separator {
       '<div class="oboard-home-widget-tabs oboard-home-widget-master-tabs" role="tablist" aria-label="Progress type">',
       '<button class="oboard-home-widget-tab is-active" type="button" role="tab" aria-selected="true" data-home-widget-mode="objectives">Objectives’ progress</button>',
       '<button class="oboard-home-widget-tab" type="button" role="tab" aria-selected="false" data-home-widget-mode="metrics">Metrics progress</button>',
+      '<label class="oboard-home-merge-toggle"><input type="checkbox" data-home-merge-charts><span class="oboard-home-merge-checkbox">' + svgIcon('icon-check') + '</span><span>Merge charts</span></label>',
       '</div>',
       '<div class="oboard-home-widget-grid" data-home-widgets></div>',
       '</div>',
@@ -11257,7 +11686,8 @@ img.ProseMirror-separator {
     const clear = host?.querySelector('.oboard-home-workspace-clear');
     const options = host ? Array.from(host.querySelectorAll('.oboard-home-workspace-option')) : [];
     const progressTabs = Array.from(document.querySelectorAll('.oboard-home-widget-tab'));
-    if (!host || !trigger || !menu || !search || !clear || !options.length || !progressTabs.length) return;
+    const mergeToggle = document.querySelector('[data-home-merge-charts]');
+    if (!host || !trigger || !menu || !search || !clear || !mergeToggle || !options.length || !progressTabs.length) return;
 
     const controller = new AbortController();
     homeWorkspaceFilterAbortController = controller;
@@ -11295,6 +11725,11 @@ img.ProseMirror-separator {
         renderHomeWidgets(options, trigger);
       }, { signal });
     });
+
+    mergeToggle.addEventListener('change', () => {
+      homeMergeCharts = mergeToggle.checked;
+      renderHomeWidgets(options, trigger);
+    }, { signal });
 
     search.addEventListener('input', () => {
       const query = search.value.trim().toLocaleLowerCase();
