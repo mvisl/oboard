@@ -4014,7 +4014,8 @@ img.ProseMirror-separator {
   .oboard-home-merged-chart-v2[data-chart-mode="overall"] .oboard-home-merged-hit { display: none; }
   .oboard-home-merged-chart-v2[data-chart-mode="overall"] .oboard-home-merged-average,
   .oboard-home-merged-chart-v2[data-chart-mode="overall"] .oboard-home-merged-range { display: block; }
-  .oboard-home-merged-chart-v2[data-chart-mode="overall"] svg { right: 300px; width: auto; }
+  .oboard-home-merged-chart-v2[data-chart-mode="overall"] svg { right: auto; width: calc(100% - 300px); }
+  .oboard-home-merged-hit { fill: none; stroke: transparent; stroke-width: 18; vector-effect: non-scaling-stroke; }
   .oboard-home-merged-endpoint-label { position: absolute; top: var(--oboard-label-y); right: 4px; display: flex; align-items: center; gap: 6px; color: var(--oboard-group-color, var(--grey-semi-medium)); font-size: 12px; font-weight: 700; line-height: 16px; transform: translateY(-50%); pointer-events: none; white-space: nowrap; transition: opacity 160ms ease; }
   .oboard-home-merged-chart-v2.has-active .oboard-home-merged-endpoint-label:not(.is-active) { opacity: .4; }
   .oboard-home-merged-endpoint-marker, .oboard-home-merged-legend-marker { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: var(--oboard-group-color, var(--grey-semi-medium)); }
