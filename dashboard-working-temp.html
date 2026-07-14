@@ -2842,6 +2842,13 @@ img.ProseMirror-separator {
     height: 16px;
   }
 
+  .oboard-favorites-section-icon .oboard-favorites-section-image {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
   .oboard-favorites-section-icon.is-blue { background: var(--primary-color-next-100); color: var(--primary-color-next); }
   .oboard-favorites-section-icon.is-violet { background: #f1e9ff; color: var(--purple); }
   .oboard-favorites-section-icon.is-green { background: #dff5ea; color: var(--grade-high-color-next); }
@@ -2989,6 +2996,10 @@ img.ProseMirror-separator {
 
   .oboard-static-home {
     padding-top: 24px;
+  }
+
+  .oboard-home-widget-master-tabs {
+    display: none !important;
   }
 
   .oboard-home-header {
@@ -8020,7 +8031,9 @@ img.ProseMirror-separator {
   }
   const removedObjectiveFavorites = new Set(Array.isArray(removedObjectiveFavoriteNames) ? removedObjectiveFavoriteNames : []);
   const objectiveFavoriteNames = Array.from(objectiveFavoriteTemplates.keys()).filter(name => !removedObjectiveFavorites.has(name));
-  let favoriteOrder = [...objectiveFavoriteNames, ...originalSidebarOrder];
+  const favoritePrototypeGroupNames = ['QA', 'Customer Support', 'Sales', 'Marketing', 'Engineering', 'Product', 'IT Operations'];
+  const favoritePrototypeGroups = new Set(favoritePrototypeGroupNames);
+  let favoriteOrder = [...favoritePrototypeGroupNames];
   const favoriteSectionTypes = ['objective', 'dashboard'];
   let favoriteSectionOrder = [...favoriteSectionTypes];
   let favoriteSectionSwitchTimer = null;
@@ -8121,16 +8134,32 @@ img.ProseMirror-separator {
     '7 Days deposit': { icon: 'icon-calendar-check', tone: 'teal' }
   };
 
+  const favoriteGroupVisuals = {
+    Marketing: { image: 'assets/home-workspaces/marketing.png' },
+    Engineering: { image: 'assets/home-workspaces/engineering.png' },
+    Product: { image: 'assets/home-workspaces/product.png' },
+    'IT Operations': { image: 'assets/home-workspaces/operations.png' },
+    QA: { icon: 'icon-bug', tone: 'rose' },
+    'Customer Support': { icon: 'icon-menu-support', tone: 'teal' },
+    Sales: { icon: 'icon-users', tone: 'orange' }
+  };
+
   function favoriteVisual(name, type) {
+    if (favoriteGroupVisuals[name]) return favoriteGroupVisuals[name];
     if (type === 'objective') return { icon: 'icon-menu-objectives', tone: 'violet' };
     return favoriteDashboardVisuals[name] || { icon: 'icon-menu-dashboard', tone: 'blue' };
+  }
+
+  function favoriteVisualMarkup(visual) {
+    if (visual.image) return '<img class="oboard-favorites-section-image" src="' + visual.image + '" alt="">';
+    return svgIcon(visual.icon);
   }
 
   function createFavoriteDragHandle(type, name) {
     const visual = favoriteVisual(name, type);
     const handle = createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite item');
     handle.innerHTML = [
-      '<span class="oboard-favorites-section-icon is-' + visual.tone + '">' + svgIcon(visual.icon) + '</span>',
+      '<span class="oboard-favorites-section-icon' + (visual.image ? ' is-image' : ' is-' + visual.tone) + '">' + favoriteVisualMarkup(visual) + '</span>',
       '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
     ].join('');
     return handle;
@@ -8416,30 +8445,24 @@ img.ProseMirror-separator {
   }
 
   function favoriteBaseNames() {
-    const favorites = new Set(rowOrder.filter(item => item.favorite).map(item => item.name));
-    const objectiveNames = new Set(objectiveFavoriteNames);
+    const availableDashboards = new Set(rowOrder.filter(item => item.favorite).map(item => item.name));
+    const groups = new Set(Array.from(favoritePrototypeGroups));
     const names = [];
     favoriteOrder.forEach(name => {
-      if (objectiveNames.has(name)) {
+      if (groups.has(name)) {
         names.push(name);
-        objectiveNames.delete(name);
+        groups.delete(name);
         return;
       }
-      if (favorites.has(name)) {
+      if (availableDashboards.has(name)) {
         names.push(name);
-        favorites.delete(name);
+        availableDashboards.delete(name);
       }
     });
-    objectiveFavoriteNames.forEach(name => {
-      if (objectiveNames.has(name)) {
+    favoritePrototypeGroupNames.forEach(name => {
+      if (groups.has(name)) {
         names.push(name);
-        objectiveNames.delete(name);
-      }
-    });
-    rowOrder.forEach(item => {
-      if (favorites.has(item.name)) {
-        names.push(item.name);
-        favorites.delete(item.name);
+        groups.delete(name);
       }
     });
     return names;
@@ -9159,18 +9182,7 @@ img.ProseMirror-separator {
   }
 
   function restoreFavoriteOrder() {
-    let names = [];
-    try {
-      names = JSON.parse(window.localStorage.getItem(FAVORITE_ORDER_STORAGE_KEY) || '[]');
-    } catch {
-      names = [];
-    }
-    if (Array.isArray(names) && names.length) {
-      const hasObjectiveItems = objectiveFavoriteNames.every(name => names.includes(name));
-      favoriteOrder = hasObjectiveItems
-        ? names
-        : [...objectiveFavoriteNames, ...names.filter(name => !objectiveFavoriteNames.includes(name))];
-    }
+    favoriteOrder = [...favoritePrototypeGroupNames];
   }
 
   function restoreFavoriteSectionOrder() {
@@ -12144,8 +12156,18 @@ img.ProseMirror-separator {
 
   function updateDashboardFavorite(name, favorite) {
     const item = rowOrder.find(row => row.name === name);
-    if (!item) return;
+    if (!item) {
+      if (!favoritePrototypeGroupNames.includes(name)) return;
+      if (favorite) favoritePrototypeGroups.add(name);
+      else favoritePrototypeGroups.delete(name);
+      favoriteOrder = favoriteOrder.filter(itemName => itemName !== name);
+      if (favorite) favoriteOrder.push(name);
+      syncSidebar();
+      return;
+    }
     item.favorite = favorite;
+    favoriteOrder = favoriteOrder.filter(itemName => itemName !== name);
+    if (favorite) favoriteOrder.push(name);
     setIcon(item.row.querySelector('.cdl-ActionFavoriteButton svg'), favorite ? FILLED : EMPTY);
     document.querySelectorAll('.oboard-grouped-dashboard[data-dashboard-name="' + CSS.escape(name) + '"] .oboard-grouped-favorite svg').forEach(svg => {
       setIcon(svg, favorite ? FILLED : EMPTY);
