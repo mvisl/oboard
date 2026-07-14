@@ -2544,10 +2544,11 @@ img.ProseMirror-separator {
   .oboard-favorites-picker {
     position: fixed;
     z-index: 10020;
-    width: 340px;
+    box-sizing: border-box;
+    width: 300px;
     max-height: min(420px, calc(100vh - 24px));
     overflow-y: auto;
-    padding: 8px;
+    padding: 4px;
     border: 1px solid var(--grey-2-next);
     border-radius: 8px;
     background: var(--white-color);
@@ -2569,12 +2570,14 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-picker-root {
-    min-height: 48px;
-    padding: 4px 8px;
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 44px;
+    padding: 10px 12px;
     color: var(--primary-color-next);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
-    line-height: 22px;
+    line-height: 20px;
   }
 
   .oboard-favorites-picker-root:hover,
@@ -2605,8 +2608,8 @@ img.ProseMirror-separator {
   .oboard-favorites-picker-workspace-icon,
   .oboard-favorites-picker-department-icon {
     display: block;
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
     flex: 0 0 auto;
     object-fit: contain;
   }
@@ -2617,24 +2620,26 @@ img.ProseMirror-separator {
 
   .oboard-favorites-picker-children {
     position: relative;
-    margin-left: 16px;
-    padding-left: 48px;
+    margin-left: 12px;
+    padding-left: 40px;
   }
 
   .oboard-favorites-picker-children::before {
     content: '';
     position: absolute;
-    left: 16px;
+    left: 12px;
     top: 0;
-    bottom: 28px;
+    bottom: 22px;
     width: 1px;
     background: var(--grey-2-next);
   }
 
   .oboard-favorites-picker-option {
     position: relative;
-    min-height: 56px;
-    padding: 6px 8px;
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 44px;
+    padding: 10px 8px;
     font-size: 14px;
     line-height: 20px;
   }
@@ -2642,10 +2647,10 @@ img.ProseMirror-separator {
   .oboard-favorites-picker-option::before {
     content: '';
     position: absolute;
-    left: -32px;
-    top: -28px;
-    width: 32px;
-    height: 56px;
+    left: -28px;
+    top: -22px;
+    width: 28px;
+    height: 44px;
     border-bottom: 1px solid var(--grey-2-next);
     border-left: 1px solid var(--grey-2-next);
     border-bottom-left-radius: 8px;
@@ -2655,26 +2660,11 @@ img.ProseMirror-separator {
     color: var(--primary-color-next);
   }
 
-  .oboard-favorites-picker-copy {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-  }
-
   .oboard-favorites-picker-department {
+    min-width: 0;
     overflow: hidden;
     color: var(--primary-color-next);
     font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .oboard-favorites-picker-dashboard {
-    min-width: 0;
-    overflow: hidden;
-    color: var(--grey-semi-medium);
-    font-size: 12px;
-    line-height: 16px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -2882,9 +2872,10 @@ img.ProseMirror-separator {
     z-index: 10000;
     top: calc(100% + 2px);
     left: 0;
-    width: 320px;
+    box-sizing: border-box;
+    width: 300px;
     overflow: hidden;
-    border: 1px solid var(--grey-2-next);
+    border: 0;
     border-radius: 8px;
     background: var(--white-color);
     box-shadow: 0 8px 20px rgba(var(--dark-2-rgb), 0.2);
@@ -2898,9 +2889,10 @@ img.ProseMirror-separator {
     position: relative;
     display: flex;
     align-items: center;
-    height: 48px;
+    box-sizing: border-box;
+    height: 40px;
     border: 2px solid var(--primary-color-next);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--dark-2);
   }
 
@@ -2908,20 +2900,20 @@ img.ProseMirror-separator {
     flex: 0 0 24px;
     width: 24px;
     height: 24px;
-    margin-left: 14px;
+    margin-left: 12px;
   }
 
   .oboard-home-workspace-search input {
     min-width: 0;
     width: 100%;
     height: 100%;
-    padding: 0 14px 0 12px;
+    padding: 0 12px 0 8px;
     border: 0;
     outline: 0;
     background: transparent;
     color: var(--dark-1);
     font: inherit;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .oboard-home-workspace-search input::placeholder {
@@ -2929,31 +2921,28 @@ img.ProseMirror-separator {
   }
 
   .oboard-home-workspace-options {
-    max-height: 288px;
+    max-height: 220px;
     overflow-y: auto;
-    padding: 4px 0;
+    padding: 0 4px;
   }
 
   .oboard-home-workspace-option {
-    display: grid;
-    grid-template-columns: 24px 32px 12px 32px minmax(0, 1fr);
-    gap: 10px;
+    display: flex;
+    gap: 0;
     align-items: center;
+    box-sizing: border-box;
     width: 100%;
-    min-height: 48px;
-    padding: 6px 12px;
+    height: 44px;
+    min-height: 44px;
+    padding: 10px 10px 10px 12px;
     border: 0;
     background: var(--white-color);
     color: var(--dark-1);
     font: inherit;
-    font-size: 16px;
-    line-height: 22px;
+    font-size: 14px;
+    line-height: 20px;
     text-align: left;
     cursor: pointer;
-  }
-
-  .oboard-home-workspace-option.is-workspace {
-    grid-template-columns: 24px 32px minmax(0, 1fr);
   }
 
   .oboard-home-workspace-option:hover,
@@ -2969,16 +2958,18 @@ img.ProseMirror-separator {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    box-sizing: border-box;
+    width: 14px;
+    height: 14px;
+    margin-right: 12px;
     border: 2px solid var(--grey-semi-medium);
-    border-radius: 5px;
+    border-radius: 4px;
     color: transparent;
   }
 
   .oboard-home-workspace-checkbox svg {
-    width: 18px;
-    height: 18px;
+    width: 12px;
+    height: 12px;
   }
 
   .oboard-home-workspace-option.is-selected .oboard-home-workspace-checkbox {
@@ -2990,19 +2981,23 @@ img.ProseMirror-separator {
   .oboard-home-workspace-tile,
   .oboard-home-group-tile {
     display: block;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     object-fit: contain;
   }
 
   .oboard-home-workspace-parent-arrow {
-    width: 12px;
-    height: 12px;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
     color: var(--grey-semi-medium);
   }
 
   .oboard-home-workspace-label {
+    min-width: 0;
+    margin-left: 8px;
+    flex: 1 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3011,24 +3006,25 @@ img.ProseMirror-separator {
   .oboard-home-workspace-clear {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: calc(100% - 24px);
-    height: 48px;
-    margin: 0 12px;
-    padding: 0 4px;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 53px;
+    margin: 0;
+    padding: 0 12px;
     border: 0;
     border-top: 1px solid var(--grey-2-next);
     background: var(--white-color);
     color: var(--grey-semi-medium);
     font: inherit;
-    font-size: 16px;
+    font-size: 14px;
     text-align: left;
     cursor: pointer;
   }
 
   .oboard-home-workspace-clear svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     color: var(--grey-1-next);
   }
 
@@ -7571,10 +7567,7 @@ img.ProseMirror-separator {
       return [
         '<button class="oboard-favorites-picker-option' + (selected ? ' is-selected' : '') + '" type="button" role="treeitem" aria-selected="' + selected + '" data-favorite-name="' + escapeHtml(option.dashboard) + '" data-department="' + escapeHtml(option.department) + '">',
         '<img class="oboard-favorites-picker-department-icon" src="' + option.icon + '" alt="">',
-        '<span class="oboard-favorites-picker-copy">',
         '<span class="oboard-favorites-picker-department">' + escapeHtml(option.department) + '</span>',
-        '<span class="oboard-favorites-picker-dashboard">' + escapeHtml(option.dashboard) + '</span>',
-        '</span>',
         '</button>'
       ].join('');
     }).join('');
