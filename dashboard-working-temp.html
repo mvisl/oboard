@@ -11,6 +11,7 @@
   <meta name="theme-color" content="#ffffff">
 
   <title>Dashboard Working Copy</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 
   <style>:root{--grade-low-color:#d1523a;--grade-medium-color:#ff991f;--grade-high-color:#00b395;--grade-low-color-next:#f64963;--grade-low-color-next-0:#fddde2;--grade-low-color-next-100:#fbacb8;--grade-low-color-next-200:#f97b8e;--grade-low-color-next-300:#f74b65;--grade-low-color-next-400:#f41a3b;--grade-low-color-next-500:#d10a28;--grade-low-color-next-600:#a1081f;--grade-low-color-next-700:#700515;--grade-medium-color-next:#ff8541;--grade-medium-color-next-0:#ffe8db;--grade-medium-color-next-100:#ffc7a8;--grade-medium-color-next-200:#ffa575;--grade-medium-color-next-300:#ff8442;--grade-medium-color-next-400:#ff630f;--grade-medium-color-next-500:#db4d00;--grade-medium-color-next-600:#a83b00;--grade-medium-color-next-700:#752900;--grade-high-color-next:#36b27e;--grade-high-color-next-0:#ebf9f3;--grade-high-color-next-100:#c4eddc;--grade-high-color-next-200:#9de1c5;--grade-high-color-next-300:#76d5ae;--grade-high-color-next-400:#4fc996;--grade-high-color-next-500:#36b07d;--grade-high-color-next-600:#2a8961;--grade-high-color-next-700:#1e6245;--grade-closed-color:#42526e;--grade-abandoned-color:#6b778c;--grade-backlog-color:#172b4d;--grade-default-color:#172b4d;--grey-1-next:#b5bbc5;--grey-1-next-rgb:181,187,197;--grey-2-next:#dfe1e6;--grey-3-next:#f5f6f7;--dark-3:#6b778c;--dark-2:#42526e;--dark-2-rgb:66,82,110;--dark-1:#172b4d;--breadcrumbs-offset:32px;--grade-default-color-rgb:23,43,77;--grade-high-color-rgb-next:54,178,126;--grade-medium-color-rgb-next:255,133,65;--grade-low-color-rgb-next:246,73,99;--grade-closed-color-rgb:66,82,110;--grade-abandoned-color-rgb:107,119,140;--grade-backlog-color-rgb-next:23,43,77;--white-rgb:255,255,255;--primary-color-next:#0052cc;--primary-color-next-0:#fff;--primary-color-next-50:#e6f0ff;--primary-color-next-100:#cce0ff;--primary-color-next-150:#b3d1ff;--primary-color-next-200:#99c2ff;--primary-color-next-250:#80b3ff;--primary-color-next-300:#66a3ff;--primary-color-next-350:#4d94ff;--primary-color-next-400:#3385ff;--primary-color-next-450:#1975ff;--primary-color-next-500:#06f;--primary-color-next-550:#005ce6;--primary-color-next-600:#0052cc;--primary-color-next-650:#0047b3;--primary-color-next-700:#003d99;--primary-color-next-750:#003380;--primary-color-next-800:#002966;--primary-color-next-850:#001f4d;--primary-color-next-900:#001433;--primary-color-next-950:#000a1a;--primary-color-rgb-next:0,82,204;--gray-blue:#42526e;--gray-blue-0:#eff1f5;--gray-blue-100:#cfd6e2;--gray-blue-200:#afbbcf;--gray-blue-300:#8fa0bc;--gray-blue-400:#7085a9;--gray-blue-500:#566b8f;--gray-blue-600:#435370;--gray-blue-700:#303c50;--gray-blue-800:#1d2430;--gray-blue-900:#0a0c10;--gray:#dfe1e6;--gray-0:#fcfcfd;--gray-100:#e0e1e6;--gray-200:#c3c7d0;--gray-300:#a6acb9;--gray-400:#8a91a3;--gray-500:#6e768c;--gray-600:#585e6f;--gray-700:#414653;--gray-800:#2b2e36;--gray-900:#14161a;--page-left-padding:32px;--page-right-padding:32px;--page-left-padding-next:40px;--page-right-padding-next:40px;--primary-color:#0052cc;--warning-color:#ff8541;--danger-color:#f64963;--white-color:#fff;--black-color:$black;--black-rgb:0,0,0;--grey-semi-medium:#6b778c;--grey-semi-medium-rgb:107,119,140;--purple:#a769f6;--okr-table-row-controls-button-width:24px;--okr-table-row-gap:8px;--okr-table-checkin-cell-width:132px;--app-dialog-my:60px;--app-dialog-mx:auto;--app-dialog-backdrop-color:rgba(23,43,77,.8)}</style>
   
@@ -2418,6 +2419,34 @@ img.ProseMirror-separator {
     overflow: visible;
   }
 
+  .oboard-favorites-mode-switcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: -4px -8px -4px;
+    padding: 4px;
+    border-radius: 8px;
+    background: var(--oboard-sidebar-panel-bg);
+  }
+
+  .oboard-favorites-mode-switcher button {
+    height: 32px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--dark-2);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 590;
+    line-height: 20px;
+    cursor: pointer;
+  }
+
+  .oboard-favorites-mode-switcher button.is-active {
+    background: var(--white-color);
+    box-shadow: 0 3px 5px rgba(9, 30, 66, 0.2), 0 0 1px rgba(9, 30, 66, 0.31);
+  }
+
   .oboard-nav-section-favorites {
     position: relative;
     z-index: 1;
@@ -2479,7 +2508,8 @@ img.ProseMirror-separator {
     flex: 1 1 auto;
     min-height: 0;
     margin-top: 4px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .oboard-favorites-list .amni-Item {
@@ -2686,6 +2716,94 @@ img.ProseMirror-separator {
     box-shadow: 0 8px 20px rgba(var(--dark-2-rgb), 0.2);
   }
 
+  .oboard-favorites-picker-search {
+    display: flex;
+    height: 32px;
+    align-items: center;
+    gap: 6px;
+    margin: 12px 12px 8px;
+    padding: 0 8px;
+    border: 2px solid var(--grey-2-next);
+    border-radius: 6px;
+    color: var(--dark-2);
+  }
+
+  .oboard-favorites-picker-search:focus-within {
+    border-color: var(--primary-color-next);
+  }
+
+  .oboard-favorites-picker-search .svg-icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+  }
+
+  .oboard-favorites-picker-search input {
+    min-width: 0;
+    flex: 1 1 auto;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--dark-1);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .oboard-favorites-picker-options {
+    padding: 0 4px 4px;
+  }
+
+  .oboard-favorites-picker-choice {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--dark-2);
+    font: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .oboard-favorites-picker-choice:hover,
+  .oboard-favorites-picker-choice.is-selected {
+    background: var(--grey-3-next);
+  }
+
+  .oboard-favorites-picker-choice[hidden] {
+    display: none;
+  }
+
+  .oboard-favorites-picker-choice .oboard-favorites-section-icon,
+  .oboard-favorite-user-avatar {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+
+  .oboard-favorite-user-item .amni-Item {
+    padding-left: 8px;
+  }
+
+  .oboard-favorite-user-avatar {
+    border-radius: 50%;
+    color: var(--white-color);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
   .oboard-favorites-picker-root,
   .oboard-favorites-picker-option {
     display: flex;
@@ -2842,6 +2960,11 @@ img.ProseMirror-separator {
     height: 16px;
   }
 
+  .oboard-favorites-section-icon .ti {
+    font-size: 16px;
+    line-height: 1;
+  }
+
   .oboard-favorites-section-icon .oboard-favorites-section-image {
     display: block;
     width: 24px;
@@ -2855,6 +2978,9 @@ img.ProseMirror-separator {
   .oboard-favorites-section-icon.is-orange { background: #fff0e5; color: var(--grade-medium-color-next); }
   .oboard-favorites-section-icon.is-rose { background: #ffe9ee; color: var(--grade-low-color-next); }
   .oboard-favorites-section-icon.is-teal { background: #e1f6f4; color: #1f8f87; }
+  .oboard-favorites-section-icon.is-qa,
+  .oboard-favorites-section-icon.is-sales { background: #ffece6; color: #c9372c; }
+  .oboard-favorites-section-icon.is-support { background: #e0f2f1; color: #0d9488; }
 
   .oboard-favorites-drag-handle .oboard-favorites-drag-icon {
     position: absolute;
@@ -7857,6 +7983,15 @@ img.ProseMirror-separator {
     const favoritesSection = document.createElement('div');
     favoritesSection.className = 'oboard-nav-section oboard-nav-section-favorites';
 
+    const favoritesModeSwitcher = document.createElement('div');
+    favoritesModeSwitcher.className = 'oboard-favorites-mode-switcher';
+    favoritesModeSwitcher.setAttribute('role', 'tablist');
+    favoritesModeSwitcher.setAttribute('aria-label', 'Favorites type');
+    favoritesModeSwitcher.innerHTML = [
+      '<button class="is-active" type="button" role="tab" aria-selected="true" data-favorite-mode="groups">Groups</button>',
+      '<button type="button" role="tab" aria-selected="false" data-favorite-mode="users">Users</button>'
+    ].join('');
+
     const favoritesTitle = document.createElement('li');
     favoritesTitle.className = 'amnl-List_Item oboard-favorites-title-row';
     favoritesTitle.innerHTML = '<span class="amni-Item amni-Item-default">' + svgIcon(FILLED, 'amni-Item_Icon') + '<span class="amni-Item_Text">Favorites</span></span>';
@@ -7875,6 +8010,7 @@ img.ProseMirror-separator {
     favoritesSection.appendChild(originalFavorites);
     favoritesSection.appendChild(favoritesAddMore);
     sections.appendChild(primarySection);
+    sections.appendChild(favoritesModeSwitcher);
     sections.appendChild(favoritesSection);
     nav.appendChild(sections);
     nav.classList.add('oboard-sidebar-sectioned');
@@ -8031,9 +8167,10 @@ img.ProseMirror-separator {
   }
   const removedObjectiveFavorites = new Set(Array.isArray(removedObjectiveFavoriteNames) ? removedObjectiveFavoriteNames : []);
   const objectiveFavoriteNames = Array.from(objectiveFavoriteTemplates.keys()).filter(name => !removedObjectiveFavorites.has(name));
-  const favoritePrototypeGroupNames = ['QA', 'Customer Support', 'Sales', 'Marketing', 'Engineering', 'Product', 'IT Operations'];
+  const favoritePrototypeGroupNames = ['QA', 'Customer Support', 'Sales'];
   const favoritePrototypeGroups = new Set(favoritePrototypeGroupNames);
   let favoriteOrder = [...favoritePrototypeGroupNames];
+  let favoriteMode = 'groups';
   const favoriteSectionTypes = ['objective', 'dashboard'];
   let favoriteSectionOrder = [...favoriteSectionTypes];
   let favoriteSectionSwitchTimer = null;
@@ -8044,11 +8181,15 @@ img.ProseMirror-separator {
   let selectedFavoritePickerName = '';
   let activeFavoriteActionsMenu = null;
   let favoriteActionsEventsBound = false;
-  const favoriteDepartmentOptions = [
-    { department: 'Marketing', dashboard: 'Website Traffic Analysis 2024', icon: 'assets/home-workspaces/marketing.png' },
-    { department: 'Engineering', dashboard: '2026 Trial dashboard', icon: 'assets/home-workspaces/engineering.png' },
-    { department: 'Product', dashboard: 'Revenue Forecasts Q3', icon: 'assets/home-workspaces/product.png' },
-    { department: 'IT Operations', dashboard: '7 Days deposit', icon: 'assets/home-workspaces/operations.png' }
+  const favoriteGroupPickerOptions = ['QA', 'Customer Support', 'Sales', 'Marketing', 'Engineering', 'Product', 'IT Operations'];
+  const favoriteUsers = [
+    { name: 'John Doe', initials: 'JD', color: '#206a83' },
+    { name: 'Don Salomon', initials: 'DS', color: '#3d4351' },
+    { name: 'Ben Hodges', initials: 'BH', color: '#0c66e4' },
+    { name: 'Keller Jannis', initials: 'KJ', color: '#1f845a' },
+    { name: 'Martine Graziano', initials: 'MG', color: '#8250df' },
+    { name: 'Viktor Klein', initials: 'VK', color: '#5e4db2' },
+    { name: 'Leo Jones', initials: 'LJ', color: '#206a83' }
   ];
   let tableSortable = null;
   let favoriteSortable = null;
@@ -8135,13 +8276,13 @@ img.ProseMirror-separator {
   };
 
   const favoriteGroupVisuals = {
+    QA: { tablerIcon: 'ti-zoom-scan', tone: 'qa' },
+    'Customer Support': { tablerIcon: 'ti-headset', tone: 'support' },
+    Sales: { tablerIcon: 'ti-users', tone: 'sales' },
     Marketing: { image: 'assets/home-workspaces/marketing.png' },
     Engineering: { image: 'assets/home-workspaces/engineering.png' },
     Product: { image: 'assets/home-workspaces/product.png' },
-    'IT Operations': { image: 'assets/home-workspaces/operations.png' },
-    QA: { icon: 'icon-bug', tone: 'rose' },
-    'Customer Support': { icon: 'icon-menu-support', tone: 'teal' },
-    Sales: { icon: 'icon-users', tone: 'orange' }
+    'IT Operations': { image: 'assets/home-workspaces/operations.png' }
   };
 
   function favoriteVisual(name, type) {
@@ -8151,6 +8292,7 @@ img.ProseMirror-separator {
   }
 
   function favoriteVisualMarkup(visual) {
+    if (visual.tablerIcon) return '<i class="ti ' + visual.tablerIcon + '" aria-hidden="true"></i>';
     if (visual.image) return '<img class="oboard-favorites-section-image" src="' + visual.image + '" alt="">';
     return svgIcon(visual.icon);
   }
@@ -8473,22 +8615,30 @@ img.ProseMirror-separator {
     document.querySelector('.oboard-favorites-add-more')?.setAttribute('aria-expanded', 'false');
   }
 
+  function favoritePickerItemMarkup(name) {
+    if (favoriteMode === 'users') {
+      const user = favoriteUsers.find(item => item.name === name);
+      if (!user) return '';
+      return '<span class="oboard-favorite-user-avatar" style="background:' + user.color + '">' + user.initials + '</span>';
+    }
+    const visual = favoriteVisual(name, 'group');
+    return '<span class="oboard-favorites-section-icon' + (visual.image ? ' is-image' : ' is-' + visual.tone) + '">' + favoriteVisualMarkup(visual) + '</span>';
+  }
+
   function favoritePickerHtml() {
-    const options = favoriteDepartmentOptions.map(option => {
-      const selected = option.dashboard === selectedFavoritePickerName;
+    const names = favoriteMode === 'users' ? favoriteUsers.map(user => user.name) : favoriteGroupPickerOptions;
+    const options = names.map(name => {
+      const selected = favoriteMode === 'groups' && favoritePrototypeGroups.has(name);
       return [
-        '<button class="oboard-favorites-picker-option' + (selected ? ' is-selected' : '') + '" type="button" role="treeitem" aria-selected="' + selected + '" data-favorite-name="' + escapeHtml(option.dashboard) + '" data-department="' + escapeHtml(option.department) + '">',
-        '<img class="oboard-favorites-picker-department-icon" src="' + option.icon + '" alt="">',
-        '<span class="oboard-favorites-picker-department">' + escapeHtml(option.department) + '</span>',
+        '<button class="oboard-favorites-picker-choice' + (selected ? ' is-selected' : '') + '" type="button" role="option" aria-selected="' + selected + '" data-favorite-picker-name="' + escapeHtml(name) + '">',
+        favoritePickerItemMarkup(name),
+        '<span>' + escapeHtml(name) + '</span>',
         '</button>'
       ].join('');
     }).join('');
     return [
-      '<button class="oboard-favorites-picker-root' + (selectedFavoritePickerName === 'Some new Dashboard' ? ' is-selected' : '') + '" type="button" role="treeitem" aria-selected="' + String(selectedFavoritePickerName === 'Some new Dashboard') + '" data-favorite-name="Some new Dashboard">',
-      '<img class="oboard-favorites-picker-workspace-icon" src="assets/home-workspaces/workspace.png" alt="">',
-      '<span>Libertex</span>',
-      '</button>',
-      '<div class="oboard-favorites-picker-children" role="group">' + options + '</div>',
+      '<label class="oboard-favorites-picker-search">' + svgIcon('icon-search-next') + '<input type="search" autocomplete="off" placeholder="Search" aria-label="Search ' + (favoriteMode === 'users' ? 'users' : 'groups') + '"></label>',
+      '<div class="oboard-favorites-picker-options" role="listbox">' + options + '</div>',
     ].join('');
   }
 
@@ -8511,6 +8661,14 @@ img.ProseMirror-separator {
     document.body.appendChild(picker);
     button.setAttribute('aria-expanded', 'true');
     positionFavoritePicker(picker, button);
+    const search = picker.querySelector('input[type="search"]');
+    search?.addEventListener('input', () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      picker.querySelectorAll('[data-favorite-picker-name]').forEach(choice => {
+        choice.hidden = Boolean(query) && !choice.dataset.favoritePickerName.toLocaleLowerCase().includes(query);
+      });
+    });
+    requestAnimationFrame(() => search?.focus({ preventScroll: true }));
   }
 
   function initFavoritePicker() {
@@ -8528,23 +8686,17 @@ img.ProseMirror-separator {
     });
 
     document.addEventListener('click', event => {
-      const option = event.target.closest('.oboard-favorites-picker-option, .oboard-favorites-picker-root');
+      const option = event.target.closest('[data-favorite-picker-name]');
       if (option) {
-        const picker = option.closest('.oboard-favorites-picker');
-        picker.querySelectorAll('.oboard-favorites-picker-option, .oboard-favorites-picker-root').forEach(item => {
-          const selected = item === option;
-          item.classList.toggle('is-selected', selected);
-          item.setAttribute('aria-selected', String(selected));
-        });
-        selectedFavoritePickerName = option.dataset.favoriteName || '';
-        const dashboard = rowOrder.find(item => item.name === selectedFavoritePickerName);
-        if (dashboard && !dashboard.favorite) {
-          if (!favoriteOrder.includes(selectedFavoritePickerName)) favoriteOrder.push(selectedFavoritePickerName);
-          updateDashboardFavorite(selectedFavoritePickerName, true);
+        const name = option.dataset.favoritePickerName || '';
+        selectedFavoritePickerName = name;
+        if (favoriteMode === 'groups' && name) {
+          if (!favoriteOrder.includes(name)) favoriteOrder.push(name);
+          updateDashboardFavorite(name, true);
         }
         closeFavoritePicker();
         requestAnimationFrame(() => {
-          const addedItem = dashboardChildren?.querySelector('[data-dashboard-name="' + CSS.escape(selectedFavoritePickerName) + '"]');
+          const addedItem = dashboardChildren?.querySelector('[data-dashboard-name="' + CSS.escape(name) + '"]');
           addedItem?.scrollIntoView({ block: 'nearest' });
           addedItem?.classList.add('is-type-navigation-highlight');
           window.setTimeout(() => addedItem?.classList.remove('is-type-navigation-highlight'), 1300);
@@ -8797,9 +8949,52 @@ img.ProseMirror-separator {
     return groupedFavoriteNames();
   }
 
+  function renderFavoriteUsers() {
+    if (!dashboardChildren) return;
+    favoriteUsers.forEach(user => {
+      const item = document.createElement('li');
+      item.className = 'amnl-List_Item oboard-favorite-user-item';
+      item.dataset.favoriteUserName = user.name;
+      item.innerHTML = [
+        '<span class="amni-Item amni-Item-default">',
+        '<span class="oboard-favorite-user-avatar" style="background:' + user.color + '">' + user.initials + '</span>',
+        '<span class="amni-Item_Text">' + escapeHtml(user.name) + '</span>',
+        '</span>'
+      ].join('');
+      dashboardChildren.appendChild(item);
+    });
+  }
+
+  function setFavoriteMode(mode) {
+    favoriteMode = mode === 'users' ? 'users' : 'groups';
+    const switcher = document.querySelector('.oboard-favorites-mode-switcher');
+    switcher?.querySelectorAll('[data-favorite-mode]').forEach(button => {
+      const active = button.dataset.favoriteMode === favoriteMode;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+    closeFavoritePicker();
+    syncSidebar();
+  }
+
+  function initFavoriteModeSwitcher() {
+    const switcher = document.querySelector('.oboard-favorites-mode-switcher');
+    if (!switcher || switcher.dataset.oboardFavoriteModeReady === 'true') return;
+    switcher.dataset.oboardFavoriteModeReady = 'true';
+    switcher.addEventListener('click', event => {
+      const button = event.target.closest('[data-favorite-mode]');
+      if (!button) return;
+      setFavoriteMode(button.dataset.favoriteMode);
+    });
+  }
+
   function syncSidebar() {
     if (!dashboardChildren) return;
     dashboardChildren.innerHTML = '';
+    if (favoriteMode === 'users') {
+      renderFavoriteUsers();
+      return;
+    }
     renderFavoriteNames(sidebarNames());
     attachFavoriteDragHandlers();
     attachFavoritePreview();
@@ -12157,7 +12352,7 @@ img.ProseMirror-separator {
   function updateDashboardFavorite(name, favorite) {
     const item = rowOrder.find(row => row.name === name);
     if (!item) {
-      if (!favoritePrototypeGroupNames.includes(name)) return;
+      if (!favoriteGroupPickerOptions.includes(name)) return;
       if (favorite) favoritePrototypeGroups.add(name);
       else favoritePrototypeGroups.delete(name);
       favoriteOrder = favoriteOrder.filter(itemName => itemName !== name);
@@ -12190,6 +12385,7 @@ img.ProseMirror-separator {
   restoreFavoriteSectionOrder();
   restoreDashboardCollections();
   initWorkspacePopover();
+  initFavoriteModeSwitcher();
   initFavoritePicker();
   initDashboardCollectionColumn();
   renderDashboardFooter();
