@@ -8630,15 +8630,24 @@ img.ProseMirror-separator {
     const options = names.map(name => {
       const selected = favoriteMode === 'groups' && favoritePrototypeGroups.has(name);
       return [
-        '<button class="oboard-favorites-picker-choice' + (selected ? ' is-selected' : '') + '" type="button" role="option" aria-selected="' + selected + '" data-favorite-picker-name="' + escapeHtml(name) + '">',
+        '<button class="oboard-favorites-picker-choice' + (favoriteMode === 'groups' ? ' oboard-favorites-picker-option' : '') + (selected ? ' is-selected' : '') + '" type="button" role="option" aria-selected="' + selected + '" data-favorite-picker-name="' + escapeHtml(name) + '">',
         favoritePickerItemMarkup(name),
         '<span>' + escapeHtml(name) + '</span>',
         '</button>'
       ].join('');
     }).join('');
+    const list = favoriteMode === 'groups'
+      ? [
+        '<div class="oboard-favorites-picker-root" role="presentation">',
+        '<img class="oboard-favorites-picker-workspace-icon" src="assets/home-workspaces/workspace.png" alt="">',
+        '<span>Libertex</span>',
+        '</div>',
+        '<div class="oboard-favorites-picker-children" role="listbox">' + options + '</div>'
+      ].join('')
+      : '<div class="oboard-favorites-picker-options" role="listbox">' + options + '</div>';
     return [
       '<label class="oboard-favorites-picker-search">' + svgIcon('icon-search-next') + '<input type="search" autocomplete="off" placeholder="Search" aria-label="Search ' + (favoriteMode === 'users' ? 'users' : 'groups') + '"></label>',
-      '<div class="oboard-favorites-picker-options" role="listbox">' + options + '</div>',
+      list,
     ].join('');
   }
 
