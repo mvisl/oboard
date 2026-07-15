@@ -2795,9 +2795,14 @@ img.ProseMirror-separator {
     align-items: center;
     gap: 8px;
     box-sizing: border-box;
-    height: 40px !important;
-    min-height: 40px !important;
+    height: 32px !important;
+    min-height: 32px !important;
     padding: 0 32px 0 36px !important;
+    font: inherit;
+  }
+
+  .oboard-favorite-user-item .amni-Item_Text {
+    font: inherit;
   }
 
   .oboard-favorite-user-avatar {
@@ -10458,19 +10463,15 @@ img.ProseMirror-separator {
   function initFavoriteUserSortable() {
     if (!window.Sortable || !dashboardChildren) return;
     favoriteSortable?.destroy();
+    const favoriteUserSortableOptions = sortableBaseOptions(() => {
+      favoriteUserNames = Array.from(dashboardChildren.querySelectorAll(':scope > .oboard-favorite-user-item'))
+        .map(item => item.dataset.favoriteUserName)
+        .filter(Boolean);
+    }, event => event.item.getBoundingClientRect());
     favoriteSortable = window.Sortable.create(dashboardChildren, {
-      animation: 180,
-      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      ...favoriteUserSortableOptions,
       draggable: '.oboard-favorite-user-item',
       handle: '.oboard-favorites-drag-handle',
-      ghostClass: 'oboard-drag-ghost',
-      chosenClass: 'oboard-drag-chosen',
-      dragClass: 'oboard-dragging',
-      onEnd() {
-        favoriteUserNames = Array.from(dashboardChildren.querySelectorAll(':scope > .oboard-favorite-user-item'))
-          .map(item => item.dataset.favoriteUserName)
-          .filter(Boolean);
-      }
     });
   }
 
