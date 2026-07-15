@@ -2423,7 +2423,7 @@ img.ProseMirror-separator {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
-    margin: -4px -8px -4px;
+    margin: 0 -8px;
     padding: 4px;
     border-radius: 8px;
     background: var(--oboard-sidebar-panel-bg);
@@ -2464,10 +2464,7 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorites-title-row {
-    flex: 0 0 auto;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    display: none;
   }
 
   .oboard-favorites-title-row > .amni-Item {
@@ -2772,8 +2769,7 @@ img.ProseMirror-separator {
     cursor: pointer;
   }
 
-  .oboard-favorites-picker-choice:hover,
-  .oboard-favorites-picker-choice.is-selected {
+  .oboard-favorites-picker-choice:hover {
     background: var(--grey-3-next);
   }
 
@@ -2794,7 +2790,14 @@ img.ProseMirror-separator {
   }
 
   .oboard-favorite-user-item .amni-Item {
-    padding-left: 8px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 32px 0 36px !important;
   }
 
   .oboard-favorite-user-avatar {
@@ -2955,6 +2958,12 @@ img.ProseMirror-separator {
     transition: opacity 120ms ease;
   }
 
+  .oboard-favorites-drag-handle .oboard-favorite-user-avatar {
+    position: absolute;
+    inset: 0;
+    transition: opacity 120ms ease;
+  }
+
   .oboard-favorites-section-icon .svg-icon {
     width: 16px;
     height: 16px;
@@ -3002,6 +3011,12 @@ img.ProseMirror-separator {
   .oboard-favorites-list .amnl-List_Item:hover .oboard-favorites-section-icon,
   .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorites-section-icon,
   .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorites-section-icon {
+    opacity: 0;
+  }
+
+  .oboard-favorites-list .amnl-List_Item:hover .oboard-favorite-user-avatar,
+  .oboard-favorites-list .amnl-List_Item:focus-within .oboard-favorite-user-avatar,
+  .oboard-favorites-list .amnl-List_Item.oboard-dragging .oboard-favorite-user-avatar {
     opacity: 0;
   }
 
@@ -8191,6 +8206,7 @@ img.ProseMirror-separator {
     { name: 'Viktor Klein', initials: 'VK', color: '#5e4db2' },
     { name: 'Leo Jones', initials: 'LJ', color: '#206a83' }
   ];
+  let favoriteUserNames = favoriteUsers.slice(0, 3).map(user => user.name);
   let tableSortable = null;
   let favoriteSortable = null;
   let groupedSortable = null;
@@ -8302,6 +8318,15 @@ img.ProseMirror-separator {
     const handle = createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite item');
     handle.innerHTML = [
       '<span class="oboard-favorites-section-icon' + (visual.image ? ' is-image' : ' is-' + visual.tone) + '">' + favoriteVisualMarkup(visual) + '</span>',
+      '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
+    ].join('');
+    return handle;
+  }
+
+  function createFavoriteUserDragHandle(user) {
+    const handle = createDragHandle('oboard-favorites-drag-handle', 'Reorder favorite user');
+    handle.innerHTML = [
+      '<span class="oboard-favorite-user-avatar" style="background:' + user.color + '">' + user.initials + '</span>',
       '<svg data-target-id="' + DRAG + '" height="24" width="24" aria-hidden="true" class="svg-icon ai-Icon oboard-favorites-drag-icon"><use xlink:href="#' + DRAG + '" href="#' + DRAG + '"></use></svg>'
     ].join('');
     return handle;
@@ -8628,9 +8653,8 @@ img.ProseMirror-separator {
   function favoritePickerHtml() {
     const names = favoriteMode === 'users' ? favoriteUsers.map(user => user.name) : favoriteGroupPickerOptions;
     const options = names.map(name => {
-      const selected = favoriteMode === 'groups' && favoritePrototypeGroups.has(name);
       return [
-        '<button class="oboard-favorites-picker-choice' + (favoriteMode === 'groups' ? ' oboard-favorites-picker-option' : '') + (selected ? ' is-selected' : '') + '" type="button" role="option" aria-selected="' + selected + '" data-favorite-picker-name="' + escapeHtml(name) + '">',
+        '<button class="oboard-favorites-picker-choice' + (favoriteMode === 'groups' ? ' oboard-favorites-picker-option' : '') + '" type="button" role="option" aria-selected="false" data-favorite-picker-name="' + escapeHtml(name) + '">',
         favoritePickerItemMarkup(name),
         '<span>' + escapeHtml(name) + '</span>',
         '</button>'
@@ -8702,6 +8726,10 @@ img.ProseMirror-separator {
         if (favoriteMode === 'groups' && name) {
           if (!favoriteOrder.includes(name)) favoriteOrder.push(name);
           updateDashboardFavorite(name, true);
+        }
+        if (favoriteMode === 'users' && name && !favoriteUserNames.includes(name)) {
+          favoriteUserNames.push(name);
+          syncSidebar();
         }
         closeFavoritePicker();
         requestAnimationFrame(() => {
@@ -8918,6 +8946,13 @@ img.ProseMirror-separator {
     syncSidebar();
   }
 
+  function removeFavoriteUser(name) {
+    const index = favoriteUserNames.indexOf(name);
+    if (index < 0) return;
+    favoriteUserNames.splice(index, 1);
+    syncSidebar();
+  }
+
   function bindFavoriteActionsEvents() {
     if (favoriteActionsEventsBound) return;
     favoriteActionsEventsBound = true;
@@ -8942,6 +8977,7 @@ img.ProseMirror-separator {
         if (actionName === 'rename') startFavoriteRename(name);
         if (actionName === 'remove' && type === 'objective') removeObjectiveFavorite(name);
         if (actionName === 'remove' && type === 'dashboard') updateDashboardFavorite(name, false);
+        if (actionName === 'remove' && type === 'user') removeFavoriteUser(name);
         return;
       }
 
@@ -8960,22 +8996,36 @@ img.ProseMirror-separator {
 
   function renderFavoriteUsers() {
     if (!dashboardChildren) return;
-    favoriteUsers.forEach(user => {
+    favoriteUserNames.map(name => favoriteUsers.find(user => user.name === name)).filter(Boolean).forEach(user => {
       const item = document.createElement('li');
       item.className = 'amnl-List_Item oboard-favorite-user-item';
       item.dataset.favoriteUserName = user.name;
+      item.dataset.dashboardName = user.name;
       item.innerHTML = [
         '<span class="amni-Item amni-Item-default">',
-        '<span class="oboard-favorite-user-avatar" style="background:' + user.color + '">' + user.initials + '</span>',
         '<span class="amni-Item_Text">' + escapeHtml(user.name) + '</span>',
         '</span>'
       ].join('');
+      const content = item.querySelector('.amni-Item');
+      content?.prepend(createFavoriteUserDragHandle(user));
+      const actionsButton = document.createElement('button');
+      actionsButton.type = 'button';
+      actionsButton.className = 'oboard-favorites-actions-trigger';
+      actionsButton.dataset.favoriteActionsName = user.name;
+      actionsButton.dataset.favoriteActionsType = 'user';
+      actionsButton.setAttribute('aria-label', 'Actions for ' + user.name);
+      actionsButton.setAttribute('aria-haspopup', 'menu');
+      actionsButton.setAttribute('aria-expanded', 'false');
+      actionsButton.innerHTML = svgIcon('icon-more');
+      item.appendChild(actionsButton);
       dashboardChildren.appendChild(item);
     });
   }
 
   function setFavoriteMode(mode) {
     favoriteMode = mode === 'users' ? 'users' : 'groups';
+    favoriteSortable?.destroy();
+    favoriteSortable = null;
     const switcher = document.querySelector('.oboard-favorites-mode-switcher');
     switcher?.querySelectorAll('[data-favorite-mode]').forEach(button => {
       const active = button.dataset.favoriteMode === favoriteMode;
@@ -9002,6 +9052,8 @@ img.ProseMirror-separator {
     dashboardChildren.innerHTML = '';
     if (favoriteMode === 'users') {
       renderFavoriteUsers();
+      bindFavoriteActionsEvents();
+      initFavoriteUserSortable();
       return;
     }
     renderFavoriteNames(sidebarNames());
@@ -10399,6 +10451,25 @@ img.ProseMirror-separator {
       onEnd(event) {
         clearFavoriteSectionSwitchTimer();
         baseFavoriteOnEnd(event);
+      }
+    });
+  }
+
+  function initFavoriteUserSortable() {
+    if (!window.Sortable || !dashboardChildren) return;
+    favoriteSortable?.destroy();
+    favoriteSortable = window.Sortable.create(dashboardChildren, {
+      animation: 180,
+      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      draggable: '.oboard-favorite-user-item',
+      handle: '.oboard-favorites-drag-handle',
+      ghostClass: 'oboard-drag-ghost',
+      chosenClass: 'oboard-drag-chosen',
+      dragClass: 'oboard-dragging',
+      onEnd() {
+        favoriteUserNames = Array.from(dashboardChildren.querySelectorAll(':scope > .oboard-favorite-user-item'))
+          .map(item => item.dataset.favoriteUserName)
+          .filter(Boolean);
       }
     });
   }
