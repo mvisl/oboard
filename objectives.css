@@ -1,0 +1,25 @@
+:root{--surface:#f9fafb;--border:#e3e7ee;--brand:#0052cc;--scale:1}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.prototype{width:1440px;margin:0 auto;display:flex;align-items:flex-start;min-height:1090px;zoom:var(--scale)}
+.navigation{width:472px;height:1090px;position:sticky;top:0;overflow:hidden;flex:none}
+.navigation>img{display:block;max-width:none}
+main{width:968px;flex:none}
+.top-reference{height:354px;overflow:hidden;position:relative}
+.top-reference>img,.lower-reference>img{position:absolute;left:0;display:block;max-width:none;pointer-events:none;user-select:none}
+.top-reference>img{top:0;left:-472px}
+#objectives{display:block;appearance:none;position:relative;width:904px;height:267px;margin:0 32px;padding:0;border:0;border-radius:12px;background:var(--surface);overflow:hidden;cursor:pointer;transition:height .3s ease-out;text-align:left}
+#objectives:focus-visible{outline:3px solid var(--brand);outline-offset:4px}
+#objectives[aria-expanded=false]{height:56px;box-shadow:inset 0 0 0 1px var(--border)}
+.objectives-header{position:absolute;left:0;right:0;top:0;height:56px;overflow:hidden;pointer-events:none}
+.objectives-header>img{display:block;width:904px;height:267px;max-width:none}
+.chevron-cover{position:absolute;left:16px;top:18px;width:20px;height:20px;background:var(--surface);pointer-events:none}
+.section-chevron{display:block;transition:transform .3s ease-out}
+#objectives[aria-expanded=false] .section-chevron{transform:rotate(-90deg)}
+.collapse-body{position:absolute;top:56px;left:0;width:904px;height:211px;overflow:hidden;opacity:1;transition:opacity .3s ease-out;pointer-events:none}
+.collapse-body>img{position:absolute;left:0;top:-56px;width:904px;height:267px;display:block;max-width:none}
+#objectives[aria-expanded=false] .collapse-body{opacity:0}
+#objectives[aria-expanded=false]:after{content:"";position:absolute;inset:0;border:1px solid var(--border);border-radius:12px;pointer-events:none}
+.lower-reference{height:616px;position:relative;overflow:hidden;margin-top:16px}
+.lower-reference>img{top:-637px}
+@media(prefers-reduced-motion:reduce){#objectives,.section-chevron,.collapse-body{transition:none}}
