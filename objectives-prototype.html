@@ -6,29 +6,34 @@
   <title>Oboard — Objectives prototype</title>
   <meta name="description" content="Exact Figma Home V19 prototype. Click Objectives to expand or collapse the overview.">
   <link rel="icon" href="objectives-assets/3320-19846-imgGroup5422.svg">
-  <link rel="stylesheet" href="objectives.css">
+  <link rel="stylesheet" href="objectives.css?v=2">
 </head>
 <body>
   <div class="prototype">
-    <aside class="navigation" aria-label="Oboard navigation — static prototype reference">
-      <img src="objectives-assets/reference-screen.png" width="1440" height="1090" alt="Oboard. Product workspace. Home selected. Groups: Engineering, Oboard, Product, Marketing, Sales, Support, Operations.">
-    </aside>
-    <main>
+    <nav class="navigation" aria-label="Oboard navigation — static prototype reference">
+      <aside class="main-menu" aria-label="Main menu">
+        <div class="menu-top"><img src="objectives-assets/reference-screen.png" srcset="objectives-assets/reference-screen@2x.png 2x" width="1440" height="1090" alt="Oboard. Product workspace. Home, Check-ins, Objectives, Reports."></div>
+        <div class="menu-footer"><img src="objectives-assets/reference-screen.png" srcset="objectives-assets/reference-screen@2x.png 2x" width="1440" height="1090" alt="Profile, notifications, flag, help and settings."></div>
+      </aside>
+      <aside class="groups-sidebar" aria-label="Groups">
+        <div class="groups-top"><img src="objectives-assets/reference-screen.png" srcset="objectives-assets/reference-screen@2x.png 2x" width="1440" height="1090" alt="Groups: Engineering, Oboard, Product, Marketing, Sales, Support, Operations."></div>
+      </aside>
+    </nav>
+    <main id="main-content" aria-label="Home content" tabindex="-1">
       <div class="top-reference" aria-label="Hello, John! Company wide, Q4 2025. John Doe, Engineering Manager. Average progress 52%. Objectives tab.">
-        <img src="objectives-assets/reference-screen.png" width="1440" height="1090" alt="">
+        <img src="objectives-assets/reference-screen.png" srcset="objectives-assets/reference-screen@2x.png 2x" width="1440" height="1090" alt="">
       </div>
-      <button type="button" id="objectives" aria-label="Objectives" aria-expanded="true" aria-controls="objectives-body">
-        <span class="objectives-header" aria-hidden="true"><img src="objectives-assets/reference-objectives.png" width="904" height="267" alt=""></span>
-        <span class="chevron-cover" aria-hidden="true"><img class="section-chevron" src="objectives-assets/3320-25894-imgChevron.svg" width="20" height="20" alt=""></span>
-        <span id="objectives-body" class="collapse-body" aria-hidden="false">
-          <img src="objectives-assets/reference-objectives.png" width="904" height="267" alt="AN-1 Improve product data reliability, 70%. KR-1 Reduce data errors in reports to less than 1%, 60%. KR-2 Automate 80% of weekly reporting tasks, 75%. AN-2 Strengthen analytics infrastructure, 70%. Owner John Doe.">
-        </span>
-      </button>
+      <section id="objectives" data-expanded="true" aria-labelledby="objectives-label">
+        <h2><button id="objectives-toggle" type="button" aria-expanded="true" aria-controls="objectives-body"><span class="section-title"><img class="icon section-chevron" src="objectives-assets/3320-25894-imgChevron.svg" width="24" height="24" alt=""><img class="icon " src="objectives-assets/3320-25894-imgTarget.svg" width="24" height="24" alt=""><span id="objectives-label">Objectives</span></span><span class="section-stats"><span class="progress" role="meter" aria-label="Objectives progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="57"><span></span></span><span class="progress-values"><span>57%</span><span>+2%</span></span></span></button></h2>
+        <div id="objectives-body" class="collapse-body" aria-hidden="false">
+          <table aria-label="Objectives overview"><thead><tr><th scope="col">Objective / Metric</th><th scope="col">Status</th><th scope="col">Owner</th><th scope="col">Last Check-in</th></tr></thead><tbody><tr class="objective-row"><td class="objective-label"><span class="label-content"><img class="icon " src="objectives-assets/3320-25894-imgIcons.svg" width="24" height="24" alt=""><span class="type-badge objective-badge">C</span><span class="item-copy"><b>AN-1</b> Improve product data reliability</span></span></td><td class="status"><strong>70%</strong></td><td class="owner"><span class="avatar" aria-label="John Doe">JD</span></td><td class="check-in"><img class="icon " src="objectives-assets/3320-25894-imgIconLeftMenu.svg" width="24" height="24" alt=""><span>3 weeks ago</span></td></tr><tr class="key-result-row"><td class="objective-label"><span class="label-content"><span class="type-badge kr-badge">KR</span><span class="item-copy"><b>KR-1</b> Reduce data errors in reports to &lt; 1%</span></span></td><td class="status"><strong>60%</strong><span class="weight">× 1<img class="icon " src="objectives-assets/3320-25894-imgIconWeight.svg" width="24" height="24" alt=""></span></td><td class="owner"><span class="avatar" aria-label="John Doe">JD</span></td><td class="check-in"><img class="icon " src="objectives-assets/3320-25894-imgIconLeftMenu.svg" width="24" height="24" alt=""><span>2 weeks ago</span></td></tr><tr class="key-result-row"><td class="objective-label"><span class="label-content"><span class="type-badge kr-badge">KR</span><span class="item-copy"><b>KR-2</b> Automate 80% of weekly reporting tasks</span></span></td><td class="status"><strong>75%</strong><span class="weight">× 1<img class="icon " src="objectives-assets/3320-25894-imgIconWeight.svg" width="24" height="24" alt=""></span></td><td class="owner"><span class="avatar" aria-label="John Doe">JD</span></td><td class="check-in"><img class="icon " src="objectives-assets/3320-25894-imgIconLeftMenu.svg" width="24" height="24" alt=""><span>Yesterday</span></td></tr><tr class="objective-row"><td class="objective-label"><span class="label-content"><img class="icon " src="objectives-assets/3320-25894-imgIcons1.svg" width="24" height="24" alt=""><span class="type-badge objective-badge">C</span><span class="item-copy"><b>AN-2</b> Strengthen analytics infrastructure</span></span></td><td class="status"><strong>70%</strong></td><td class="owner"><span class="avatar" aria-label="John Doe">JD</span></td><td class="check-in"><img class="icon " src="objectives-assets/3320-25894-imgIconLeftMenu.svg" width="24" height="24" alt=""><span>3 weeks ago</span></td></tr></tbody></table>
+        </div>
+      </section>
       <div class="lower-reference" id="metrics" aria-label="Metrics, Metrics KPI period view and Stakeholder — static prototype reference">
-        <img src="objectives-assets/reference-main.png" width="968" height="1253" alt="">
+        <img src="objectives-assets/reference-main.png" srcset="objectives-assets/reference-main@2x.png 2x" width="968" height="1253" alt="">
       </div>
     </main>
   </div>
-  <script src="objectives.js"></script>
+  <script src="objectives.js?v=2"></script>
 </body>
 </html>
