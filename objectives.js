@@ -16,6 +16,7 @@ objectives.addEventListener('click', () => {
 function fitPrototype() {
   const scale = Math.min(1, window.innerWidth / 1440);
   document.documentElement.style.setProperty('--scale', scale);
+  document.documentElement.style.setProperty('--viewport-width', `${window.innerWidth / scale}px`);
   document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight / scale}px`);
 }
 fitPrototype();
