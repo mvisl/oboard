@@ -2,55 +2,43 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OBoard — Strategic context</title>
 <style>
-  :root{--ink:#090e20;--text:#142246;--muted:#65738f;--blue:#1268f3;--line:#dbe6f6;--soft:#eef5ff;--soft-2:#f7faff}
-  *{box-sizing:border-box} body{margin:0;background:#fff;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-  .page{width:min(1440px,100%);margin:0 auto;padding:64px 48px 72px}.eyebrow{margin:0 0 22px;text-align:center;color:var(--blue);font-size:13px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.title{max-width:1080px;margin:0 auto 12px;text-align:center;font-size:clamp(46px,5.1vw,70px);letter-spacing:-.055em;line-height:1.01}.title span{color:var(--blue)}.lede{margin:0 auto 38px;text-align:center;color:var(--muted);font-size:22px;line-height:1.35}
-  .comparison{border:1px solid #cfe0fa;border-radius:22px;background:linear-gradient(135deg,#f7fbff,#edf5ff);padding:28px;box-shadow:0 18px 48px rgba(46,97,171,.07)}
-  .prompt{height:72px;display:flex;align-items:center;gap:16px;border:1px solid #d6e5fa;border-radius:15px;background:#fff;padding:0 18px;font-size:20px;font-weight:680;letter-spacing:-.02em}.spark{display:grid;place-items:center;width:42px;height:42px;border-radius:11px;background:#e8f1ff;color:var(--blue);font-size:28px;line-height:1}
-  .context{display:grid;grid-template-columns:repeat(3,1fr);margin:16px 0;background:#fff;border-radius:14px;min-height:64px;align-items:center}.signal{min-width:0;display:flex;justify-content:center;align-items:center;gap:11px;padding:0 22px;color:#233d70;font-size:17px;font-weight:620;text-align:center}.signal+.signal{border-left:1px solid #dce6f5}.signal b{color:var(--blue);font-size:24px;line-height:1}.signal span{white-space:nowrap}
-  .lists{display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border-radius:16px;background:#fff}.list{padding:22px 20px 18px;min-width:0}.list+ .list{border-left:1px solid #d6e4f7}.list h2{margin:0;color:#657596;font-size:14px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}.list.with h2{color:var(--blue)}.rule{margin:5px 0 16px;color:var(--muted);font-size:16px}.head,.row{display:grid;grid-template-columns:54px minmax(0,1fr) 126px;align-items:center;column-gap:10px}.head{min-height:31px;color:#6b7b99;font-size:13px;font-weight:700}.head span:last-child{text-align:right}.row{min-height:70px;border-top:1px solid #e3ebf7;font-size:17px}.row.key{background:#f1f7ff;border-radius:11px;border-top:0;margin:0 -6px;padding:0 6px}.rank{font-size:17px;font-weight:800;color:#344a77}.row.key .rank{color:var(--blue)}.item{min-width:0;font-weight:650;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{color:#697b9e;font-size:14px;white-space:nowrap;text-align:right}.moved{display:inline-block;margin-left:8px;border-radius:999px;background:#deebff;padding:3px 7px;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:0;vertical-align:middle}.quiet{color:#6d7c99}.footer{margin:26px 0 0;text-align:center;color:#61749b;font-size:17px}.footer b{color:#193c83}
-  @media(max-width:800px){.page{padding:42px 18px}.title{font-size:42px}.lede{font-size:18px}.comparison{padding:16px}.context{grid-template-columns:1fr}.signal{justify-content:flex-start;min-height:52px;border-left:0!important}.signal+.signal{border-top:1px solid #dce6f5}.lists{grid-template-columns:1fr}.list+.list{border-top:1px solid #d6e4f7;border-left:0}.signal span{white-space:normal}.meta{font-size:12px}.head,.row{grid-template-columns:42px minmax(0,1fr) 94px}}
+:root{--ink:#09112a;--muted:#68789a;--blue:#1268f3;--line:#cfe0f8;--soft:#f6faff;--u:8px}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.page{width:min(1392px,100%);margin:auto;padding:64px 56px 72px}.title{margin:0;text-align:center;font-size:clamp(48px,5vw,68px);line-height:1.02;letter-spacing:-.055em}.title span{color:var(--blue)}.lede{margin:16px 0 40px;text-align:center;color:var(--muted);font-size:23px;line-height:1.35;letter-spacing:-.02em}
+.prompt{height:80px;display:flex;align-items:center;gap:16px;padding:16px 24px;border:1px solid var(--line);border-radius:16px;font-size:22px;font-weight:650;letter-spacing:-.025em}.spark{display:grid;place-items:center;width:48px;height:48px;flex:none;border-radius:12px;background:#e8f2ff;color:var(--blue);font-size:30px}
+.stage{position:relative;margin-top:32px;min-height:488px;padding:32px;border:1px solid var(--line);border-radius:24px;background:#fff;overflow:hidden}.labels{position:relative;z-index:2;display:grid;grid-template-columns:46% 1fr;margin:0 0 24px;color:var(--muted);font-size:14px;line-height:1.2;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.labels span:last-child{padding-left:24px}
+.layout{position:relative;z-index:2;display:grid;grid-template-columns:34% 18% 48%;align-items:start}.signals{display:grid;gap:16px}.signal{min-height:88px;display:flex;align-items:center;gap:16px;padding:16px;border-radius:16px;background:var(--soft);font-size:20px;font-weight:620;line-height:1.25;letter-spacing:-.025em}.iconbox{width:48px;height:48px;display:grid;place-items:center;flex:none;border-radius:12px;background:#e7f1ff;color:var(--blue)}.iconbox img,.iconbox svg{width:26px;height:26px}.iconbox img{filter:invert(33%) sepia(88%) saturate(2896%) hue-rotate(208deg) brightness(98%) contrast(94%)}
+.flow{position:absolute;z-index:1;left:calc(34% - 5px);top:80px;width:20%;height:280px;pointer-events:none;overflow:visible}.flow path{fill:none;stroke:#b7d4ff;stroke-width:1.65;stroke-linecap:round}.flow circle{fill:var(--blue)}
+.decision{grid-column:3;min-width:0}.choice{min-height:168px;display:flex;align-items:center;gap:24px;padding:16px 24px 16px 16px;border-radius:16px;background:linear-gradient(110deg,#f0f7ff,#f8fbff)}.rank{width:112px;height:112px;display:grid;place-items:center;flex:none;border-radius:12px;background:var(--blue);color:#fff;font-size:44px;font-weight:800;letter-spacing:-.055em;box-shadow:0 8px 20px rgba(18,104,243,.18)}.choice h2{margin:0 0 8px;font-size:clamp(26px,2.4vw,34px);line-height:1.05;letter-spacing:-.045em}.choice p{margin:0;max-width:540px;color:#6d7fa3;font-size:20px;line-height:1.35}.provenance{margin-top:32px}.provenance h3{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.2;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.provenance p{margin:4px 0;color:var(--muted);font-size:20px;line-height:1.35;letter-spacing:-.02em}.provenance b{color:var(--blue)}.principle{margin:40px 0 0;text-align:center;color:var(--muted);font-size:19px}.principle b{color:#294783}
+@media(max-width:850px){.page{padding:40px 20px}.lede{font-size:18px}.stage{padding:24px 16px}.labels{grid-template-columns:1fr}.labels span:last-child{display:none}.layout{grid-template-columns:1fr}.flow{display:none}.decision{grid-column:auto;margin-top:24px}.signal{min-height:72px;font-size:16px}.choice{gap:16px}.rank{width:80px;height:80px;font-size:32px}.choice h2{font-size:23px}.choice p,.provenance p{font-size:16px}}
+.page-switcher{position:fixed;z-index:20;right:18px;top:50%;display:grid;gap:6px;transform:translateY(-50%);padding:6px;border:1px solid #dbe7f8;border-radius:12px;background:rgba(255,255,255,.84);box-shadow:0 8px 24px rgba(20,51,97,.10);backdrop-filter:blur(8px)}.page-switcher a{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#62708a;font-size:12px;font-weight:800;text-decoration:none}.page-switcher a:hover{background:#eaf2ff;color:#1268f3}.page-switcher a[aria-current="page"]{background:#1268f3;color:#fff}
 </style>
 </head>
 <body>
-  <main class="page">
-    <p class="eyebrow">Strategic context layer</p>
-    <h1 class="title">The same backlog. <span>A better answer.</span></h1>
-    <p class="lede">One prompt. The priority changes when strategy is clear.</p>
-
-    <section class="comparison" aria-label="How strategic context changes backlog priority">
-      <div class="prompt"><span class="spark" aria-hidden="true">✦</span>Prioritize the backlog for next quarter.</div>
-      <div class="context" aria-label="Strategic context the AI uses">
-        <div class="signal"><b aria-hidden="true">◎</b><span>Enterprise expansion</span></div>
-        <div class="signal"><b aria-hidden="true">⚑</b><span>KR: 500+ seat customers</span></div>
-        <div class="signal"><b aria-hidden="true">▥</b><span>4 of 6 trials blocked by security review</span></div>
+<main class="page">
+  <h1 class="title">A decision you can <span>explain.</span></h1>
+  <p class="lede">Strategic context changes the priority — and shows why.</p>
+  <div class="prompt"><span class="spark" aria-hidden="true">✦</span><span>Prioritize next quarter’s backlog.</span></div>
+  <section class="stage" aria-label="Strategic context informed priority decision">
+    <div class="labels"><span>What the agent saw</span><span>The decision</span></div>
+    <svg class="flow" viewBox="0 0 300 280" preserveAspectRatio="none" aria-hidden="true"><path d="M0 42 C104 42,116 140,269 140"/><path d="M0 140 C118 140,137 140,269 140"/><path d="M0 238 C104 238,116 140,269 140"/><circle cx="273" cy="140" r="5"/></svg>
+    <div class="layout">
+      <div class="signals">
+        <div class="signal"><span class="iconbox"><img src="../../published-prototype/objectives-assets/3320-25894-imgTarget.svg" alt=""></span><span>Enterprise expansion</span></div>
+        <div class="signal"><span class="iconbox"><img src="figma-product/icons/strategy.svg" alt=""></span><span>500+ seat customer goal</span></div>
+        <div class="signal"><span class="iconbox"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.5c-2.7 0-4.7.02-6.1.14-1.35.1-1.93.32-2.29.58-.3.22-.55.58-.69 1.48C2.77 6.64 2.8 7.91 2.8 9.77c0 4.08 2.29 6.77 4.74 8.45A16 16 0 0 0 12 20.5a16 16 0 0 0 4.46-2.28c2.45-1.68 4.74-4.37 4.74-8.45 0-1.86.03-3.13-.12-4.07-.14-.9-.39-1.26-.69-1.48-.36-.26-.94-.48-2.29-.58-1.4-.12-3.4-.14-6.1-.14Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m8.4 11.8 2.15 2.1 4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>4 of 6 trials blocked by security review</span></div>
       </div>
-
-      <div class="lists">
-        <section class="list" aria-labelledby="without">
-          <h2 id="without">Without AI context</h2>
-          <p class="rule">Votes + delivery effort</p>
-          <div class="head"><span>#</span><span>Initiative</span><span>Votes · effort</span></div>
-          <div class="row key"><span class="rank">#1</span><span class="item">Bulk CSV export</span><span class="meta">22 · 2 days</span></div>
-          <div class="row"><span class="rank">#2</span><span class="item">Advanced admin controls</span><span class="meta">18 · 5 days</span></div>
-          <div class="row"><span class="rank">#3</span><span class="item">API rate limits</span><span class="meta">16 · 3 days</span></div>
-          <div class="row"><span class="rank">#9</span><span class="item">SCIM provisioning + audit logs</span><span class="meta">9 · 7 days</span></div>
-        </section>
-        <section class="list with" aria-labelledby="with">
-          <h2 id="with">With AI strategic context</h2>
-          <p class="rule">Strategy + customer signal</p>
-          <div class="head"><span>#</span><span>Initiative</span><span>Votes · effort</span></div>
-          <div class="row key"><span class="rank">#1</span><span class="item">SCIM provisioning + audit logs <i class="moved">from #9</i></span><span class="meta">9 · 7 days</span></div>
-          <div class="row"><span class="rank">#2</span><span class="item">SSO (SAML)</span><span class="meta">14 · 6 days</span></div>
-          <div class="row"><span class="rank">#3</span><span class="item">Advanced admin controls</span><span class="meta">12 · 5 days</span></div>
-          <div class="row"><span class="rank quiet">#9</span><span class="item quiet">Bulk CSV export <i class="moved">from #1</i></span><span class="meta">22 · 2 days</span></div>
-        </section>
+      <div class="decision">
+        <div class="choice"><div class="rank">#1</div><div><h2>SCIM provisioning + audit logs</h2><p>Unblocks the security review holding back enterprise trials.</p></div></div>
+        <div class="provenance"><h3>Provenance</h3><p>Before context: <b>#9</b></p><p>Without context, Bulk CSV export was <b>#1</b>.</p></div>
       </div>
-    </section>
-    <p class="footer"><b>Enterprise readiness</b> over feature breadth.</p>
-  </main>
+    </div>
+  </section>
+  <p class="principle"><b>Enterprise readiness</b> over feature breadth.</p>
+ </main>
+<nav class="page-switcher" aria-label="OBoard prototypes"><a href="platform-4-states.html" aria-label="Platform">1</a><a href="agents-timeline.html" aria-label="AI agents timeline">2</a><a href="strategic-context.html" aria-current="page" aria-label="Strategic context">3</a></nav>
 </body>
 </html>

@@ -17,8 +17,8 @@
 @media(max-width:1100px){.page{padding:38px 20px}.agents{grid-template-columns:repeat(3,1fr)}.agent{height:170px}.phase-track{display:none}.connector{display:none}.work{height:auto;margin-top:22px;padding:26px}.work-head{height:auto;min-height:94px}.work-grid{height:auto;margin-top:16px;grid-template-columns:minmax(0,1fr) 280px}.cycle{--active:0!important}}
 @media(max-width:720px){.title{font-size:40px}.lede{font-size:17px}.agents{grid-template-columns:1fr 1fr}.agent{height:178px}.work{height:auto;padding:20px}.work-head{height:auto;min-height:0}.work-meta{display:none}.work-grid{height:auto;margin-top:18px;grid-template-columns:1fr}.result-action{align-items:flex-start;flex-direction:column}.result-action b{white-space:normal}.summary{min-height:0}.footer{gap:20px;align-items:flex-start}.footer a{text-align:right}}
 /* Desktop approval corrections: keep the summary subordinate and balanced. */
-.stat{padding-right:8px}
-.stat+.stat{padding-left:8px}
+.stat{padding-right:16px}
+.stat+.stat{padding-left:16px}
 .stat b{font-size:22px;line-height:1.2}
 /* Keep the card-to-detail handoff visibly deliberate rather than stubby. */
 .connector{height:64px;margin-top:0}
@@ -36,13 +36,20 @@
 .work{height:350px;padding:24px}
 .work-grid{height:auto;min-height:170px;gap:16px}
 .result,.summary{padding:20px}
-.stats{margin-top:16px}
+.result h4{margin:16px 0 8px}
+.stats{margin-top:auto}
+.agent:hover{transform:none}
+.agent{height:172px;padding:20px}
+.agent-icon{margin-bottom:16px}
+.agent h2{margin-bottom:8px}
 .result{padding-bottom:20px}
-.result-action{display:flex;margin-top:20px;padding:10px 16px;gap:24px}
+.result-action{display:flex;margin-top:24px;padding:10px 16px;justify-content:space-between;gap:24px}
+.result-action b{margin-left:auto;text-align:right}
 .work{height:auto;min-height:306px}
 /* The connector marker is the seam: half above, half inside the work shell. */
-.connector:before{top:-6px;bottom:0}
+.connector:before{top:0;bottom:0}
 .connector:after{width:18px;height:18px;border:2px solid #fff;box-shadow:0 0 0 4px #e7f0ff;bottom:-11px}
+.page-switcher{position:fixed;z-index:20;right:18px;top:50%;display:grid;gap:6px;transform:translateY(-50%);padding:6px;border:1px solid #dbe7f8;border-radius:12px;background:rgba(255,255,255,.84);box-shadow:0 8px 24px rgba(20,51,97,.10);backdrop-filter:blur(8px)}.page-switcher a{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#62708a;font-size:12px;font-weight:800;text-decoration:none}.page-switcher a:hover{background:#eaf2ff;color:#1268f3}.page-switcher a[aria-current="page"]{background:#1268f3;color:#fff}
 </style>
 </head>
 <body>
@@ -79,7 +86,8 @@
     </section>
   </section>
   <footer class="footer"><span>Works within your permissions. Every draft stays under human control.</span><a href="#">Explore all agents&nbsp; →</a></footer>
-</main>
+ </main>
+<nav class="page-switcher" aria-label="OBoard prototypes"><a href="platform-4-states.html" aria-label="Platform">1</a><a href="agents-timeline.html" aria-current="page" aria-label="AI agents timeline">2</a><a href="strategic-context.html" aria-label="Strategic context">3</a></nav>
 <script>
 const iconBase='https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/';
 const agents=[

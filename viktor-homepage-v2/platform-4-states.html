@@ -31,19 +31,26 @@ h1{text-align:center;margin:24px 0 10px;font-size:clamp(42px,4.4vw,62px);line-he
 .state-icon.initiative{background:#a769f6}
 .state-icon.checkin{background:#12a878}
 .state-icon img,.state-icon.initiative img{filter:brightness(0) invert(1)}
-.initiative-composite{display:grid;grid-template-rows:132px minmax(0,1fr);gap:12px;overflow:hidden;border-radius:16px;background:#fff;padding:var(--section-gap)}
-.integration-flow{overflow:hidden;background:#fff}
-.integration-flow img{display:block;width:84%;height:auto;margin:0 auto}
-.objectives-frame{min-height:0;overflow:hidden;display:grid;place-items:start center;background:#fff}
-.objectives-card-shell{width:84%;height:100%;overflow:hidden;border:1px solid #dfe4ec;border-radius:16px;background:#fff}
+.initiative-composite{display:grid;grid-template-rows:auto minmax(0,1fr);gap:0;overflow:hidden;border-radius:16px;background:#fff;padding:var(--section-gap)}
+.integration-flow{position:relative;aspect-ratio:5.84/1;overflow:hidden;background:transparent}
+.integration-flow img{position:relative;z-index:1;display:block;width:84%;height:auto;margin:0 auto;mix-blend-mode:multiply}
+.flow-discs{position:absolute;z-index:0;inset:0;pointer-events:none}.flow-disc{position:absolute;top:20%;width:6.8%;aspect-ratio:1;border-radius:50%;background:#fff;transform:translateX(-50%)}.flow-disc:nth-child(1){left:40.6%}.flow-disc:nth-child(2){left:50%}.flow-disc:nth-child(3){left:59.4%}
+.flow-cleaner{position:absolute;z-index:2;left:0;right:0;bottom:0;height:20%;background:#eef5ff;pointer-events:none}
+.flow-tip{position:absolute;top:-2px;bottom:3px;width:14px;transform:translateX(-50%)}
+.flow-tip:before{content:"";position:absolute;left:6px;top:0;bottom:6px;border-left:2px solid #b8d3ff}
+.flow-tip:after{content:"";position:absolute;left:2px;bottom:3px;width:8px;height:8px;border-right:2px solid #b8d3ff;border-bottom:2px solid #b8d3ff;transform:rotate(45deg)}
+.flow-tip:nth-child(1){left:46.4%}.flow-tip:nth-child(2){left:50%}.flow-tip:nth-child(3){left:53.6%}
+.objectives-frame{position:relative;min-height:0;overflow:hidden;display:grid;place-items:start center;background:transparent}
+.objectives-frame:after{content:"";position:absolute;z-index:3;left:8%;right:8%;bottom:0;height:64px;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.82) 58%,#fff 88%)}
+.objectives-card-shell{width:84%;height:100%;overflow:hidden;border:0;border-radius:0;background:transparent}
 .objectives-frame .objectives-window{display:block;width:107.8%;max-width:none;height:auto;margin:-3.2% 0 0 -3.9%}
-.checkin-window{position:relative;height:390px;overflow:hidden;border-radius:16px;background:#f5f7fa;padding:12px}
-.checkin-window:after{content:"";position:absolute;z-index:2;left:12px;right:12px;bottom:12px;height:96px;pointer-events:none;background:linear-gradient(180deg,rgba(245,247,250,0) 0%,rgba(245,247,250,.76) 56%,#f5f7fa 82%)}
-.checkin-card{min-height:480px;overflow:hidden;border:1px solid #e3e8ef;border-radius:14px;background:#fff;color:#10213d}
+.checkin-window{position:relative;height:390px;overflow:hidden;border-radius:14px;background:transparent;padding:0}
+.checkin-window:after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:0;height:96px;pointer-events:none;background:linear-gradient(180deg,rgba(245,247,250,0) 0%,rgba(245,247,250,.76) 56%,#f5f7fa 82%)}
+.checkin-card{min-height:480px;overflow:hidden;border:1px solid #e3e8ef;border-radius:14px;background:#f5f7fa;color:#10213d}
 .checkin-author{height:88px;display:flex;align-items:center;gap:12px;padding:16px 20px;background:#e7f0fd}
 .checkin-avatar{width:44px;height:44px;flex:none;border:2px solid #fff;border-radius:50%;background-image:url('platform-shots/checkin.webp');background-repeat:no-repeat;background-size:933px 561px;background-position:-54px -33px}
 .checkin-author strong{display:block;font-size:16px;line-height:1.2}.checkin-author time{display:block;margin-top:4px;color:#68748d;font-size:13px}
-.checkin-body{padding:20px;display:grid;gap:16px}
+.checkin-body{padding:20px;display:grid;gap:16px;background:#f5f7fa}
 .checkin-meta{display:grid;grid-template-columns:auto auto minmax(80px,1fr) auto auto;gap:12px;align-items:center;font-size:14px}
 .kr-chip{padding:6px 8px;border-radius:8px;background:#ff8640;color:#fff;font-size:12px;font-weight:800}.kr-label{color:#0758bd;font-weight:750}.checkin-placeholder{height:10px;border-radius:99px;background:#ccd5e3}.checkin-quarter{font-weight:700}.checkin-team{padding:6px 10px;border-radius:8px;background:#c7f4cc;color:#254b46;font-weight:650;white-space:nowrap}
 .change-stack{display:grid;gap:8px}.change-row{min-height:52px;border:1px solid #e4e8ee;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700}.change-value{display:flex;gap:12px;align-items:center}.old{color:#b5bbc6}.arrow{color:#13ae76}.new{color:#0aa66f}.status-old,.status-new{padding:5px 8px;border:1px solid #dde2e9;border-radius:7px;font-size:11px}.status-old{color:#aeb4bf}.status-new{border-color:#9ce5cc;color:#15966b}
@@ -57,7 +64,9 @@ h1{text-align:center;margin:24px 0 10px;font-size:clamp(42px,4.4vw,62px);line-he
 .strategy-panel{display:grid;place-items:center;min-height:0;overflow:hidden;border-radius:16px;background:#fff}
 .strategy-panel .state-visual{width:100%;border-radius:0}
 .scene[data-scene="okr"] .figma-stack>img{border-radius:0;clip-path:inset(1px)}
-.initiative-composite{background:#fff}
+.okr-card{overflow:visible;border:0;border-radius:0;background:transparent}
+.scene[data-scene="okr"] .okr-card>img{display:block;width:100%;height:auto;border-radius:0}
+.initiative-composite{background:transparent}
 .stage:has(.scene[data-scene="initiatives"].active):after{display:none}
 .stage{--section-gap:18px;--head-height:82px;--head-pad-x:18px;--head-pad-y:16px;--head-icon-gap:16px;padding:var(--section-gap)}
 .state-shell,.figma-stack,.scene[data-scene="checkins"] .state-shell{gap:var(--section-gap)}
@@ -71,12 +80,14 @@ h1{margin:24px 0 12px}
 .rail{grid-template-rows:repeat(4,120px);gap:16px}
 .rail:before{left:52px;top:48px;bottom:72px}
 .tab{height:120px;border-radius:20px;padding:20px 24px;gap:20px}
-.state-copy strong{margin-top:4px}
+.state-copy small{font-size:16px;line-height:1.2;letter-spacing:.06em}
+.state-copy strong{margin-top:4px;font-size:22px}
 .caption{margin:20px 8px 0}
 .stage{height:552px;--section-gap:20px;--head-height:84px;--head-pad-x:20px;--head-pad-y:16px;--head-icon-gap:16px}
 .scene[data-scene="strategy"] .state-shell{grid-template-rows:var(--head-height) minmax(0,1fr)}
 .checkin-window{height:392px}
 @media(max-width:980px){.page{padding:40px 20px}.story{grid-template-columns:280px minmax(0,1fr);gap:24px}.rail{grid-template-rows:repeat(4,100px);gap:16px}.rail:before{left:36px;top:36px;bottom:64px}.tab{height:100px;grid-template-columns:44px 1fr;padding:16px;gap:12px}.num{width:44px;height:44px}}
+.page-switcher{position:fixed;z-index:20;right:18px;top:50%;display:grid;gap:6px;transform:translateY(-50%);padding:6px;border:1px solid #dbe7f8;border-radius:12px;background:rgba(255,255,255,.84);box-shadow:0 8px 24px rgba(20,51,97,.10);backdrop-filter:blur(8px)}.page-switcher a{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#62708a;font-size:12px;font-weight:800;text-decoration:none}.page-switcher a:hover{background:#eaf2ff;color:#1268f3}.page-switcher a[aria-current="page"]{background:#1268f3;color:#fff}
 </style>
 </head>
 <body><main class="page">
@@ -101,14 +112,14 @@ h1{margin:24px 0 12px}
       </div><p class="caption"><b>Every team can trace its work back to the strategy it serves.</b></p>
     </div>
     <div class="scene shot-scene" data-scene="okr">
-      <div class="figma-state figma-stack"><div class="state-head"><span class="state-icon okr"><img src="figma-product/icons/okr.svg" alt=""></span><span class="state-copy"><small>OKRs &amp; KPI</small><strong>Outcomes and business metrics on one board</strong></span></div><img src="figma-product/objectives-open@2x.png" alt="Open Objectives table from Oboard Design System"><img src="figma-product/kpi-period-open@2x.png" alt="Open KPI period table from Oboard Design System"></div>
+      <div class="figma-state figma-stack"><div class="state-head"><span class="state-icon okr"><img src="figma-product/icons/okr.svg" alt=""></span><span class="state-copy"><small>OKRs &amp; KPI</small><strong>Outcomes and business metrics on one board</strong></span></div><div class="okr-card"><img src="figma-product/objectives-open@2x.png" alt="Open Objectives table from Oboard Design System"></div><div class="okr-card"><img src="figma-product/kpi-period-open@2x.png" alt="Open KPI period table from Oboard Design System"></div></div>
       <img class="product-shot" src="platform-shots/okr.webp" alt="Oboard OKR and KPI view from the supplied prototype">
       <div class="hero-card"><div class="ico">◎</div><div><div class="kicker">OKRs &amp; KPI</div><h2>Outcomes and business metrics on one board</h2></div></div><div class="connect"></div>
       <div class="grid2"><div class="card"><div class="section-title"><span>Q3 Objectives</span><span>55% grade</span></div><div class="row"><span>O1</span><span>Improve checkout reliability</span><span class="progress"><i style="width:55%"></i></span><span class="badge risk">Behind</span></div><div class="row"><span>KR1</span><span>Raise availability to 99.94%</span><span class="progress"><i style="width:72%"></i></span><span class="badge good">On track</span></div><div class="row"><span>KR2</span><span>Reduce incident MTTR by 75%</span><span class="progress"><i style="width:61%"></i></span><span class="badge good">On track</span></div></div><div class="card metric"><div class="kicker">Product KPI</div><div class="big">12,500</div><small>Monthly active users</small><div class="progress" style="margin-top:26px"><i style="width:68%"></i></div><small>+8.4% this month</small></div></div>
       <p class="caption">A <b>55% objective grade and a 12,500 MAU reading</b> get read together—not in separate tools.</p>
     </div>
     <div class="scene shot-scene" data-scene="initiatives">
-      <div class="figma-state state-shell"><div class="state-head"><span class="state-icon initiative"><img src="figma-product/icons/initiative.svg" alt=""></span><span class="state-copy"><small>Initiatives</small><strong>The work that moves the number</strong></span></div><div class="initiative-composite"><div class="integration-flow"><img src="platform-shots/initiative.webp" alt="Jira, API and Power BI feeding Oboard"></div><div class="objectives-frame"><div class="objectives-card-shell"><img class="objectives-window" src="figma-product/objectives-table@2x.png" alt="Figma Objectives table with a gray header and linked initiatives"></div></div></div></div>
+      <div class="figma-state state-shell"><div class="state-head"><span class="state-icon initiative"><img src="figma-product/icons/initiative.svg" alt=""></span><span class="state-copy"><small>Initiatives</small><strong>The work that moves the number</strong></span></div><div class="initiative-composite"><div class="integration-flow"><span class="flow-discs" aria-hidden="true"><i class="flow-disc"></i><i class="flow-disc"></i><i class="flow-disc"></i></span><img src="platform-shots/initiative.webp" alt="Jira, API and Power BI feeding Oboard"><span class="flow-cleaner" aria-hidden="true"><i class="flow-tip"></i><i class="flow-tip"></i><i class="flow-tip"></i></span></div><div class="objectives-frame"><div class="objectives-card-shell"><img class="objectives-window" src="figma-product/objectives-table@2x.png" alt="Figma Objectives table with a gray header and linked initiatives"></div></div></div></div>
       <img class="product-shot" src="platform-shots/initiative.webp" alt="Oboard initiatives view from the supplied prototype">
       <div class="hero-card"><div class="ico">⚡</div><div><div class="kicker">Initiatives</div><h2>Connect delivery work to the result it moves</h2></div></div><div class="connect"></div>
       <div class="card"><div class="section-title"><span>KR · Reduce incident MTTR by 75%</span><span>61%</span></div><div class="source-row"><span class="source">Jira</span><span class="source">Azure DevOps</span><span class="source">Power BI</span><span class="source">API</span></div><div class="row"><span>⚡</span><span>Standardize alerting across services</span><span class="weight">40% weight</span><span class="badge good">80%</span></div><div class="row"><span>⚡</span><span>Automate incident triage</span><span class="weight">35% weight</span><span class="badge good">64%</span></div><div class="row"><span>⚡</span><span>Run reliability game days</span><span class="weight">25% weight</span><span class="badge risk">20%</span></div></div>
@@ -124,4 +135,5 @@ h1{margin:24px 0 12px}
   </div>
 </section></main>
 <script>const tabs=[...document.querySelectorAll('.tab')],scenes=[...document.querySelectorAll('.scene')];const initial=new URLSearchParams(location.search).get('state');if(initial){tabs.forEach(x=>x.setAttribute('aria-selected',String(x.dataset.state===initial)));scenes.forEach(s=>s.classList.toggle('active',s.dataset.scene===initial));}tabs.forEach(t=>{t.addEventListener('mousedown',e=>e.preventDefault());t.addEventListener('click',()=>{const y=scrollY;tabs.forEach(x=>x.setAttribute('aria-selected',String(x===t)));scenes.forEach(s=>s.classList.toggle('active',s.dataset.scene===t.dataset.state));requestAnimationFrame(()=>scrollTo(0,y));});});</script>
+<nav class="page-switcher" aria-label="OBoard prototypes"><a href="platform-4-states.html" aria-current="page" aria-label="Platform">1</a><a href="agents-timeline.html" aria-label="AI agents timeline">2</a><a href="strategic-context.html" aria-label="Strategic context">3</a></nav>
 </body></html>
