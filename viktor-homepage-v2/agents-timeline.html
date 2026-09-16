@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OBoard — AI agents across the cycle</title>
+<style>
+:root{--ink:#090e20;--navy:#142246;--muted:#6b7791;--blue:#1268f3;--blue-2:#6c7cff;--violet:#8438e8;--line:#dbe4f1;--soft:#f2f6ff;--soft-2:#eaf2ff;--good:#0b9f6b;--risk:#ec721f;--shadow:0 18px 44px rgba(35,77,142,.08)}
+*,*::before,*::after{box-sizing:border-box}html{scrollbar-gutter:stable}body{margin:0;background:#fff;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}button{font:inherit}
+.page{width:100%;max-width:1360px;margin:auto;padding:64px 56px 56px}.brand{text-align:center;color:#65738f;font-size:14px;font-weight:800;letter-spacing:.32em}.title{max-width:900px;text-align:center;margin:24px auto 10px;font-size:clamp(42px,4.4vw,62px);line-height:1.02;letter-spacing:-.052em}.title span{color:var(--blue)}.lede{text-align:center;margin:0 auto 44px;color:var(--muted);font-size:21px}
+.cycle{position:relative;--connector-x:50%}.phase-track{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;height:54px}.phase-track:before{content:"";position:absolute;left:var(--line-start,8.333%);right:calc(100% - var(--line-end,91.667%));top:38px;height:2px;background:#86b6ff}.phase{position:relative;display:flex;justify-content:center;align-items:flex-start;gap:8px;font-size:16px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}.phase:nth-child(1){grid-column:1}.phase:nth-child(2){grid-column:2/span 2}.phase:nth-child(3){grid-column:4/span 2}.phase:nth-child(4){grid-column:6}.phase-num{font-weight:780}.phase-dot{position:absolute;left:50%;top:29px;width:18px;height:18px;border:2px solid var(--blue);background:white;border-radius:50%;transform:translateX(-50%);z-index:2}.phase:first-child .phase-dot{background:var(--blue);box-shadow:0 0 0 4px #e7f0ff}
+.agents{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;position:relative}.agent{height:152px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px;text-align:left;cursor:pointer;color:var(--ink);box-shadow:0 4px 12px rgba(20,48,94,.055),0 1px 2px rgba(20,48,94,.04);transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;position:relative}.agent:hover{transform:translateY(-3px);background:#fafcff;box-shadow:0 13px 26px rgba(20,48,94,.11),0 3px 7px rgba(20,48,94,.05)}.agent[aria-selected=true]{border-color:#6a9df8;background:#f5f8ff;box-shadow:0 12px 24px rgba(18,104,243,.14),0 3px 7px rgba(20,48,94,.06)}.agent-icon{width:38px;height:38px;border-radius:10px;background:#eaf2ff;display:grid;place-items:center;margin-bottom:9px}.agent-icon img{width:23px;height:23px;filter:invert(36%) sepia(93%) saturate(3913%) hue-rotate(208deg) brightness(100%) contrast(91%)}.agent h2{margin:0 0 5px;font-size:17px;line-height:1.12;letter-spacing:-.02em}.agent p{margin:0;color:var(--muted);font-size:13px;line-height:1.32}
+.connector{height:46px;position:relative}.connector:before{content:"";position:absolute;top:0;bottom:14px;width:2px;background:var(--blue);left:var(--connector-x);transform:translateX(-50%);transition:left .24s cubic-bezier(.2,.8,.2,1)}.connector:after{content:"";position:absolute;bottom:4px;width:16px;height:16px;border-radius:50%;background:var(--blue);border:3px solid white;box-shadow:0 0 0 2px #bdd5ff;left:var(--connector-x);transform:translateX(-50%);transition:left .24s cubic-bezier(.2,.8,.2,1)}
+.work{height:384px;border:1px solid #e1e9f5;border-radius:22px;background:linear-gradient(145deg,#eef5ff 0%,#f6f8ff 100%);padding:30px 32px;box-shadow:var(--shadow);overflow:hidden}.work-head{height:94px;display:flex;align-items:flex-start;gap:16px}.work-icon{width:62px;height:62px;border-radius:15px;background:#e3eeff;display:grid;place-items:center;flex:none}.work-icon img{width:36px;height:36px;filter:invert(36%) sepia(93%) saturate(3913%) hue-rotate(208deg) brightness(100%) contrast(91%)}.work-title{min-width:0}.agent-label{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}.work-title h3{font-size:clamp(28px,2.3vw,32px);line-height:1.08;letter-spacing:-.035em;margin:4px 0}.work-title p{display:block;margin:0;color:var(--muted);font-size:17px}.work-meta{margin-left:auto;display:flex;align-items:center;gap:18px;text-align:right;color:var(--muted);font-size:14px;line-height:1.35}.rerun{border:1px solid #b8c9e5;background:#fff;color:#263b68;border-radius:10px;height:42px;padding:0 16px;font-size:14px;font-weight:700;cursor:pointer}.rerun:hover{border-color:var(--blue);color:var(--blue)}
+.work-grid{height:214px;margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px}.result,.summary{background:#fff;border:1px solid #e1e7f0;border-radius:16px;overflow:hidden}.result{padding:22px 24px}.result-kicker,.summary-tag{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.result h4{max-width:800px;font-size:clamp(22px,1.8vw,24px);line-height:1.16;letter-spacing:-.025em;margin:7px 0 4px}.result>p{margin:0;color:var(--muted);font-size:16px;line-height:1.35}.result-action{margin-top:17px;padding:15px 24px;border-radius:12px;background:#f4f8ff;display:flex;align-items:center;justify-content:space-between;gap:18px}.result-action strong{display:block;font-size:15px}.result-action p{margin:3px 0 0;color:var(--muted);font-size:14px}.result-action b{color:var(--blue);font-size:15px;white-space:nowrap}.summary{padding:20px;display:flex;flex-direction:column}.summary-tag{display:block;margin-bottom:10px}.summary h4,.summary>p{display:none}.stats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;margin-top:auto;border:0;align-items:start}.stat{min-width:0;padding:0;white-space:normal;overflow:hidden}.stat+.stat{border-left:1px solid #e7edf6;padding-left:16px}.stat b{display:block;max-width:100%;font-size:24px;line-height:.95;color:#123885;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.stat span{display:block;max-width:100%;font-size:12px;color:var(--muted);overflow-wrap:anywhere}.actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px}.action{height:42px;border-radius:10px;border:1px solid #9eb8e2;background:#fff;color:#17356e;font-size:14px;font-weight:760;cursor:pointer}.action#secondaryAction{display:none}.action.primary{border:0;color:#fff;background:linear-gradient(90deg,#1268f3,#8535e7)}.action:hover{filter:brightness(.98)}
+.footer{display:flex;justify-content:space-between;align-items:center;padding:12px 4px 0;color:var(--muted);font-size:12px}.footer a{color:var(--blue);font-size:13px;font-weight:760;text-decoration:none}
+@media(max-width:1100px){.page{padding:38px 20px}.agents{grid-template-columns:repeat(3,1fr)}.agent{height:170px}.phase-track{display:none}.connector{display:none}.work{height:auto;margin-top:22px;padding:26px}.work-head{height:auto;min-height:94px}.work-grid{height:auto;margin-top:16px;grid-template-columns:minmax(0,1fr) 280px}.cycle{--active:0!important}}
+@media(max-width:720px){.title{font-size:40px}.lede{font-size:17px}.agents{grid-template-columns:1fr 1fr}.agent{height:178px}.work{height:auto;padding:20px}.work-head{height:auto;min-height:0}.work-meta{display:none}.work-grid{height:auto;margin-top:18px;grid-template-columns:1fr}.result-action{align-items:flex-start;flex-direction:column}.result-action b{white-space:normal}.summary{min-height:0}.footer{gap:20px;align-items:flex-start}.footer a{text-align:right}}
+/* Desktop approval corrections: keep the summary subordinate and balanced. */
+.stat{padding-right:8px}
+.stat+.stat{padding-left:8px}
+.stat b{font-size:22px;line-height:1.2}
+/* Keep the card-to-detail handoff visibly deliberate rather than stubby. */
+.connector{height:64px;margin-top:0}
+/* The selected agent and its icon already establish the AI context. */
+.agent-label{display:none}
+.work{height:364px}
+.work-head{height:72px;align-items:center}
+.result{padding:18px 24px}
+.result-action{margin-top:12px;padding:12px 24px;justify-content:flex-start;gap:32px}
+/* Give phase markers a deliberate breathing gap above the selectable cards. */
+.agents{margin-top:20px}
+/* Oboard md secondary action: compact and visually subordinate to the main CTA. */
+.rerun{height:32px;padding:0 16px;border-radius:6px;border-color:#9eb8e2;color:#17356e;font-size:14px;font-weight:600}
+/* Shared compact desktop rhythm: 24px shell, 16px relationships, 20px panel insets. */
+.work{height:350px;padding:24px}
+.work-grid{height:auto;min-height:170px;gap:16px}
+.result,.summary{padding:20px}
+.stats{margin-top:16px}
+.result{padding-bottom:20px}
+.result-action{display:flex;margin-top:20px;padding:10px 16px;gap:24px}
+.work{height:auto;min-height:306px}
+/* The connector marker is the seam: half above, half inside the work shell. */
+.connector:before{top:-6px;bottom:0}
+.connector:after{width:18px;height:18px;border:2px solid #fff;box-shadow:0 0 0 4px #e7f0ff;bottom:-11px}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="brand">OBOARD</div>
+  <h1 class="title">Keep <span>every cycle</span> moving.</h1>
+  <p class="lede">AI agents that turn your work into progress — from preparation to a stronger close.</p>
+  <section class="cycle" aria-label="AI agents across the operating cycle">
+    <div class="phase-track" aria-hidden="true">
+      <div class="phase"><span class="phase-num">01</span><span>Prepare</span><i class="phase-dot"></i></div>
+      <div class="phase"><span class="phase-num">02</span><span>Plan</span><i class="phase-dot"></i></div>
+      <div class="phase"><span class="phase-num">03</span><span>Run</span><i class="phase-dot"></i></div>
+      <div class="phase"><span class="phase-num">04</span><span>Close</span><i class="phase-dot"></i></div>
+    </div>
+    <div class="agents" role="tablist" aria-label="Choose an AI agent">
+      <button class="agent" role="tab" data-index="0" aria-selected="false"><span class="agent-icon"><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/file-description.svg" alt=""></span><h2>Strategy Readiness</h2><p>Pressure-test your strategy before it cascades.</p></button>
+      <button class="agent" role="tab" data-index="1" aria-selected="false"><span class="agent-icon"><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/list-details.svg" alt=""></span><h2>OKR Drafting</h2><p>Turn parent goals into measurable team OKRs.</p></button>
+      <button class="agent" role="tab" data-index="2" aria-selected="true"><span class="agent-icon"><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/target-arrow.svg" alt=""></span><h2>Alignment Analysis</h2><p>Find disconnected goals. Get a concrete fix.</p></button>
+      <button class="agent" role="tab" data-index="3" aria-selected="false"><span class="agent-icon"><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/message-circle.svg" alt=""></span><h2>Check-in Drafting</h2><p>Turn work signals into an update you can confirm.</p></button>
+      <button class="agent" role="tab" data-index="4" aria-selected="false"><span class="agent-icon"><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/chart-bar.svg" alt=""></span><h2>Engagement Report</h2><p>See who is participating — and who went quiet.</p></button>
+      <button class="agent" role="tab" data-index="5" aria-selected="false"><span class="agent-icon"><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/sparkles.svg" alt=""></span><h2>Retrospective Prep</h2><p>Bring what moved, stalled and carries forward.</p></button>
+    </div>
+    <div class="connector" aria-hidden="true"></div>
+    <section class="work" aria-live="polite">
+      <header class="work-head">
+        <div class="work-icon"><img id="workIcon" alt=""></div>
+        <div class="work-title"><div class="agent-label">AI agent</div><h3 id="workName"></h3><p id="workDesc"></p></div>
+        <div class="work-meta"><span id="workMeta"></span><button class="rerun" type="button">Run again</button></div>
+      </header>
+      <div class="work-grid">
+        <section class="result"><div class="result-kicker" id="resultKicker"></div><h4 id="resultTitle"></h4><p id="resultCopy"></p><div class="result-action"><div><strong id="focusTitle"></strong><p id="focusEvidence"></p></div><b id="focusAction"></b></div></section>
+        <aside class="summary"><div class="summary-tag">At a glance</div><h4 id="summaryTitle"></h4><p id="summaryCopy"></p><div class="stats"><div class="stat"><b id="statOneValue"></b><span id="statOneLabel"></span></div><div class="stat"><b id="statTwoValue"></b><span id="statTwoLabel"></span></div></div><div class="actions"><button class="action" id="secondaryAction"></button><button class="action primary" id="primaryAction"></button></div></aside>
+      </div>
+    </section>
+  </section>
+  <footer class="footer"><span>Works within your permissions. Every draft stays under human control.</span><a href="#">Explore all agents&nbsp; →</a></footer>
+</main>
+<script>
+const iconBase='https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/';
+const agents=[
+ {name:'Strategy Readiness',desc:'Pressure-test the strategy before it cascades.',icon:'file-description.svg',meta:'Reviewed 4 strategic priorities<br>Last updated 2 minutes ago',result:'Readiness risks',copy:'Resolve the unclear choices before teams draft their objectives.',heads:['Strategic choice','Readiness signal','Agent recommendation'],rows:[['Win enterprise trust','No measurable reliability threshold','Define a 99.95% SLO and accountable owner'],['Expand in EMEA','Target segment is not specified','Name priority markets and buying teams'],['Improve efficiency','Conflicts with reliability investment','State which cost trade-off is acceptable']],next:'Define a 99.95% SLO and accountable owner',sumTitle:'The direction is strong, but not yet cascade-ready.',sum:'Two choices need measurable boundaries; one needs an explicit trade-off before teams can align.',s1:'3',l1:'risks',s2:'4',l2:'priorities',secondary:'Edit strategy',primary:'Review fixes'},
+ {name:'OKR Drafting',desc:'Turn parent goals into measurable team OKRs.',icon:'list-details.svg',meta:'Drafted from “Platform Reliability”<br>Using Q3 planning context',result:'Draft team OKRs',copy:'Each draft inherits the parent outcome and proposes a measurable result.',heads:['Draft objective','Proposed key result','Confidence'],rows:[['Make checkout resilient','Raise successful checkout rate to 99.95%','High'],['Shorten incident recovery','Reduce P1 median MTTR from 75 to 25 min','High'],['Reduce alert fatigue','Cut non-actionable alerts by 40%','Medium']],next:'Review and assign the three drafts',sumTitle:'Three measurable drafts are ready for owner review.',sum:'The agent used last cycle’s baseline, team capacity and the parent strategy—not a blank template.',s1:'3',l1:'drafts',s2:'2',l2:'sources',secondary:'Edit in Oboard',primary:'Review & assign'},
+ {name:'Alignment Analysis',desc:'Find disconnected goals and get a concrete fix.',icon:'target-arrow.svg',meta:'Analyzed 12 OKRs across 4 teams<br>Last updated 4 minutes ago',result:'Misaligned objectives',copy:'Review the evidence and apply the suggested fix.',heads:['Objective','Why it’s misaligned','Suggested fix'],rows:[['Grow ARR to $5M','Only 1 of 6 team OKRs supports revenue','Add 2–3 measurable revenue KRs'],['Improve Backend','No link to a strategic outcome','Link to Platform Reliability'],['Expand to EMEA','No owner and 3 open dependencies','Assign an owner and dependencies']],next:'Add 2–3 measurable revenue KRs',sumTitle:'3 of 12 objectives need an alignment fix.',sum:'Addressing these gaps could increase cross-functional clarity before the cycle starts.',s1:'3',l1:'misaligned',s2:'4',l2:'teams',secondary:'Edit in Oboard',primary:'Edit & submit'},
+ {name:'Check-in Drafting',desc:'Turn work signals into an update you can confirm.',icon:'message-circle.svg',meta:'Compiled Jira, Slack and KPI signals<br>Drafted 1 minute ago',result:'Draft weekly check-in',copy:'The agent proposes the update; the human owner confirms every statement.',heads:['Check-in field','Drafted update','Evidence'],rows:[['Progress','Checkout success reached 99.94%; KR moves 50% → 75%','KPI + Jira'],['Plans','Scale the worker pool before seasonal peak','Sprint 42'],['Problems','Alerting dependency remains with Platform','Slack thread']],next:'Confirm the evidence-backed check-in',sumTitle:'The key result is back on track.',sum:'The draft explains what changed, what comes next and what still needs attention.',s1:'+25',l1:'progress pts',s2:'3',l2:'signals',secondary:'Edit draft',primary:'Confirm check-in'},
+ {name:'Engagement Report',desc:'See who is participating — and who went quiet.',icon:'chart-bar.svg',meta:'Analyzed 38 owners across 7 teams<br>Current cycle · Week 6',result:'Participation signals',copy:'Focus the follow-up where missing updates create the most risk.',heads:['Team','Participation','Signal'],rows:[['Platform','92% · 11 of 12 owners','Healthy'],['Customer Success','64% · 7 of 11 owners','Needs follow-up'],['Sales','38% · 3 of 8 owners','At risk']],next:'Nudge the seven quiet owners',sumTitle:'Two teams need a targeted nudge.',sum:'The gap is concentrated in seven owners, not across the whole company. Follow up precisely.',s1:'7',l1:'quiet owners',s2:'81%',l2:'participation',secondary:'View owners',primary:'Send nudges'},
+ {name:'Retrospective Prep',desc:'Bring what moved, stalled and carries forward.',icon:'sparkles.svg',meta:'Prepared from the completed Q3 cycle<br>Includes decisions and evidence',result:'Cycle retrospective',copy:'A concise evidence-backed starting point for the closing conversation.',heads:['Outcome','What the cycle showed','Next decision'],rows:[['Reliability','P1 MTTR fell 58%; below 75% target','Continue for one cycle'],['Alert quality','Noise fell 42%; target exceeded','Standardize across teams'],['EMEA launch','3 dependencies remain open','Carry forward with owner']],next:'Carry EMEA dependencies into the next cycle',sumTitle:'One practice scales; one outcome carries forward.',sum:'The draft separates evidence, decisions and unresolved work so the next cycle starts cleanly.',s1:'2',l1:'achieved',s2:'1',l2:'carried forward',secondary:'Edit retro',primary:'Review & close'}
+];
+const tabs=[...document.querySelectorAll('.agent')],cycle=document.querySelector('.cycle'),phaseTrack=document.querySelector('.phase-track'),phaseDots=[...document.querySelectorAll('.phase-dot')];
+const refs={workIcon,workName,workDesc,workMeta,resultKicker,resultTitle,resultCopy,focusTitle,focusEvidence,focusAction,summaryTitle,summaryCopy,statOneValue,statOneLabel,statTwoValue,statTwoLabel,secondaryAction,primaryAction};
+let selected=2;
+function syncGeometry(index){const cycleRect=cycle.getBoundingClientRect(),tabRect=tabs[index].getBoundingClientRect(),trackRect=phaseTrack.getBoundingClientRect(),firstDot=phaseDots[0].getBoundingClientRect(),lastDot=phaseDots.at(-1).getBoundingClientRect();cycle.style.setProperty('--connector-x',`${tabRect.left+tabRect.width/2-cycleRect.left}px`);phaseTrack.style.setProperty('--line-start',`${firstDot.left+firstDot.width/2-trackRect.left}px`);phaseTrack.style.setProperty('--line-end',`${lastDot.left+lastDot.width/2-trackRect.left}px`)}
+function render(index){const a=agents[index],focus=a.rows[0];selected=index;tabs.forEach((t,i)=>t.setAttribute('aria-selected',String(i===index)));syncGeometry(index);refs.workIcon.src=iconBase+a.icon;refs.workName.textContent=a.name;refs.workDesc.textContent=a.desc;refs.workMeta.innerHTML=a.meta;refs.resultKicker.textContent=a.result;refs.resultTitle.textContent=a.sumTitle;refs.resultCopy.textContent=a.sum;refs.focusTitle.textContent=focus[0];refs.focusEvidence.textContent=focus[1];refs.focusAction.textContent=a.next+' →';refs.summaryTitle.textContent=a.sumTitle;refs.summaryCopy.textContent=a.sum;refs.statOneValue.textContent=a.s1;refs.statOneLabel.textContent=a.l1;refs.statTwoValue.textContent=a.s2;refs.statTwoLabel.textContent=a.l2;refs.secondaryAction.textContent=a.secondary;refs.primaryAction.textContent=a.primary;}
+tabs.forEach((t,i)=>{t.addEventListener('mousedown',e=>e.preventDefault());t.addEventListener('click',()=>{const y=scrollY;render(i);requestAnimationFrame(()=>scrollTo(0,y));});});
+addEventListener('resize',()=>syncGeometry(selected));
+render(2);
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OBoard — Platform story, four states</title>
+<style>
+:root{--ink:#0b1020;--muted:#68748d;--blue:#1268f3;--violet:#8659ef;--line:#dfe7f2;--panel:#f2f6ff;--good:#0aa66f;--risk:#ef741f}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit}.page{max-width:1500px;margin:auto;padding:64px 56px 76px}.eyebrow{text-align:center;color:var(--blue);font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+h1{text-align:center;margin:24px 0 10px;font-size:clamp(42px,4.4vw,62px);line-height:1.02;letter-spacing:-.052em}.accent{color:var(--blue);margin-left:.12em}.lede{text-align:center;color:var(--muted);font-size:21px;margin:0 0 44px}
+.story{display:grid;grid-template-columns:430px minmax(0,1fr);gap:38px;align-items:start}.rail{display:grid;grid-template-rows:repeat(4,118px);gap:12px;position:relative;align-self:start}.rail:before{content:"";position:absolute;left:51px;top:48px;bottom:70px;border-left:2px dotted #d9dee8}.tab{position:relative;z-index:1;height:118px;border:0;background:transparent;text-align:left;border-radius:18px;padding:20px 24px;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start;cursor:pointer;color:#4f5a70;transition:background .18s,box-shadow .18s,color .18s}
+.tab:hover{background:#f7f9fd}.tab[aria-selected="true"]{background:linear-gradient(135deg,#eef5ff,#f5f7ff);box-shadow:inset 0 0 0 1px #dbe8fb}.num{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#edf0f5;font-size:18px;font-weight:700}.tab[aria-selected="true"] .num{background:var(--blue);color:#fff;box-shadow:0 8px 20px #1268f333}.tab b{display:block;font-size:24px;line-height:1.2;color:inherit;letter-spacing:-.018em}.tab[aria-selected="true"] b{color:var(--ink)}.tab span:last-child span{display:block;margin-top:8px;font-size:16px;line-height:1.45;color:var(--muted)}
+.stage{position:relative;height:802px;background:#eef5ff;padding:22px;border:1px solid #d8e6fb;border-radius:24px;box-shadow:0 18px 50px rgba(42,87,156,.06);overflow:hidden}.stage:after{content:"";pointer-events:none;position:absolute;z-index:5;left:1px;right:1px;bottom:1px;height:110px;border-radius:0 0 23px 23px;background:linear-gradient(180deg,rgba(238,245,255,0),#eef5ff 86%)}.scene{display:none;animation:in .25s ease}.scene.active{display:block}.scene[data-scene="strategy"],.shot-scene{height:auto;background:transparent;border:0;border-radius:0;padding:0}.scene> *:not(.figma-state):not(.caption){display:none}.figma-state{display:block;width:100%;height:auto}.state-shell,.figma-stack{display:grid;gap:16px}.state-visual,.figma-stack>img{display:block;width:100%;height:auto}.state-head{display:flex;align-items:center;gap:16px;padding:17px 19px;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(38,77,140,.06)}.state-icon{width:50px;height:50px;border-radius:13px;background:#e6f0ff;display:grid;place-items:center;flex:none}.state-icon img{width:25px;height:25px;filter:invert(32%) sepia(95%) saturate(2535%) hue-rotate(208deg) brightness(97%) contrast(96%)}.state-icon.initiative{background:#a769f6}.state-icon.initiative img{width:18px;height:22px;filter:brightness(0) invert(1)}.state-copy small{display:block;color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.state-copy strong{display:block;margin-top:5px;color:var(--ink);font-size:20px;line-height:1.18;letter-spacing:-.02em}.product-shot{display:none}@keyframes in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.hero-card,.card{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:0 7px 22px rgba(38,77,140,.05)}.hero-card{padding:22px 24px;display:flex;align-items:center;gap:18px}.ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:#eaf3ff;color:var(--blue);font-size:24px;font-weight:800;flex:none}.kicker{font-size:12px;text-transform:uppercase;color:var(--blue);font-weight:800;letter-spacing:.04em}.hero-card h2{font-size:28px;line-height:1.15;margin:6px 0 0;letter-spacing:-.025em}.connect{width:2px;height:28px;background:var(--blue);margin:auto}.card{overflow:hidden}.section-title{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:750}.row{display:grid;grid-template-columns:34px minmax(0,1fr) 120px 100px;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid #edf1f6}.row:last-child{border:0}.badge{justify-self:end;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}.good{background:#e8f8f1;color:var(--good)}.risk{background:#fff1e8;color:var(--risk)}.progress{height:7px;border-radius:99px;background:#e8ebf0;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#7268f5,#9871ef);border-radius:99px}.stack{display:grid;gap:16px}.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.metric{padding:20px}.metric .big{font-size:32px;font-weight:800;letter-spacing:-.04em;margin-top:8px}.metric small{color:var(--muted)}
+.source-row{display:flex;gap:10px;padding:18px;flex-wrap:wrap}.source{padding:10px 13px;border-radius:10px;background:#f5f7fb;font-size:13px;font-weight:700}.weight{color:var(--violet);font-weight:800}.check-hero{display:flex;justify-content:space-between;align-items:center;padding:24px}.delta{font-size:42px;font-weight:850;letter-spacing:-.04em}.delta span{color:var(--blue)}.note{padding:18px 20px;line-height:1.5;color:#39445a;border-top:1px solid #edf1f6}.channels{display:flex;gap:8px;padding:0 20px 20px}.channels span{background:#f1f4f9;border-radius:9px;padding:8px 11px;font-size:12px;font-weight:700}.caption{margin:20px 6px 0;color:var(--muted);font-size:15px;line-height:1.55}.caption b{color:var(--ink)}
+@media(max-width:980px){.page{padding:38px 20px}.story{grid-template-columns:280px minmax(0,1fr);gap:22px}.rail{grid-template-columns:1fr;grid-template-rows:repeat(4,100px)}.rail:before{left:35px;top:35px;bottom:65px}.tab{height:100px;grid-template-columns:42px 1fr;padding:14px;gap:12px}.num{width:42px;height:42px}.tab b{font-size:20px}.tab span:last-child span{font-size:14px}.stage{height:720px}}@media(max-width:620px){.story{grid-template-columns:1fr}.rail:before{display:none}.stage{height:auto;min-height:540px}.row{grid-template-columns:28px 1fr}.row .progress,.row .badge{display:none}.grid2{grid-template-columns:1fr}}
+.stage{height:620px}
+.scene[data-scene="initiatives"] .state-visual{width:112%;max-width:none;margin-left:-6%}
+.stage{height:500px;padding:18px}
+.state-head{height:82px;padding:14px 16px;border-radius:16px;box-shadow:none}
+.state-copy strong{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.state-visual,.figma-stack>img{border-radius:16px}
+.caption{display:none!important}
+.scene[data-scene="checkins"] .state-shell{gap:12px}
+.scene[data-scene="checkins"] .state-visual{width:104%;max-width:none;margin:-10px 0 -52px -2%;clip-path:inset(10px 10px 52px round 16px)}
+@media(max-width:980px){.stage{height:580px}}
+.stage{height:550px}
+.stage:after{left:0;right:0;bottom:0;height:140px;border-radius:0 0 23px 23px;background:linear-gradient(180deg,rgba(238,245,255,0),#eef5ff 76%,#eef5ff 100%)}
+.state-icon{background:#1268f3}
+.state-icon.okr{background:#ff8a3d}
+.state-icon.initiative{background:#a769f6}
+.state-icon.checkin{background:#12a878}
+.state-icon img,.state-icon.initiative img{filter:brightness(0) invert(1)}
+.initiative-composite{display:grid;grid-template-rows:132px minmax(0,1fr);gap:12px;overflow:hidden;border-radius:16px;background:#fff;padding:var(--section-gap)}
+.integration-flow{overflow:hidden;background:#fff}
+.integration-flow img{display:block;width:84%;height:auto;margin:0 auto}
+.objectives-frame{min-height:0;overflow:hidden;display:grid;place-items:start center;background:#fff}
+.objectives-card-shell{width:84%;height:100%;overflow:hidden;border:1px solid #dfe4ec;border-radius:16px;background:#fff}
+.objectives-frame .objectives-window{display:block;width:107.8%;max-width:none;height:auto;margin:-3.2% 0 0 -3.9%}
+.checkin-window{position:relative;height:390px;overflow:hidden;border-radius:16px;background:#f5f7fa;padding:12px}
+.checkin-window:after{content:"";position:absolute;z-index:2;left:12px;right:12px;bottom:12px;height:96px;pointer-events:none;background:linear-gradient(180deg,rgba(245,247,250,0) 0%,rgba(245,247,250,.76) 56%,#f5f7fa 82%)}
+.checkin-card{min-height:480px;overflow:hidden;border:1px solid #e3e8ef;border-radius:14px;background:#fff;color:#10213d}
+.checkin-author{height:88px;display:flex;align-items:center;gap:12px;padding:16px 20px;background:#e7f0fd}
+.checkin-avatar{width:44px;height:44px;flex:none;border:2px solid #fff;border-radius:50%;background-image:url('platform-shots/checkin.webp');background-repeat:no-repeat;background-size:933px 561px;background-position:-54px -33px}
+.checkin-author strong{display:block;font-size:16px;line-height:1.2}.checkin-author time{display:block;margin-top:4px;color:#68748d;font-size:13px}
+.checkin-body{padding:20px;display:grid;gap:16px}
+.checkin-meta{display:grid;grid-template-columns:auto auto minmax(80px,1fr) auto auto;gap:12px;align-items:center;font-size:14px}
+.kr-chip{padding:6px 8px;border-radius:8px;background:#ff8640;color:#fff;font-size:12px;font-weight:800}.kr-label{color:#0758bd;font-weight:750}.checkin-placeholder{height:10px;border-radius:99px;background:#ccd5e3}.checkin-quarter{font-weight:700}.checkin-team{padding:6px 10px;border-radius:8px;background:#c7f4cc;color:#254b46;font-weight:650;white-space:nowrap}
+.change-stack{display:grid;gap:8px}.change-row{min-height:52px;border:1px solid #e4e8ee;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700}.change-value{display:flex;gap:12px;align-items:center}.old{color:#b5bbc6}.arrow{color:#13ae76}.new{color:#0aa66f}.status-old,.status-new{padding:5px 8px;border:1px solid #dde2e9;border-radius:7px;font-size:11px}.status-old{color:#aeb4bf}.status-new{border-color:#9ce5cc;color:#15966b}
+.checkin-notes{display:grid;gap:6px;color:#243957;font-size:13px}.checkin-note{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center}.note-bars{display:flex;gap:8px}.note-bars i{display:block;height:9px;border-radius:99px;background:#eef0f4}.note-bars i:first-child{width:35%}.note-bars i:last-child{width:28%}.checkin-actions{border-top:1px solid #e7ebf0;padding:12px 20px;display:flex;align-items:center;gap:20px;font-size:13px;font-weight:650;color:#2a3e5d}.channel-list{margin-left:auto;display:flex;gap:8px}.channel-list span{padding:6px 8px;border-radius:8px;background:#f0f3f8;color:#526078;font-size:11px}
+.stage:has(.scene[data-scene="checkins"].active):after{display:none}
+.checkin-window .state-visual{display:block;width:108%;max-width:none;height:auto;margin:-12px 0 0 -4%;clip-path:none}
+.scene[data-scene="checkins"] .state-visual{width:108%;margin:-12px 0 0 -4%;clip-path:none}
+@media(max-width:980px){.stage{height:610px}}
+.scene[data-scene="strategy"],.scene[data-scene="strategy"] .state-shell{height:100%}
+.scene[data-scene="strategy"] .state-shell{grid-template-rows:82px minmax(0,1fr)}
+.strategy-panel{display:grid;place-items:center;min-height:0;overflow:hidden;border-radius:16px;background:#fff}
+.strategy-panel .state-visual{width:100%;border-radius:0}
+.scene[data-scene="okr"] .figma-stack>img{border-radius:0;clip-path:inset(1px)}
+.initiative-composite{background:#fff}
+.stage:has(.scene[data-scene="initiatives"].active):after{display:none}
+.stage{--section-gap:18px;--head-height:82px;--head-pad-x:18px;--head-pad-y:16px;--head-icon-gap:16px;padding:var(--section-gap)}
+.state-shell,.figma-stack,.scene[data-scene="checkins"] .state-shell{gap:var(--section-gap)}
+.scene,.figma-state{height:100%;min-height:0}
+.state-shell{grid-template-rows:var(--head-height) minmax(0,1fr)}
+.state-head{height:var(--head-height);box-sizing:border-box;padding:var(--head-pad-y) var(--head-pad-x);gap:var(--head-icon-gap)}
+.strategy-panel,.initiative-composite,.checkin-window{min-height:0;height:100%}
+/* 4px spacing grid */
+h1{margin:24px 0 12px}
+.story{grid-template-columns:432px minmax(0,1fr);gap:40px}
+.rail{grid-template-rows:repeat(4,120px);gap:16px}
+.rail:before{left:52px;top:48px;bottom:72px}
+.tab{height:120px;border-radius:20px;padding:20px 24px;gap:20px}
+.state-copy strong{margin-top:4px}
+.caption{margin:20px 8px 0}
+.stage{height:552px;--section-gap:20px;--head-height:84px;--head-pad-x:20px;--head-pad-y:16px;--head-icon-gap:16px}
+.scene[data-scene="strategy"] .state-shell{grid-template-rows:var(--head-height) minmax(0,1fr)}
+.checkin-window{height:392px}
+@media(max-width:980px){.page{padding:40px 20px}.story{grid-template-columns:280px minmax(0,1fr);gap:24px}.rail{grid-template-rows:repeat(4,100px);gap:16px}.rail:before{left:36px;top:36px;bottom:64px}.tab{height:100px;grid-template-columns:44px 1fr;padding:16px;gap:12px}.num{width:44px;height:44px}}
+</style>
+</head>
+<body><main class="page">
+<div class="eyebrow">How Oboard works</div>
+<h1>Your strategy. <span class="accent">Connected to execution.</span></h1>
+<p class="lede">From company direction to the work that moves it forward.</p>
+<section class="story">
+  <nav class="rail" aria-label="Platform layers">
+    <button class="tab" data-state="strategy" aria-selected="true"><span class="num">01</span><span><b>Strategy</b><span>Turn company priorities into clear team goals.</span></span></button>
+    <button class="tab" data-state="okr" aria-selected="false"><span class="num">02</span><span><b>OKRs &amp; KPI</b><span>Set measurable objectives and track key results.</span></span></button>
+    <button class="tab" data-state="initiatives" aria-selected="false"><span class="num">03</span><span><b>Initiatives</b><span>Plan and align the work that moves results.</span></span></button>
+    <button class="tab" data-state="checkins" aria-selected="false"><span class="num">04</span><span><b>Check-ins</b><span>Track progress, surface risks, stay on course.</span></span></button>
+  </nav>
+  <div class="stage">
+    <div class="scene active" data-scene="strategy">
+      <div class="figma-state state-shell"><div class="state-head"><span class="state-icon strategy"><img src="figma-product/icons/strategy.svg" alt=""></span><span class="state-copy"><small>Company strategy</small><strong>Direction, cascaded to every team</strong></span></div><div class="strategy-panel"><img class="state-visual" src="platform-shots/strategy.webp" alt="Company objective cascaded through key results to department objectives"></div></div>
+      <div class="hero-card"><div class="ico">◎</div><div><div class="kicker">Company strategy</div><h2>Make reliability a competitive advantage</h2></div></div><div class="connect"></div>
+      <div class="stack">
+        <div class="card"><div class="section-title"><span>Objectives (1)</span><span>70%</span></div><div class="row"><span class="ico" style="width:30px;height:30px;border-radius:8px;font-size:14px">O</span><span>Maximize checkout platform uptime and performance</span><span class="progress"><i style="width:70%"></i></span><span class="badge good">On track</span></div></div>
+        <div class="card"><div class="section-title"><span>Initiatives (2)</span></div><div class="row"><span>⚡</span><span>Reduce critical incident MTTR</span><span class="progress"><i style="width:65%"></i></span><span class="badge risk">At risk</span></div><div class="row"><span>⚡</span><span>Standardize alerting and on-call processes</span><span class="progress"><i style="width:80%"></i></span><span class="badge good">On track</span></div></div>
+        <div class="card"><div class="section-title"><span>Check-ins (3)</span></div><div class="row"><span>●</span><span>Checkout success rate at 99.94% this week.</span><span></span><span class="badge good">On track</span></div><div class="row"><span>●</span><span>Alert noise reduced by 40% after rule update.</span><span></span><span class="badge good">On track</span></div><div class="row"><span>●</span><span>Scaling worker pool for peak traffic.</span><span></span><span class="badge risk">At risk</span></div></div>
+      </div><p class="caption"><b>Every team can trace its work back to the strategy it serves.</b></p>
+    </div>
+    <div class="scene shot-scene" data-scene="okr">
+      <div class="figma-state figma-stack"><div class="state-head"><span class="state-icon okr"><img src="figma-product/icons/okr.svg" alt=""></span><span class="state-copy"><small>OKRs &amp; KPI</small><strong>Outcomes and business metrics on one board</strong></span></div><img src="figma-product/objectives-open@2x.png" alt="Open Objectives table from Oboard Design System"><img src="figma-product/kpi-period-open@2x.png" alt="Open KPI period table from Oboard Design System"></div>
+      <img class="product-shot" src="platform-shots/okr.webp" alt="Oboard OKR and KPI view from the supplied prototype">
+      <div class="hero-card"><div class="ico">◎</div><div><div class="kicker">OKRs &amp; KPI</div><h2>Outcomes and business metrics on one board</h2></div></div><div class="connect"></div>
+      <div class="grid2"><div class="card"><div class="section-title"><span>Q3 Objectives</span><span>55% grade</span></div><div class="row"><span>O1</span><span>Improve checkout reliability</span><span class="progress"><i style="width:55%"></i></span><span class="badge risk">Behind</span></div><div class="row"><span>KR1</span><span>Raise availability to 99.94%</span><span class="progress"><i style="width:72%"></i></span><span class="badge good">On track</span></div><div class="row"><span>KR2</span><span>Reduce incident MTTR by 75%</span><span class="progress"><i style="width:61%"></i></span><span class="badge good">On track</span></div></div><div class="card metric"><div class="kicker">Product KPI</div><div class="big">12,500</div><small>Monthly active users</small><div class="progress" style="margin-top:26px"><i style="width:68%"></i></div><small>+8.4% this month</small></div></div>
+      <p class="caption">A <b>55% objective grade and a 12,500 MAU reading</b> get read together—not in separate tools.</p>
+    </div>
+    <div class="scene shot-scene" data-scene="initiatives">
+      <div class="figma-state state-shell"><div class="state-head"><span class="state-icon initiative"><img src="figma-product/icons/initiative.svg" alt=""></span><span class="state-copy"><small>Initiatives</small><strong>The work that moves the number</strong></span></div><div class="initiative-composite"><div class="integration-flow"><img src="platform-shots/initiative.webp" alt="Jira, API and Power BI feeding Oboard"></div><div class="objectives-frame"><div class="objectives-card-shell"><img class="objectives-window" src="figma-product/objectives-table@2x.png" alt="Figma Objectives table with a gray header and linked initiatives"></div></div></div></div>
+      <img class="product-shot" src="platform-shots/initiative.webp" alt="Oboard initiatives view from the supplied prototype">
+      <div class="hero-card"><div class="ico">⚡</div><div><div class="kicker">Initiatives</div><h2>Connect delivery work to the result it moves</h2></div></div><div class="connect"></div>
+      <div class="card"><div class="section-title"><span>KR · Reduce incident MTTR by 75%</span><span>61%</span></div><div class="source-row"><span class="source">Jira</span><span class="source">Azure DevOps</span><span class="source">Power BI</span><span class="source">API</span></div><div class="row"><span>⚡</span><span>Standardize alerting across services</span><span class="weight">40% weight</span><span class="badge good">80%</span></div><div class="row"><span>⚡</span><span>Automate incident triage</span><span class="weight">35% weight</span><span class="badge good">64%</span></div><div class="row"><span>⚡</span><span>Run reliability game days</span><span class="weight">25% weight</span><span class="badge risk">20%</span></div></div>
+      <p class="caption">Attach delivery systems and weight each initiative. <b>Progress updates as the work ships.</b></p>
+    </div>
+    <div class="scene shot-scene" data-scene="checkins">
+      <div class="figma-state state-shell"><div class="state-head"><span class="state-icon checkin"><img src="figma-product/icons/checkin.svg" alt=""></span><span class="state-copy"><small>Check-ins</small><strong>Progress, plans and problems—every week</strong></span></div><div class="checkin-window"><article class="checkin-card"><header class="checkin-author"><span class="checkin-avatar" role="img" aria-label="Alex Ariel"></span><span><strong>Alex Ariel</strong><time>Jun 9 at 14:55</time></span></header><div class="checkin-body"><div class="checkin-meta"><span class="kr-chip">KR</span><span class="kr-label">Key Result</span><span class="checkin-placeholder"></span><span class="checkin-quarter">Q3 2025</span><span class="checkin-team">Customer Success</span></div><div class="change-stack"><div class="change-row"><span>Progress</span><span class="change-value"><span class="old">50%</span><span class="arrow">→</span><span class="new">75%</span></span></div><div class="change-row"><span>Status changed</span><span class="change-value"><span class="status-old">BEHIND</span><span class="arrow">→</span><span class="status-new">ON TRACK</span></span></div></div><div class="checkin-notes"><div class="checkin-note"><span>Progress</span><span class="note-bars"><i></i><i></i></span></div><div class="checkin-note"><span>Plans</span><span class="note-bars"><i></i><i></i></span></div><div class="checkin-note"><span>Problems</span><span class="note-bars"><i></i><i></i></span></div></div></div><footer class="checkin-actions"><span>Reply</span><span>2 replies</span><span>5 reactions</span><span class="channel-list"><span>Slack</span><span>Teams</span><span>Discord</span><span>Email</span></span></footer></article></div></div>
+      <img class="product-shot" src="platform-shots/checkin.webp" alt="Oboard check-in view from the supplied prototype">
+      <div class="hero-card"><div class="ico">✓</div><div><div class="kicker">Check-ins</div><h2>Progress, plans and problems—every week</h2></div></div><div class="connect"></div>
+      <div class="card"><div class="check-hero"><div><div class="kicker">KR · Improve checkout reliability</div><div class="delta">50% → <span>75%</span></div></div><span class="badge good">Behind → On track</span></div><div class="note"><b>What changed</b><br>Fallback rollout completed; checkout success reached 99.94%.</div><div class="note"><b>What’s next</b><br>Scale the worker pool before the seasonal traffic peak.</div><div class="note"><b>What’s in the way</b><br>One alerting dependency remains with the platform team.</div><div class="channels"><span>Slack</span><span>Teams</span><span>Discord</span><span>Email</span></div></div>
+      <p class="caption">Ask where the team already works and keep the reasoning next to the number. <b>Human owners review and submit every update.</b></p>
+    </div>
+  </div>
+</section></main>
+<script>const tabs=[...document.querySelectorAll('.tab')],scenes=[...document.querySelectorAll('.scene')];const initial=new URLSearchParams(location.search).get('state');if(initial){tabs.forEach(x=>x.setAttribute('aria-selected',String(x.dataset.state===initial)));scenes.forEach(s=>s.classList.toggle('active',s.dataset.scene===initial));}tabs.forEach(t=>{t.addEventListener('mousedown',e=>e.preventDefault());t.addEventListener('click',()=>{const y=scrollY;tabs.forEach(x=>x.setAttribute('aria-selected',String(x===t)));scenes.forEach(s=>s.classList.toggle('active',s.dataset.scene===t.dataset.state));requestAnimationFrame(()=>scrollTo(0,y));});});</script>
+</body></html>

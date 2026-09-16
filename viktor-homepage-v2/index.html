@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OBoard — homepage workbench</title>
+  <style>
+    :root{--ink:#090e20;--blue:#1268f3;--line:#dbe4f1;--paper:#fff}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;background:var(--paper);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .frame{position:relative;width:100%;height:100%;min-height:760px}
+    iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+    .switcher{position:fixed;z-index:10;right:18px;top:50%;transform:translateY(-50%);display:grid;gap:5px;padding:6px;border:1px solid rgba(154,177,217,.5);border-radius:12px;background:rgba(255,255,255,.76);box-shadow:0 8px 24px rgba(35,77,142,.08);backdrop-filter:blur(10px)}
+    .switcher button{width:26px;height:26px;border:0;border-radius:7px;background:transparent;color:#71809b;font:700 12px/1 Inter,-apple-system,sans-serif;cursor:pointer}
+    .switcher button:hover{color:var(--blue);background:#edf4ff}
+    .switcher button[aria-selected="true"]{background:var(--blue);color:#fff;box-shadow:0 2px 6px rgba(18,104,243,.24)}
+    @media(max-width:720px){.switcher{right:10px}.frame{min-height:680px}}
+  </style>
+</head>
+<body>
+  <main class="frame" aria-label="OBoard homepage workbench">
+    <iframe id="work" title="Platform" src="platform-4-states.html"></iframe>
+    <nav class="switcher" aria-label="Homepage sections">
+      <button type="button" data-src="platform-4-states.html" aria-selected="true" title="1 · Platform">1</button>
+      <button type="button" data-src="agents-timeline.html" aria-selected="false" title="2 · AI agents timeline">2</button>
+      <button type="button" data-src="strategic-context.html" aria-selected="false" title="3 · Strategic Context Layer">3</button>
+    </nav>
+  </main>
+  <script>
+    const work=document.querySelector('#work');
+    const tabs=[...document.querySelectorAll('[data-src]')];
+    const fingerprints=new Map();
+    let active=tabs[0];
+    function show(tab,force=false){
+      if(!force&&tab===active)return;
+      active=tab;
+      tabs.forEach(item=>item.setAttribute('aria-selected',String(item===tab)));
+      work.title=tab.title;
+      work.src=tab.dataset.src;
+    }
+    tabs.forEach(tab=>tab.addEventListener('click',()=>show(tab)));
+    // The source files remain the subagents' source of truth. Poll only the active
+    // artifact and refresh its iframe after a real edit, so their changes appear live.
+    async function syncActive(){
+      const src=active.dataset.src;
+      try{
+        const response=await fetch(`${src}?workbench=${Date.now()}`,{cache:'no-store'});
+        const text=await response.text();
+        const next=`${text.length}:${text.slice(-160)}`;
+        const prior=fingerprints.get(src);
+        fingerprints.set(src,next);
+        if(prior&&prior!==next)show(active,true);
+      }catch(_){/* file:// previews cannot poll; normal iframe reload still reflects edits */}
+    }
+    syncActive();
+    setInterval(syncActive,2500);
+  </script>
+</body>
+</html>
