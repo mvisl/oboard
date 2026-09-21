@@ -84,7 +84,7 @@
 .ai-list-row{display:flex;align-items:center;gap:10px;height:42px;border-bottom:1px solid var(--ai-line)}
 .ai-list-row .ai-person-copy{width:82px}
 .ai-people-head{display:grid;grid-template-columns:116px 92px 80px;font-size:8px;color:var(--ai-muted);margin-bottom:2px}
-.ai-people-head~.ai-list-row{height:36px}
+.ai-people-head~.ai-list-row{height:28px}
 .ai-tree-row.selected .ai-progress{background:#cfddf2}
 .ai-primary .ai-detail-item .ai-tile{border:0;background:#e6f0ff}
 .ai-primary .ai-detail-item.green .ai-tile{background:#e5f8f0}
