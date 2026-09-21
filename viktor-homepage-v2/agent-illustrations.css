@@ -113,6 +113,33 @@
 .ai-work-source>span{flex:1}
 .ai-work-source .ai-skeleton{height:3px;margin-top:3px}
 .ai-checkin-rows .ai-list-row:first-child{background:#eef5ff;border-radius:4px}
+.ai-content:has(.ai-feed-entry) h4{margin-bottom:6px}
+.ai-feed-day{font-size:8px;font-weight:600;margin:0 0 4px;color:var(--ai-muted)}
+.ai-feed-entry{width:298px;border:1px solid #e6ebf3;border-radius:7px;background:white;overflow:hidden}
+.ai-feed-entry header{display:flex;gap:8px;align-items:center;padding:4px 8px;background:#f3f7fd;border-bottom:1px solid var(--ai-line)}
+.ai-feed-entry header small{display:block;margin-top:3px;color:var(--ai-muted);font-size:8px}
+.ai-feed-body{padding:3px 8px}
+.ai-feed-entity{display:flex;gap:6px;align-items:center;margin-bottom:2px;height:18px}
+.ai-feed-entity .ai-tile{width:18px;height:18px;font-size:8px}
+.ai-feed-field{display:flex;align-items:center;gap:8px;height:18px;border-bottom:1px solid var(--ai-line);font-size:9px;color:var(--ai-muted)}
+.ai-feed-field:last-child{border:0}
+.ai-feed-field b{width:62px;color:var(--ai-ink);font-size:9px}
+.ai-feed-field strong{color:var(--ai-green)}
+.ai-feed-status{color:var(--ai-green);background:#edf8f2;border-radius:3px;padding:1px 5px;font-size:8px}
+.ai-feed-entry footer{padding:3px 8px;font-size:8px;border-top:1px solid var(--ai-line);color:var(--ai-muted)}
+.ai-feed-entry footer span{margin-left:10px}
+.ai-feed-older{margin-top:8px;opacity:.65}
+.ai-feed-older .ai-feed-body{padding:8px}
+.ai-report-switches{display:flex;align-items:center;gap:8px;font-size:8px;color:var(--ai-muted);margin-bottom:10px}
+.ai-report-switches b{padding:3px 5px;background:white;box-shadow:0 1px 3px #172b4d1f;border-radius:3px;color:var(--ai-ink);font-weight:600}
+.ai-report-switches b+ b{margin-left:4px}
+.ai-status-table{width:298px}
+.ai-status-table-head,.ai-status-person{display:grid;grid-template-columns:124px 52px 48px 58px;gap:4px;align-items:center}
+.ai-status-table-head{font-size:8px;color:var(--ai-muted);padding-bottom:6px;border-bottom:1px solid #e4e9f0}
+.ai-status-person{height:32px;border-bottom:1px solid var(--ai-line)}
+.ai-status-person-name{display:flex;align-items:center;gap:6px}
+.ai-status-person-name small{display:block;font-size:7px;color:var(--ai-muted);margin-top:3px}
+.ai-status-average{font-size:9px;color:var(--ai-muted)}
 .ai-owner-row{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:11px}
 .ai-owner-row time{margin-left:auto;font-size:10px;color:var(--ai-red)}
 .ai-owner-copy{width:72px}
