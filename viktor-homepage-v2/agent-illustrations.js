@@ -29,7 +29,7 @@
   function checkin(){
     return product('<h4>Check-ins</h4>'+peopleRows([[68,'Today'],[42,'2d ago'],[18,'Aug 26'],[76,'Aug 24']]),'Check-ins')+
       primary('Draft check-in',detailItem('Progress','Activation improved to 68%.','trending-up','green')+detailItem('Plans','Finish onboarding rollout.','list-details','purple')+detailItem('Blockers','Waiting for analytics data.','alert-triangle','orange')+'<div class="ai-button-row"><span class="ai-cta muted">Edit</span>'+cta('Confirm check-in')+'</div>','Review your AI-drafted update.')+
-      secondary('Drafted from recent work',[['github','3 commits'],['figma','2 designs updated'],['googledocs','5 comments']].map(([name,copy])=>'<div class="ai-source-row"><img src="illustration-assets/'+name+'.svg" alt="'+name+'">'+copy+'</div>').join(''));
+      secondary('Drafted from recent work',[['github','3 commits'],['figma','2 designs updated'],['googledocs','5 comments']].map(([name,copy])=>'<div class="ai-source-row"><img src="illustration-assets/'+name+'.svg?rev=official-1" alt="'+name+'">'+copy+'</div>').join(''));
   }
   function engagement(){
     return product('<h4>Team</h4><div class="ai-mini-tabs"><b>People</b><span>Groups</span></div>'+peopleRows([[68,'2 days ago'],[42,'6 days ago'],[12,'Never']]),'People')+

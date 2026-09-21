@@ -4,10 +4,10 @@
 .work-head{height:auto;min-height:72px}
 .work-meta,.work-copy .summary{display:none}
 .work-grid{display:block;margin-top:24px;min-height:0;height:auto}
-.work-copy .result{padding:20px}
+.work-copy .result{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
 .work-copy .result h4{font-size:24px;margin:12px 0}
 .work-copy .result>p{font-size:15px;line-height:1.5}
-.work-copy .result-action{display:block;margin-top:20px;padding:12px}
+.work-copy .result-action{display:block;margin-top:20px;padding:16px 0 0;background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none}
 .work-copy .result-action b{display:block;margin-top:12px;text-align:left;white-space:normal;line-height:1.4}
 .work-copy .work-icon{width:48px;height:48px;border-radius:12px}
 .work-copy .work-icon img{width:28px;height:28px}

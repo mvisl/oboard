@@ -21,3 +21,10 @@ Deliberate adaptations: exact live-product logo replaces malformed generated log
 - Claude completed a visual/DOM review and accepted the shared geometry, logo, sparkle and intentional layering. Valid findings: restore Retro Key metrics signals and prevent the selected Alignment KR from wrapping. These are fixed in `5cdb11a`, followed by an 8px breathing-room adjustment above the Retro metrics. Its requests for seven people and identical primary heights conflict with the authoritative brief and were returned for clarification, not implemented.
 - Semantic refinement replaces generic menu glyphs: Vision→eye, OKRs/KRs→chart-bar, Progress→trending-up, Plans→list-details, Blockers→alert-triangle. These are unmodified Tabler 3.34.1 assets from the same icon family already used by the surrounding agent cards, a documented local adaptation where product menu icons conveyed the wrong meaning. Product navigation, logo and sparkle remain actual product assets. No employee photos were added.
 - Final independent approval remains pending; do not describe the complete implementation as approved or complete.
+
+## User-directed bounded polish
+
+- Preserve the approved right-side compositions, overlays, hierarchy connections, scores, copy, navigation, Oboard logo and sparkle. No new redesign pass.
+- One shared `.work-copy .result` treatment removes the large white card. Eyebrow, headline and description sit directly on the pale-blue detail background. Evidence/action retains only a subtle top divider; every existing string remains unchanged.
+- Check-in source-service logos are semantic content, not decorative glyphs. Use the unmodified official GitHub, full-color Figma and Google Docs SVGs stored locally; provenance is in `illustration-assets/README.md`.
+- Semantic audit: concrete Objective/KRs, hierarchy, readiness content, neutral owners, Retro agenda/carry-forward and restored metric signals are retained. No additional details or layout changes are authorized by this polish pass.
