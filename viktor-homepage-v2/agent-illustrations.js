@@ -70,7 +70,10 @@
     steps.slice(1).forEach((child,i)=>pairs.push([steps[i],child]));
     frame.querySelectorAll('.ai-branch').forEach(branch=>{
       const parent=branch.previousElementSibling?.querySelector('.ai-tile');
-      if(parent)branch.querySelectorAll(':scope > .ai-tree-row > .ai-tile').forEach(child=>pairs.push([parent,child]));
+      // Draw the parent-to-first-child elbow once. Siblings continue locally
+      // from the previous row instead of redrawing a long parent-owned rail.
+      const children=[...branch.querySelectorAll(':scope > .ai-tree-row > .ai-tile')];
+      if(parent)children.forEach((child,i)=>pairs.push([i?children[i-1]:parent,child,i>0,parent]));
     });
     if(!pairs.length)return;
     const ns='http://www.w3.org/2000/svg';
@@ -79,10 +82,11 @@
     svg.setAttribute('aria-hidden','true');
     const bounds=frame.getBoundingClientRect();
     svg.setAttribute('viewBox',`0 0 ${frame.clientWidth} ${frame.clientHeight}`);
-    pairs.forEach(([parent,child])=>{
+    pairs.forEach(([parent,child,sibling,owner])=>{
       const p=parent.getBoundingClientRect(),c=child.getBoundingClientRect();
-      const x=p.left+p.width/2-bounds.left-frame.clientLeft;
-      const y=p.bottom-bounds.top-frame.clientTop;
+      const o=(owner||parent).getBoundingClientRect();
+      const x=o.left+o.width/2-bounds.left-frame.clientLeft;
+      const y=(sibling?p.top+p.height/2:p.bottom)-bounds.top-frame.clientTop;
       const endX=c.left-bounds.left-frame.clientLeft-2;
       const endY=c.top+c.height/2-bounds.top-frame.clientTop;
       const r=Math.max(0,Math.min(6,endX-x,endY-y));

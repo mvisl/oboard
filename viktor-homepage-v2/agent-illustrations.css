@@ -65,11 +65,11 @@
 .ai-tile.orange{color:#ff8541;background:#ffe8db}
 .ai-tree-copy{width:98px;flex:none}
 .ai-tree-copy .ai-skeleton{width:90%}
-.ai-branch{margin-left:13px;padding:12px 0 0 21px}
+.ai-branch{margin-left:13px;padding:4px 0 0 21px}
 .ai-hierarchy-links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:#afbbcf}
 .ai-hierarchy-links path{fill:none;stroke:currentColor;stroke-width:1;vector-effect:non-scaling-stroke}
-.ai-branch>.ai-tree-row{margin-bottom:8px}
-.ai-branch .ai-branch{padding-top:12px}
+.ai-branch>.ai-tree-row{margin-bottom:4px}
+.ai-branch .ai-branch{padding-top:4px}
 .ai-tree-row.selected{background:#e6f0ff;border:1px solid #b3d1ff;border-radius:4px;padding:5px;gap:5px;font-size:10px}
 .ai-tree-row.selected .ai-tree-copy{width:178px;font-size:11px;line-height:1.3;white-space:nowrap}
 .ai-tree-row.selected .ai-progress{width:34px}
