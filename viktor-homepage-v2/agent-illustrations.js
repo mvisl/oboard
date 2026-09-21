@@ -9,7 +9,7 @@
   const primary = (title, body, subtitle='') => '<section class="ai-primary"><h4 class="ai-overlay-title">'+icon('sparkle','ai-sparkle')+title+'</h4>'+(subtitle?'<p class="ai-subtitle">'+subtitle+'</p>':'')+body+'</section>';
   const secondary = (title, body) => '<aside class="ai-secondary"><h5>'+title+'</h5>'+body+'</aside>';
   function sidebar(active){
-    return '<aside class="ai-sidebar" aria-label="Simplified Oboard navigation">'+[['menu-home','Home'],['menu-check-ins','Check-ins'],['menu-objectives','Objectives'],['menu-groups','People'],['menu-dashboard','Dashboard']].map(([name,label])=>'<div class="ai-nav-item '+(label===active?'active':'')+'" aria-label="'+label+'">'+icon(name)+skeleton('40px')+'</div>').join('')+'</aside>';
+    return '<aside class="ai-sidebar" aria-label="Simplified Oboard navigation">'+[['menu-home','Home'],['menu-check-ins','Check-ins'],['menu-objectives','Objectives'],['menu-dashboard','Dashboard']].map(([name,label])=>'<div class="ai-nav-item '+(label===active?'active':'')+'" aria-label="'+label+'">'+icon(name)+skeleton('40px')+'</div>').join('')+'</aside>';
   }
   function product(content,active){
     return '<div class="ai-product"><div class="ai-topbar"><img class="ai-logo" src="'+asset('oboard-logo-main')+'" alt="Oboard"><span class="ai-selector">'+skeleton('70%')+'⌄</span><span class="ai-selector">'+skeleton('70%')+'⌄</span></div>'+sidebar(active)+'<div class="ai-content">'+content+'</div></div>';
