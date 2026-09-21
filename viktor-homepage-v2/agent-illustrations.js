@@ -34,9 +34,9 @@
     return '<div class="ai-detail-item '+color+'">'+tile(name,color)+'<div><b>'+label+'</b><p>'+copy+'</p></div></div>';
   }
   function checkin(){
-    return product('<h4>Check-ins</h4>'+peopleRows([[68,'Today'],[42,'2d ago'],[18,'Aug 26'],[76,'Aug 24']]),'Check-ins')+
+    return product('<h4>Check-ins</h4><div class="ai-checkin-rows">'+peopleRows([[68,'Today'],[42,'2d ago'],[18,'Aug 26'],[76,'Aug 24']])+'</div>','Check-ins')+
       primary('Draft check-in',detailItem('Progress','Activation improved to 68%.','trending-up','green')+detailItem('Plans','Finish onboarding rollout.','list-details','purple')+detailItem('Blockers','Waiting for analytics data.','alert-triangle','orange')+'<div class="ai-button-row"><span class="ai-cta muted">Edit</span>'+cta('Confirm check-in')+'</div>','Review your AI-drafted update.')+
-      secondary('Drafted from recent work',[['github','3 commits'],['figma','2 designs updated'],['googledocs','5 comments']].map(([name,copy])=>'<div class="ai-source-row"><img src="illustration-assets/'+name+'.svg?rev=official-1" alt="'+name+'">'+copy+'</div>').join(''));
+      secondary('Drafted from recent work',[['github','3 commits'],['figma','2 designs updated'],['googledocs','5 comments']].map(([name,copy])=>'<div class="ai-source-row ai-work-source"><img src="illustration-assets/'+name+'.svg?rev=official-1" alt="'+name+'"><span>'+copy+skeleton('72%',true)+'</span></div>').join(''));
   }
   function engagement(){
     return product('<h4>Performance report</h4><div class="ai-mini-tabs"><span>By group</span><b>People</b></div><div class="ai-people-head"><span>Owner</span><span>Participation</span><span>Last update</span></div>'+peopleRows([[68,'2 days ago'],[42,'6 days ago'],[12,'Never']]),'Dashboard')+

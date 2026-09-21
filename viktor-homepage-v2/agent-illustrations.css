@@ -109,6 +109,10 @@
 .ai-button-row .ai-cta.muted{flex:0 0 48px;background:var(--ai-line);color:var(--ai-ink)}
 .ai-source-row{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:var(--ai-muted)}
 .ai-source-row img{width:16px;height:16px;object-fit:contain}
+.ai-work-source img{width:18px;height:18px}
+.ai-work-source>span{flex:1}
+.ai-work-source .ai-skeleton{height:3px;margin-top:3px}
+.ai-checkin-rows .ai-list-row:first-child{background:#eef5ff;border-radius:4px}
 .ai-owner-row{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:11px}
 .ai-owner-row time{margin-left:auto;font-size:10px;color:var(--ai-red)}
 .ai-owner-copy{width:72px}
