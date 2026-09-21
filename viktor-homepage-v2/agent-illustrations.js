@@ -19,7 +19,7 @@
     return '<aside class="ai-sidebar" aria-label="Simplified Oboard navigation">'+[['menu-home','Home'],['menu-check-ins','Check-ins'],['menu-objectives','Objectives'],['menu-dashboard','Dashboard']].map(([name,label])=>'<div class="ai-nav-item '+(label===active?'active':'')+'" aria-label="'+label+'">'+icon(name)+skeleton('40px')+'</div>').join('')+'</aside>';
   }
   function product(content,active){
-    return '<div class="ai-product"><div class="ai-topbar"><img class="ai-logo" src="'+asset('oboard-logo-main')+'" alt="Oboard"><span class="ai-selector">'+skeleton('70%')+'⌄</span><span class="ai-selector">'+skeleton('70%')+'⌄</span></div>'+sidebar(active)+'<div class="ai-content">'+content+'</div></div>';
+    return '<div class="ai-product"><div class="ai-topbar"><img class="ai-logo" src="'+asset('oboard-logo-main')+'" alt="Oboard"></div>'+sidebar(active)+'<div class="ai-content">'+content+'</div></div>';
   }
   function alignment(){
     const kr=(value,selected=false)=>'<div class="ai-tree-row '+(selected?'selected':'')+'"><span class="ai-tile">KR</span><span class="ai-tree-copy">'+(selected?'Increase activation rate to 40%':skeleton()+skeleton('55%',true))+'</span>'+progress(value,selected?'var(--ai-blue)':'var(--ai-green)')+'<small>'+value+'%</small></div>';
@@ -41,18 +41,21 @@
   function engagement(){
     return product('<h4>Team</h4><div class="ai-mini-tabs"><b>People</b><span>Groups</span></div>'+peopleRows([[68,'2 days ago'],[42,'6 days ago'],[12,'Never']]),'People')+
       primary('Engagement','<div class="ai-score-layout">'+ring(61,100)+'<div class="ai-score-copy"><strong class="ai-attention">Needs attention</strong><p>Two owners haven’t updated since the cycle opened.</p></div></div>')+
-      secondary('2 owners went quiet','<div class="ai-owner-row">'+person('B')+'Ben<time>6 days ago</time></div><div class="ai-owner-row">'+person('M')+'Martine<time>Never</time></div>'+cta('Review owners →'));
+      secondary('2 owners went quiet','<div class="ai-owner-row">'+person('B')+'<span class="ai-owner-copy">'+skeleton('88%')+skeleton('62%',true)+'</span><time>6 days ago</time></div><div class="ai-owner-row">'+person('M')+'<span class="ai-owner-copy">'+skeleton('100%')+skeleton('70%',true)+'</span><time>Never</time></div>'+cta('Review owners →'));
   }
   const okrRows=(values,letter)=>values.map(value=>'<div class="ai-okr-row"><span class="ai-tile">'+letter+'</span>'+skeleton()+progress(value,'var(--ai-green)')+'<small>'+value+'%</small></div>').join('');
   function retrospective(){
-    return product('<div class="ai-retro"><div class="ai-team-heading">'+person('EN')+'Engineering</div><div class="ai-kpis"><div><b>72%</b><span>Alignment</span></div><div><b>45%</b><span>Engagement</span></div><div><b>61%</b><span>OKR progress</span></div></div><div class="ai-mini-heading">Objectives</div>'+okrRows([70,50,30],'O')+'<div class="ai-mini-heading">Key metrics</div><div class="ai-metric-signals"><span>'+skeleton()+'↗ +12%</span><span>'+skeleton()+'↘ −8%</span></div></div>','Home')+
-      primary('Retrospective ready','<div class="ai-outcome"><b>2</b> outcomes achieved</div><div class="ai-outcome carry"><b>1</b> carries forward</div><div class="ai-mini-heading">Proposed agenda</div><ol class="ai-agenda"><li>Review outcomes</li><li>Discuss what stalled</li><li>Set next-cycle priorities</li></ol>'+cta('Review retrospective'),'Drafted from your completed cycle.')+
-      secondary('Carry forward','<p>EMEA dependencies</p><span style="color:var(--ai-blue)">Move to Q4 →</span>');
+    const summary='<div class="ai-home-summary"><div class="ai-team-heading">'+person('EN')+'<div>Engineering<small>Engineering department</small></div></div><div class="ai-kpis">'+[[72,'Alignment'],[45,'Engagement'],[61,'OKR progress']].map(([value,label],i)=>'<div><div class="ai-kpi-value"><b>'+value+'%</b>'+(i<2?progress(value):'')+'</div><span>'+label+'</span></div>').join('')+'</div></div>';
+    const objectives='<section class="ai-home-panel"><div class="ai-mini-heading">'+icon('menu-objectives')+'Objectives</div>'+[70,50,30].map((value,i)=>'<div class="ai-home-objective"><i class="ai-status-dot status-'+i+'"></i>'+skeleton('112px')+progress(value,['#42c994','#ffbc3c','#9caac0'][i])+'<small>'+value+'%</small></div>').join('')+'</section>';
+    const metrics='<section class="ai-home-panel"><div class="ai-mini-heading">'+icon('chart-bar')+'Key metrics</div><div class="ai-metric-signals"><span>↗ '+skeleton()+'<b>+12%</b></span><span>↘ '+skeleton()+'<b>−8%</b></span></div></section>';
+    return product('<div class="ai-retro">'+summary+objectives+metrics+'</div>','Home')+
+      primary('Retrospective ready','<div class="ai-outcome-panel"><div class="ai-outcome">'+tile('check','green')+'<b>2</b> outcomes achieved</div><div class="ai-outcome carry">'+tile('arrow-right')+'<b>1</b> carries forward</div></div><div class="ai-agenda-panel">'+tile('list-details','purple')+'<div><div class="ai-mini-heading">Proposed agenda</div><ol class="ai-agenda"><li>Review outcomes</li><li>Discuss what stalled</li><li>Set next-cycle priorities</li></ol></div></div>'+cta('Review retrospective'),'Drafted from your completed cycle.')+
+      '<aside class="ai-secondary ai-icon-evidence">'+tile('chevrons-right')+'<div><h5>Carry forward</h5><p>EMEA dependencies</p><span style="color:var(--ai-blue)">Move to Q4 →</span></div></aside>';
   }
   function drafting(){
     return product('<div class="ai-group-heading">'+tile('menu-objectives')+'<div>Company OKRs<small>FY 2026</small></div></div>'+okrRows([70,45,30],'C')+'<div class="ai-group-heading">'+tile('menu-groups')+'<div>Engineering OKRs<small>Engineering department</small></div></div>'+okrRows([60,40,20],'E'),'Objectives')+
       primary('Draft Engineering OKRs',detailItem('Objective','Improve platform reliability and operational efficiency','menu-objectives')+detailItem('KR 1','Increase service uptime to 99.9%','chart-bar','green')+detailItem('KR 2','Reduce critical incident MTTR by 50%','chart-bar','green')+cta('Review draft OKRs'),'Based on company goals and your department priorities.')+
-      secondary('Based on','<div class="ai-source-row">'+icon('menu-objectives')+'Company goals (FY 2026)</div><div class="ai-source-row">'+icon('menu-groups')+'Engineering priorities</div>');
+      '<aside class="ai-secondary ai-icon-evidence">'+tile('file-description','purple')+'<div><h5>Based on</h5><div class="ai-source-row">'+icon('menu-objectives')+'Company goals (FY 2026)</div><div class="ai-source-row">'+icon('menu-groups')+'Engineering priorities</div></div></aside>';
   }
   function strategy(){
     return product('<h4>Strategy overview</h4><div class="ai-strategy">'+[['Vision','eye',''],['Strategy','menu-objectives','purple'],['OKRs','chart-bar','green']].map(([label,name,color])=>'<div class="ai-strategy-step">'+tile(name,color)+'<div><b>'+label+'</b>'+skeleton()+skeleton('65%',true)+'</div></div>').join('')+'</div>','Home')+
