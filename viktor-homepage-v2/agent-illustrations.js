@@ -28,7 +28,7 @@
   }
   function checkin(){
     return product('<h4>Check-ins</h4>'+peopleRows([[68,'Today'],[42,'2d ago'],[18,'Aug 26'],[76,'Aug 24']]),'Check-ins')+
-      primary('Draft check-in',detailItem('Progress','Activation improved to 68%.','menu-dashboard','green')+detailItem('Plans','Finish onboarding rollout.','menu-check-ins','purple')+detailItem('Blockers','Waiting for analytics data.','menu-objectives','orange')+'<div class="ai-button-row"><span class="ai-cta muted">Edit</span>'+cta('Confirm check-in')+'</div>','Review your AI-drafted update.')+
+      primary('Draft check-in',detailItem('Progress','Activation improved to 68%.','trending-up','green')+detailItem('Plans','Finish onboarding rollout.','list-details','purple')+detailItem('Blockers','Waiting for analytics data.','alert-triangle','orange')+'<div class="ai-button-row"><span class="ai-cta muted">Edit</span>'+cta('Confirm check-in')+'</div>','Review your AI-drafted update.')+
       secondary('Drafted from recent work',[['github','3 commits'],['figma','2 designs updated'],['googledocs','5 comments']].map(([name,copy])=>'<div class="ai-source-row"><img src="illustration-assets/'+name+'.svg" alt="'+name+'">'+copy+'</div>').join(''));
   }
   function engagement(){
@@ -44,11 +44,11 @@
   }
   function drafting(){
     return product('<div class="ai-group-heading">'+tile('menu-objectives')+'<div>Company OKRs<small>FY 2026</small></div></div>'+okrRows([70,45,30],'C')+'<div class="ai-group-heading">'+tile('menu-groups')+'<div>Engineering OKRs<small>Engineering department</small></div></div>'+okrRows([60,40,20],'E'),'Objectives')+
-      primary('Draft Engineering OKRs',detailItem('Objective','Improve platform reliability and operational efficiency','menu-objectives')+detailItem('KR 1','Increase service uptime to 99.9%','menu-dashboard','green')+detailItem('KR 2','Reduce critical incident MTTR by 50%','menu-dashboard','green')+cta('Review draft OKRs'),'Based on company goals and your department priorities.')+
+      primary('Draft Engineering OKRs',detailItem('Objective','Improve platform reliability and operational efficiency','menu-objectives')+detailItem('KR 1','Increase service uptime to 99.9%','chart-bar','green')+detailItem('KR 2','Reduce critical incident MTTR by 50%','chart-bar','green')+cta('Review draft OKRs'),'Based on company goals and your department priorities.')+
       secondary('Based on','<div class="ai-source-row">'+icon('menu-objectives')+'Company goals (FY 2026)</div><div class="ai-source-row">'+icon('menu-groups')+'Engineering priorities</div>');
   }
   function strategy(){
-    return product('<h4>Strategy overview</h4><div class="ai-strategy">'+[['Vision','menu-home',''],['Strategy','menu-objectives','purple'],['OKRs','menu-dashboard','green']].map(([label,name,color])=>'<div class="ai-strategy-step">'+tile(name,color)+'<div><b>'+label+'</b>'+skeleton()+skeleton('65%',true)+'</div></div>').join('')+'</div>','Home')+
+    return product('<h4>Strategy overview</h4><div class="ai-strategy">'+[['Vision','eye',''],['Strategy','menu-objectives','purple'],['OKRs','chart-bar','green']].map(([label,name,color])=>'<div class="ai-strategy-step">'+tile(name,color)+'<div><b>'+label+'</b>'+skeleton()+skeleton('65%',true)+'</div></div>').join('')+'</div>','Home')+
       primary('Strategy readiness','<div class="ai-readiness">'+ring(72,100,'/100','var(--ai-green)')+'<strong>Ready with one gap</strong><p>Strategy is clear, but one goal needs a measurable target.</p></div>'+cta('View detailed analysis'))+
       secondary('Needs attention','<p><strong>Enterprise expansion</strong></p><p>Missing measurable target</p>');
   }
