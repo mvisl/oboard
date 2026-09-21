@@ -28,7 +28,7 @@
   }
   const person=(initial='')=>initial==='EN'?'<span class="ai-avatar">EN</span>':'<img class="ai-avatar" src="illustration-assets/avatar-'+({AL:'al',B:'ben',M:'martine',S:'sam'}[initial]||'al')+'.png" alt="" width="24" height="24">';
   function peopleRows(rows){
-    return rows.map(([value,date],i)=>'<div class="ai-list-row">'+person(['AL','B','M','S'][i])+'<span class="ai-person-copy">'+skeleton('90%')+skeleton('60%',true)+'</span>'+progress(value)+'<small>'+value+'%</small><time class="'+(/Never|6 days/.test(date)?'overdue':'')+'">'+date+'</time></div>').join('');
+    return rows.map(([value,date],i)=>'<div class="ai-list-row">'+person(['AL','B','M','S'][i])+'<span class="ai-person-copy">'+skeleton('90%')+skeleton('60%',true)+'</span>'+progress(value,i===0?'var(--ai-green)':'var(--ai-blue)')+'<small>'+value+'%</small><time class="'+(/Never|6 days/.test(date)?'overdue':'')+'">'+date+'</time></div>').join('');
   }
   function detailItem(label,copy,name,color=''){
     return '<div class="ai-detail-item '+color+'">'+tile(name,color)+'<div><b>'+label+'</b><p>'+copy+'</p></div></div>';
@@ -39,11 +39,11 @@
       secondary('Drafted from recent work',[['github','3 commits'],['figma','2 designs updated'],['googledocs','5 comments']].map(([name,copy])=>'<div class="ai-source-row"><img src="illustration-assets/'+name+'.svg?rev=official-1" alt="'+name+'">'+copy+'</div>').join(''));
   }
   function engagement(){
-    return product('<h4>Team</h4><div class="ai-mini-tabs"><b>People</b><span>Groups</span></div>'+peopleRows([[68,'2 days ago'],[42,'6 days ago'],[12,'Never']]),'People')+
+    return product('<h4>Performance report</h4><div class="ai-mini-tabs"><span>By group</span><b>People</b></div><div class="ai-people-head"><span>Owner</span><span>Participation</span><span>Last update</span></div>'+peopleRows([[68,'2 days ago'],[42,'6 days ago'],[12,'Never']]),'Dashboard')+
       primary('Engagement','<div class="ai-score-layout">'+ring(61,100)+'<div class="ai-score-copy"><strong class="ai-attention">Needs attention</strong><p>Two owners haven’t updated since the cycle opened.</p></div></div>')+
       secondary('2 owners went quiet','<div class="ai-owner-row">'+person('B')+'<span class="ai-owner-copy">'+skeleton('88%')+skeleton('62%',true)+'</span><time>6 days ago</time></div><div class="ai-owner-row">'+person('M')+'<span class="ai-owner-copy">'+skeleton('100%')+skeleton('70%',true)+'</span><time>Never</time></div>'+cta('Review owners →'));
   }
-  const okrRows=(values,letter)=>values.map(value=>'<div class="ai-okr-row"><span class="ai-tile">'+letter+'</span>'+skeleton()+progress(value,'var(--ai-green)')+'<small>'+value+'%</small></div>').join('');
+  const okrRows=(values,letter)=>values.map((value,i)=>'<div class="ai-okr-row"><span class="ai-tile">'+letter+'</span>'+skeleton()+progress(value,i===0?'var(--ai-green)':'#b9cce4')+'<small>'+value+'%</small></div>').join('');
   function retrospective(){
     const summary='<div class="ai-home-summary"><div class="ai-team-heading">'+person('EN')+'<div>Engineering<small>Engineering department</small></div></div><div class="ai-kpis">'+[[72,'Alignment'],[45,'Engagement'],[61,'OKR progress']].map(([value,label],i)=>'<div><div class="ai-kpi-value"><b>'+value+'%</b>'+(i<2?progress(value):'')+'</div><span>'+label+'</span></div>').join('')+'</div></div>';
     const objectives='<section class="ai-home-panel"><div class="ai-mini-heading">'+icon('menu-objectives')+'Objectives</div>'+[70,50,30].map((value,i)=>'<div class="ai-home-objective"><i class="ai-status-dot status-'+i+'"></i>'+skeleton('112px')+progress(value,['#42c994','#ffbc3c','#9caac0'][i])+'<small>'+value+'%</small></div>').join('')+'</section>';

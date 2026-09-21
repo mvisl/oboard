@@ -52,7 +52,7 @@
 .ai-icon-evidence>div{min-width:0;flex:1}
 .ai-icon-evidence .ai-source-row{font-size:9px;gap:5px;margin-top:6px}
 .ai-icon-evidence .ai-source-row .ai-icon{width:13px;height:13px}
-.ai-progress{display:block;flex:none;height:5px;width:64px;background:var(--ai-line);border-radius:4px;overflow:hidden}
+.ai-progress{display:block;flex:none;height:6px;width:64px;background:var(--ai-line);border-radius:4px;overflow:hidden}
 .ai-progress i{display:block;height:100%;border-radius:4px;background:var(--progress-color,var(--ai-blue));width:var(--progress)}
 .ai-ring{flex:none;width:88px;height:88px;display:grid;place-items:center;position:relative}
 .ai-ring-art{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
@@ -83,6 +83,13 @@
 .ai-tree-row small{font-size:10px;color:var(--ai-muted)}
 .ai-list-row{display:flex;align-items:center;gap:10px;height:42px;border-bottom:1px solid var(--ai-line)}
 .ai-list-row .ai-person-copy{width:82px}
+.ai-people-head{display:grid;grid-template-columns:116px 92px 80px;font-size:8px;color:var(--ai-muted);margin-bottom:2px}
+.ai-people-head~.ai-list-row{height:36px}
+.ai-tree-row.selected .ai-progress{background:#cfddf2}
+.ai-primary .ai-detail-item .ai-tile{border:0;background:#e6f0ff}
+.ai-primary .ai-detail-item.green .ai-tile{background:#e5f8f0}
+.ai-primary .ai-detail-item.purple .ai-tile{background:#efe7ff}
+.ai-primary .ai-detail-item.orange .ai-tile{background:#ffe9df}
 .ai-avatar{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#e6f0ff;color:#7085a9;font-size:10px;flex:none;object-fit:cover}
 .ai-avatar.soft{background:#eff1f5;color:#afbbcf}
 .ai-list-row time{font-size:10px;color:var(--ai-muted);margin-left:4px}
