@@ -30,7 +30,7 @@
 .ai-content h4{font-size:14px;margin:0 0 14px;font-weight:700}
 .ai-primary,.ai-secondary{position:absolute;background:white;border:1px solid #edf2f9;border-radius:8px}
 .ai-primary{right:0;top:24px;width:240px;padding:16px;box-shadow:0 12px 28px #457cb526;overflow:hidden}
-.ai-primary::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--ai-blue),var(--ai-purple))}
+.ai-primary::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#55baff 0%,#7b89ff 36%,#a278f8 68%,#d65ef3 100%)}
 .ai-overlay-title{display:flex;gap:6px;align-items:center;font-size:14px;font-weight:750;line-height:1.25;margin:0 0 12px}
 .ai-sparkle{color:#8438e8;width:20px;height:20px}
 .ai-subtitle{color:var(--ai-muted);font-size:12px;margin:0 0 14px;line-height:1.45}
