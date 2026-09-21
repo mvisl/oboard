@@ -136,7 +136,7 @@
 .ai-status-table{width:298px}
 .ai-status-table-head,.ai-status-person{display:grid;grid-template-columns:124px 52px 48px 58px;gap:4px;align-items:center}
 .ai-status-table-head{font-size:8px;color:var(--ai-muted);padding-bottom:6px;border-bottom:1px solid #e4e9f0}
-.ai-status-person{height:32px;border-bottom:1px solid var(--ai-line)}
+.ai-status-person{height:28px;border-bottom:1px solid var(--ai-line)}
 .ai-status-person-name{display:flex;align-items:center;gap:6px}
 .ai-status-person-name small{display:block;font-size:7px;color:var(--ai-muted);margin-top:3px}
 .ai-status-average{font-size:9px;color:var(--ai-muted)}
