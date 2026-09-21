@@ -51,6 +51,7 @@
 .connector:after{width:18px;height:18px;border:2px solid #fff;box-shadow:0 0 0 4px #e7f0ff;bottom:-11px}
 .page-switcher{position:fixed;z-index:20;right:18px;top:50%;display:grid;gap:6px;transform:translateY(-50%);padding:6px;border:1px solid #dbe7f8;border-radius:12px;background:rgba(255,255,255,.84);box-shadow:0 8px 24px rgba(20,51,97,.10);backdrop-filter:blur(8px)}.page-switcher a{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#62708a;font-size:12px;font-weight:800;text-decoration:none}.page-switcher a:hover{background:#eaf2ff;color:#1268f3}.page-switcher a[aria-current="page"]{background:#1268f3;color:#fff}
 </style>
+<link rel="stylesheet" href="agent-illustrations.css">
 </head>
 <body>
 <main class="page">
@@ -74,7 +75,7 @@
     </div>
     <div class="connector" aria-hidden="true"></div>
     <section class="work" aria-live="polite">
-      <header class="work-head">
+      <div class="work-copy"><header class="work-head">
         <div class="work-icon"><img id="workIcon" alt=""></div>
         <div class="work-title"><div class="agent-label">AI agent</div><h3 id="workName"></h3><p id="workDesc"></p></div>
         <div class="work-meta"><span id="workMeta"></span><button class="rerun" type="button">Run again</button></div>
@@ -83,11 +84,13 @@
         <section class="result"><div class="result-kicker" id="resultKicker"></div><h4 id="resultTitle"></h4><p id="resultCopy"></p><div class="result-action"><div><strong id="focusTitle"></strong><p id="focusEvidence"></p></div><b id="focusAction"></b></div></section>
         <aside class="summary"><div class="summary-tag">At a glance</div><h4 id="summaryTitle"></h4><p id="summaryCopy"></p><div class="stats"><div class="stat"><b id="statOneValue"></b><span id="statOneLabel"></span></div><div class="stat"><b id="statTwoValue"></b><span id="statTwoLabel"></span></div></div><div class="actions"><button class="action" id="secondaryAction"></button><button class="action primary" id="primaryAction"></button></div></aside>
       </div>
+      </div><div id="agentIllustration" class="agent-illustration" role="img"></div>
     </section>
   </section>
   <footer class="footer"><span>Works within your permissions. Every draft stays under human control.</span><a href="#">Explore all agents&nbsp; →</a></footer>
  </main>
 <nav class="page-switcher" aria-label="OBoard prototypes"><a href="agents-timeline.html" aria-current="page" aria-label="AI agents timeline">1</a><a href="platform-4-states.html" aria-label="Platform">2</a><a href="strategic-context.html" aria-label="Strategic context">3</a></nav>
+<script src="agent-illustrations.js"></script>
 <script>
 const iconBase='https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/';
 const agents=[
@@ -105,6 +108,8 @@ function syncGeometry(index){const cycleRect=cycle.getBoundingClientRect(),tabRe
 function render(index){const a=agents[index],focus=a.rows[0];selected=index;tabs.forEach((t,i)=>t.setAttribute('aria-selected',String(i===index)));syncGeometry(index);refs.workIcon.src=iconBase+a.icon;refs.workName.textContent=a.name;refs.workDesc.textContent=a.desc;refs.workMeta.innerHTML=a.meta;refs.resultKicker.textContent=a.result;refs.resultTitle.textContent=a.sumTitle;refs.resultCopy.textContent=a.sum;refs.focusTitle.textContent=focus[0];refs.focusEvidence.textContent=focus[1];refs.focusAction.textContent=a.next+' →';refs.summaryTitle.textContent=a.sumTitle;refs.summaryCopy.textContent=a.sum;refs.statOneValue.textContent=a.s1;refs.statOneLabel.textContent=a.l1;refs.statTwoValue.textContent=a.s2;refs.statTwoLabel.textContent=a.l2;refs.secondaryAction.textContent=a.secondary;refs.primaryAction.textContent=a.primary;}
 tabs.forEach((t,i)=>{t.addEventListener('mousedown',e=>e.preventDefault());t.addEventListener('click',()=>{const y=scrollY;render(i);requestAnimationFrame(()=>scrollTo(0,y));});});
 addEventListener('resize',()=>syncGeometry(selected));
+const renderOriginal=render;
+render=function(index){renderOriginal(index);renderAgentIllustration(index);};
 render(2);
 </script>
 </body>

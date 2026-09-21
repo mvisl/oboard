@@ -1,0 +1,11 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-menu-home">
+<g clip-path="url(#icon-menu-home_clip0_4108_80240)">
+<path d="M4 12.7426C4 12.2122 4.21071 11.7035 4.58579 11.3284L11.2929 4.62132C11.6834 4.2308 12.3166 4.2308 12.7071 4.62132L13.4142 3.91421L12.7071 4.62132L19.4142 11.3284C19.7893 11.7035 20 12.2122 20 12.7426V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V12.7426Z" stroke="currentColor" stroke-width="2" />
+<rect x="9" y="16" width="6" height="5" rx="1" stroke="currentColor" stroke-width="2" />
+</g>
+<defs>
+<clipPath id="icon-menu-home_clip0_4108_80240">
+<rect width="24" height="24" fill="white" />
+</clipPath>
+</defs>
+</svg>
