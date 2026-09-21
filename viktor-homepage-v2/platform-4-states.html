@@ -136,5 +136,5 @@ h1{margin:24px auto 12px}
   </div>
 </section></main>
 <script>const tabs=[...document.querySelectorAll('.tab')],scenes=[...document.querySelectorAll('.scene')];const initial=new URLSearchParams(location.search).get('state');if(initial){tabs.forEach(x=>x.setAttribute('aria-selected',String(x.dataset.state===initial)));scenes.forEach(s=>s.classList.toggle('active',s.dataset.scene===initial));}tabs.forEach(t=>{t.addEventListener('mousedown',e=>e.preventDefault());t.addEventListener('click',()=>{const y=scrollY;tabs.forEach(x=>x.setAttribute('aria-selected',String(x===t)));scenes.forEach(s=>s.classList.toggle('active',s.dataset.scene===t.dataset.state));requestAnimationFrame(()=>scrollTo(0,y));});});</script>
-<nav class="page-switcher" aria-label="OBoard prototypes"><a href="platform-4-states.html" aria-current="page" aria-label="Platform">1</a><a href="agents-timeline.html" aria-label="AI agents timeline">2</a><a href="strategic-context.html" aria-label="Strategic context">3</a></nav>
+<nav class="page-switcher" aria-label="OBoard prototypes"><a href="agents-timeline.html" aria-label="AI agents timeline">1</a><a href="platform-4-states.html" aria-current="page" aria-label="Platform">2</a><a href="strategic-context.html" aria-label="Strategic context">3</a></nav>
 </body></html>
