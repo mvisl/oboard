@@ -97,6 +97,7 @@
 .ai-kpis b{display:block;color:var(--ai-ink)}
 .ai-kpis span{color:var(--ai-muted);font-size:9px}
 .ai-retro .ai-okr-row{padding:3px 0}
+.ai-retro .ai-team-heading{margin-bottom:4px}
 .ai-retro .ai-mini-heading{margin-top:8px}
 .ai-metric-signals{display:flex;gap:12px;margin-top:6px;font-size:11px}
 .ai-metric-signals>span{display:flex;align-items:center;gap:8px;color:var(--ai-green)}
