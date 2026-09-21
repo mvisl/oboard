@@ -4,7 +4,14 @@
   const skeleton = (width = '70%', secondary = false) => '<span class="ai-skeleton'+(secondary?' secondary':'')+'" style="--skeleton-width:'+width+'"></span>';
   const progress = (value, color = 'var(--ai-blue)') => '<span class="ai-progress" style="--progress:'+value+'%;--progress-color:'+color+'"><i></i></span>';
   const tile = (name='menu-objectives',color='') => '<span class="ai-tile '+color+'">'+icon(name)+'</span>';
-  const ring = (value,denominator,status,color='var(--ai-blue)') => '<div class="ai-ring" style="--score:'+(value/denominator*100)+'%;--ring-color:'+color+'"><div class="ai-ring-label"><b>'+value+(denominator===10?'/10':'')+'</b><small>'+(status||'/'+denominator)+'</small></div></div>';
+  let ringId = 0;
+  const ring = (value,denominator,status,color='var(--ai-blue)') => {
+    const id='ai-score-gradient-'+(++ringId), fraction=value/denominator;
+    const angle=fraction*Math.PI*2-Math.PI/2;
+    const endX=50+42*Math.cos(angle),endY=50+42*Math.sin(angle);
+    const green=color==='var(--ai-green)';
+    return '<div class="ai-ring"><svg class="ai-ring-art" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="'+id+'" x1="85%" y1="15%" x2="15%" y2="85%"><stop stop-color="'+(green?'#20d3ab':'#258fff')+'"/><stop offset=".55" stop-color="'+(green?'#1acaa6':'#0066ff')+'"/><stop offset="1" stop-color="'+(green?'#22d4ad':'#922bfa')+'"/></linearGradient></defs><circle cx="50" cy="50" r="42" class="ai-ring-track"/><path d="M 50 8 A 42 42 0 '+(fraction>.5?1:0)+' 1 '+endX+' '+endY+'" fill="none" stroke="url(#'+id+')" stroke-width="8" stroke-linecap="round"/></svg><div class="ai-ring-label"><b>'+value+(denominator===10?'/10':'')+'</b><small>'+(status||'/'+denominator)+'</small></div></div>';
+  };
   const cta = label => '<span class="ai-cta">'+label+'</span>';
   const primary = (title, body, subtitle='') => '<section class="ai-primary"><h4 class="ai-overlay-title">'+icon('sparkle','ai-sparkle')+title+'</h4>'+(subtitle?'<p class="ai-subtitle">'+subtitle+'</p>':'')+body+'</section>';
   const secondary = (title, body) => '<aside class="ai-secondary"><h5>'+title+'</h5>'+body+'</aside>';
@@ -19,9 +26,9 @@
     const tree='<h4>Objectives</h4><div class="ai-tree"><div class="ai-tree-row">'+tile()+'<span class="ai-tree-copy">'+skeleton()+skeleton('60%',true)+'</span>'+progress(72,'var(--ai-green)')+'<small>72%</small></div><div class="ai-branch"><div class="ai-tree-row">'+tile('menu-objectives','purple')+'<span class="ai-tree-copy">'+skeleton()+skeleton('60%',true)+'</span>'+progress(58,'var(--ai-green)')+'<small>58%</small></div><div class="ai-branch">'+kr(28,true)+kr(62)+kr(45)+'</div></div></div>';
     return product(tree,'Objectives')+primary('Alignment quality','<div class="ai-score-layout">'+ring(6,10,'Needs work')+'<div class="ai-dimensions">'+[['Vertical alignment',48,'#ff8541'],['Measurability',40,'#f64963'],['Scope fit',65,'#36b27e']].map(([label,value,color])=>'<div class="ai-dimension">'+label+progress(value,color)+'</div>').join('')+'</div></div>')+secondary('AI recommendation','<p>Reframe this as a measurable customer outcome.</p>'+cta('Apply fix →'));
   }
-  const person=(initial='')=>'<span class="ai-avatar '+(!initial?'soft':'')+'">'+initial+'</span>';
+  const person=(initial='')=>initial==='EN'?'<span class="ai-avatar">EN</span>':'<img class="ai-avatar" src="illustration-assets/avatar-'+({AL:'al',B:'ben',M:'martine',S:'sam'}[initial]||'al')+'.png" alt="" width="24" height="24">';
   function peopleRows(rows){
-    return rows.map(([value,date],i)=>'<div class="ai-list-row">'+person(i===0?'AL':'')+'<span class="ai-person-copy">'+skeleton('90%')+skeleton('60%',true)+'</span>'+progress(value)+'<small>'+value+'%</small><time class="'+(/Never|6 days/.test(date)?'overdue':'')+'">'+date+'</time></div>').join('');
+    return rows.map(([value,date],i)=>'<div class="ai-list-row">'+person(['AL','B','M','S'][i])+'<span class="ai-person-copy">'+skeleton('90%')+skeleton('60%',true)+'</span>'+progress(value)+'<small>'+value+'%</small><time class="'+(/Never|6 days/.test(date)?'overdue':'')+'">'+date+'</time></div>').join('');
   }
   function detailItem(label,copy,name,color=''){
     return '<div class="ai-detail-item '+color+'">'+tile(name,color)+'<div><b>'+label+'</b><p>'+copy+'</p></div></div>';
