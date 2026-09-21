@@ -142,6 +142,15 @@
 .ai-home-objective small{color:var(--ai-muted);font-size:9px}
 .ai-home-panel .ai-metric-signals{gap:8px}
 .ai-retro .ai-home-summary{padding:8px;margin-bottom:8px}
+.ai-retro .ai-home-summary{min-width:0;width:298px;gap:6px;padding:8px 6px}
+.ai-home-summary .ai-team-heading{width:106px;gap:5px;font-size:9px}
+.ai-home-summary .ai-team-heading small{font-size:7px}
+.ai-home-summary .ai-avatar{width:24px;height:24px;font-size:9px}
+.ai-home-summary .ai-kpis>div{padding:0 5px}
+.ai-home-summary .ai-kpis{font-size:9px}
+.ai-home-summary .ai-kpis span{font-size:7px;white-space:nowrap}
+.ai-home-summary .ai-kpi-value{gap:3px}
+.ai-home-summary .ai-kpi-value .ai-progress{width:18px}
 .ai-retro .ai-home-panel{padding:6px;margin-bottom:6px}
 .ai-home-panel .ai-metric-signals>span{background:#effaf5;padding:6px;border-radius:4px;gap:6px}
 .ai-home-panel .ai-metric-signals>span:last-child{background:#fff1f3}
