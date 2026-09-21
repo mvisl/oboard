@@ -38,7 +38,7 @@
   }
   const okrRows=(values,letter)=>values.map(value=>'<div class="ai-okr-row"><span class="ai-tile">'+letter+'</span>'+skeleton()+progress(value,'var(--ai-green)')+'<small>'+value+'%</small></div>').join('');
   function retrospective(){
-    return product('<div class="ai-team-heading">'+person('EN')+'Engineering</div><div class="ai-kpis"><div><b>72%</b><span>Alignment</span></div><div><b>45%</b><span>Engagement</span></div><div><b>61%</b><span>OKR progress</span></div></div><div class="ai-mini-heading">Objectives</div>'+okrRows([70,50,30],'O')+'<div class="ai-mini-heading">Key metrics</div>'+skeleton('55%'),'Home')+
+    return product('<div class="ai-retro"><div class="ai-team-heading">'+person('EN')+'Engineering</div><div class="ai-kpis"><div><b>72%</b><span>Alignment</span></div><div><b>45%</b><span>Engagement</span></div><div><b>61%</b><span>OKR progress</span></div></div><div class="ai-mini-heading">Objectives</div>'+okrRows([70,50,30],'O')+'<div class="ai-mini-heading">Key metrics</div><div class="ai-metric-signals"><span>'+skeleton()+'↗ +12%</span><span>'+skeleton()+'↘ −8%</span></div></div>','Home')+
       primary('Retrospective ready','<div class="ai-outcome"><b>2</b> outcomes achieved</div><div class="ai-outcome carry"><b>1</b> carries forward</div><div class="ai-mini-heading">Proposed agenda</div><ol class="ai-agenda"><li>Review outcomes</li><li>Discuss what stalled</li><li>Set next-cycle priorities</li></ol>'+cta('Review retrospective'),'Drafted from your completed cycle.')+
       secondary('Carry forward','<p>EMEA dependencies</p><span style="color:var(--ai-blue)">Move to Q4 →</span>');
   }

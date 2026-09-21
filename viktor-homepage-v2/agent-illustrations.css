@@ -64,7 +64,7 @@
 .ai-branch>.ai-tree-row{margin-bottom:8px}
 .ai-branch .ai-branch{padding-top:12px}
 .ai-tree-row.selected{background:#e6f0ff;border:1px solid #b3d1ff;border-radius:4px;padding:5px;gap:5px;font-size:10px}
-.ai-tree-row.selected .ai-tree-copy{width:156px;font-size:11px;line-height:1.3}
+.ai-tree-row.selected .ai-tree-copy{width:178px;font-size:11px;line-height:1.3;white-space:nowrap}
 .ai-tree-row.selected .ai-progress{width:34px}
 .ai-tree-row small{font-size:10px;color:var(--ai-muted)}
 .ai-list-row{display:flex;align-items:center;gap:10px;height:42px;border-bottom:1px solid var(--ai-line)}
@@ -96,6 +96,12 @@
 .ai-kpis{display:flex;gap:16px;font-size:11px;margin-bottom:12px}
 .ai-kpis b{display:block;color:var(--ai-ink)}
 .ai-kpis span{color:var(--ai-muted);font-size:9px}
+.ai-retro .ai-okr-row{padding:3px 0}
+.ai-retro .ai-mini-heading{margin-top:8px}
+.ai-metric-signals{display:flex;gap:12px;margin-top:6px;font-size:11px}
+.ai-metric-signals>span{display:flex;align-items:center;gap:8px;color:var(--ai-green)}
+.ai-metric-signals>span:last-child{color:var(--ai-red)}
+.ai-metric-signals .ai-skeleton{width:40px}
 .ai-mini-heading{font-size:11px;font-weight:600;margin:14px 0 4px}
 .ai-outcome{display:flex;align-items:center;gap:8px;margin:12px 0;font-size:12px}
 .ai-outcome b{font-size:17px;color:var(--ai-green)}
