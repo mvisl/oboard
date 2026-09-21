@@ -58,8 +58,9 @@
 .ai-tile.orange{color:#ff8541;background:#ffe8db}
 .ai-tree-copy{width:98px;flex:none}
 .ai-tree-copy .ai-skeleton{width:90%}
-.ai-branch{margin-left:13px;padding:12px 0 0 20px;border-left:1px solid #afbbcf}
-.ai-branch>.ai-tree-row::before{content:"";position:absolute;left:-21px;top:-12px;width:16px;height:29px;border:solid #afbbcf;border-width:0 0 1px 1px;border-bottom-left-radius:6px}
+.ai-branch{margin-left:13px;padding:12px 0 0 21px}
+.ai-hierarchy-links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:#afbbcf}
+.ai-hierarchy-links path{fill:none;stroke:currentColor;stroke-width:1;vector-effect:non-scaling-stroke}
 .ai-branch>.ai-tree-row{margin-bottom:8px}
 .ai-branch .ai-branch{padding-top:12px}
 .ai-tree-row.selected{background:#e6f0ff;border:1px solid #b3d1ff;border-radius:4px;padding:5px;gap:5px;font-size:10px}
@@ -112,7 +113,6 @@
 .ai-strategy-step{display:flex;gap:10px;align-items:center;position:relative;margin-bottom:22px}
 .ai-strategy-step:nth-child(2){margin-left:28px}
 .ai-strategy-step:nth-child(3){margin-left:56px}
-.ai-strategy-step:not(:first-child)::before{content:"";position:absolute;left:-15px;top:-24px;width:12px;height:36px;border:solid #afbbcf;border-width:0 0 1px 1px;border-bottom-left-radius:5px}
 .ai-strategy-step b{font-size:12px}
 .ai-strategy-step .ai-tile{width:30px;height:30px}
 .ai-strategy-step .ai-skeleton{width:112px;margin-top:6px}

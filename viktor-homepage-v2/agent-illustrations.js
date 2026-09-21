@@ -53,10 +53,45 @@
       secondary('Needs attention','<p><strong>Enterprise expansion</strong></p><p>Missing measurable target</p>');
   }
   const renderers={2:alignment,3:checkin,4:engagement,5:retrospective,1:drafting,0:strategy};
+  // Attach connectors to actual tile bounds, never to a decorative side spine.
+  function connectHierarchy(host){
+    const frame=host.querySelector('.ai-product');
+    if(!frame)return;
+    frame.querySelector('.ai-hierarchy-links')?.remove();
+    const pairs=[];
+    const steps=[...frame.querySelectorAll('.ai-strategy-step > .ai-tile')];
+    steps.slice(1).forEach((child,i)=>pairs.push([steps[i],child]));
+    frame.querySelectorAll('.ai-branch').forEach(branch=>{
+      const parent=branch.previousElementSibling?.querySelector('.ai-tile');
+      if(parent)branch.querySelectorAll(':scope > .ai-tree-row > .ai-tile').forEach(child=>pairs.push([parent,child]));
+    });
+    if(!pairs.length)return;
+    const ns='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(ns,'svg');
+    svg.classList.add('ai-hierarchy-links');
+    svg.setAttribute('aria-hidden','true');
+    const bounds=frame.getBoundingClientRect();
+    svg.setAttribute('viewBox',`0 0 ${frame.clientWidth} ${frame.clientHeight}`);
+    pairs.forEach(([parent,child])=>{
+      const p=parent.getBoundingClientRect(),c=child.getBoundingClientRect();
+      const x=p.left+p.width/2-bounds.left-frame.clientLeft;
+      const y=p.bottom-bounds.top-frame.clientTop;
+      const endX=c.left-bounds.left-frame.clientLeft-2;
+      const endY=c.top+c.height/2-bounds.top-frame.clientTop;
+      const r=Math.max(0,Math.min(6,endX-x,endY-y));
+      const path=document.createElementNS(ns,'path');
+      path.setAttribute('d',`M ${x} ${y} V ${endY-r} Q ${x} ${endY} ${x+r} ${endY} H ${endX}`);
+      svg.append(path);
+    });
+    frame.append(svg);
+  }
+  const hierarchyResize=new ResizeObserver(entries=>entries.forEach(({target})=>connectHierarchy(target)));
   window.renderAgentIllustration = function(index, host=document.getElementById('agentIllustration')){
     if(!host)return;
     host.innerHTML=(renderers[index]||alignment)();
     host.setAttribute('aria-label', ['Strategy Readiness','OKR Drafting','Alignment Analysis','Check-in Drafting','Engagement Report','Retrospective Prep'][index]+' product illustration');
+    connectHierarchy(host);
+    hierarchyResize.observe(host);
   };
   window.agentIllustrationPrimitives={asset,icon,skeleton,progress,tile,ring,cta,primary,secondary,sidebar,product,renderers};
 })();
