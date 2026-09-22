@@ -50,3 +50,9 @@ Scope remains narrow: lighter shared left detail, official integration logos and
 - Revision 36da75b: Claude approved Engagement row spacing, Alignment badges and shared shadow regressions; GPT and Gemini approved the actual Engagement screenshot. These are scoped visual approvals, not global product-fidelity approval.
 - Subsequent user corrections supersede that Engagement placement approval: return its secondary overlay to the shared baseline and lift report rows. Check-in spacing and enlarged left header icon tiles also require fresh verification. Do not report these later revisions as covered by the earlier approval.
 - Still open: literal live counterparts for Strategy overview, stacked Company/Engineering drafting surface, stepped Alignment row composition, and Retrospective's Engineering KPI summary. Do not claim all six are product-verified.
+
+### Simplified backgrounds — ccddc96
+
+User explicitly requested a lighter marketing abstraction for the Check-in and Retrospective backgrounds. Removed Check-in's duplicate date, Value/Status rows, Reply/React controls and nested borders; retained author/time → KR → progress change. Removed Retro's tiny KPI trio and nested panel frames; retained team identity, objective rows and metric signals. GPT, Gemini and Claude each approved both scenes for visual style, density and meaning using rendered page context. Claude compared against the other four scenes. These approvals do not close the remaining product-fidelity source gaps.
+
+Claude also approved 440a8c4's Check-in row normalization and restored Engagement secondary baseline; it explicitly noted the first background percentage is occluded by the foreground AI overlay, accepted as intentional layering. Later native Based on icon and connector changes (8347a66) are a separate scope awaiting fresh visual validation.

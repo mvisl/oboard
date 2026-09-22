@@ -17,3 +17,5 @@ Service marks were replaced with unmodified official SVG artwork on 2026-09-22. 
 The prior monochrome Simple Icons approximations are no longer used for these service marks. Logo geometry and colors must not be redrawn or themed: the service identity carries the source-evidence meaning.
 
 Illustration colors reuse the current Oboard product palette. The four-point sparkle is the product's icon-sparkle, rendered through a CSS mask. The eye, chart-bar, trending-up, alert-triangle and list-details semantic glyphs are unmodified Tabler 3.34.1 SVGs, the same family used by the surrounding agent cards; their source is https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/.
+
+`icon-ds-building.svg` and `icon-ds-users.svg` are unmodified SVG exports from Oboard Design System 25/26, retrieved 2026-09-22 for the Drafting “Based on” source rows. Company uses `building2`, component key `1fa230481352a38f3973d01a28855d828b5d7074`; team uses `users`, key `c97a8b3e9bf26b71aaf20a5af11f66d12431f332`. Both retain the native 24px viewBox and 2px round stroke; the local display uses 16px CSS masks.
