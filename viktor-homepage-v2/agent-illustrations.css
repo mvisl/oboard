@@ -209,10 +209,11 @@
 .ai-okr-row .ai-progress{width:44px}
 .ai-okr-row small{font-size:9px;color:var(--ai-muted)}
 .ai-strategy-step{display:flex;gap:10px;align-items:center;position:relative;margin-bottom:22px}
-.ai-strategy-step:nth-child(2){margin-left:28px}
-.ai-strategy-step:nth-child(3){margin-left:56px}
+.ai-strategy-step:nth-child(2){margin-left:52px}
+.ai-strategy-step:nth-child(3){margin-left:104px}
 .ai-strategy-step b{font-size:12px}
-.ai-strategy-step .ai-tile{width:30px;height:30px}
+.ai-strategy-step .ai-tile{width:36px;height:36px}
+.ai-strategy-step .ai-icon{width:24px;height:24px}
 .ai-strategy-step .ai-skeleton{width:112px;margin-top:6px}
 .ai-readiness{text-align:center}
 .ai-readiness .ai-ring{margin:4px auto 12px;width:104px;height:104px}

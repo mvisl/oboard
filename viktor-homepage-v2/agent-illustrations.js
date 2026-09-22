@@ -60,7 +60,7 @@
       '<aside class="ai-secondary ai-icon-evidence">'+tile('file-description','purple')+'<div><h5>Based on</h5><div class="ai-source-row">'+icon('menu-objectives')+'Company goals (FY 2026)</div><div class="ai-source-row">'+icon('menu-groups')+'Engineering priorities</div></div></aside>';
   }
   function strategy(){
-    return product('<h4>Strategy overview</h4><div class="ai-strategy">'+[['Vision','eye',''],['Strategy','menu-objectives','purple'],['OKRs','chart-bar','green']].map(([label,name,color])=>'<div class="ai-strategy-step">'+tile(name,color)+'<div><b>'+label+'</b>'+skeleton()+skeleton('65%',true)+'</div></div>').join('')+'</div>','Home')+
+    return product('<h4>Strategy overview</h4><div class="ai-strategy">'+[['Vision','ds-eye',''],['Strategy','ds-target','purple'],['OKRs','ds-chart-column','green']].map(([label,name,color])=>'<div class="ai-strategy-step">'+tile(name,color)+'<div><b>'+label+'</b>'+skeleton()+skeleton('65%',true)+'</div></div>').join('')+'</div>','Home')+
       primary('Strategy readiness','<div class="ai-readiness">'+ring(72,100,'/100','var(--ai-green)')+'<strong>Ready with one gap</strong><p>Strategy is clear, but one goal needs a measurable target.</p></div>'+cta('View detailed analysis'))+
       '<aside class="ai-secondary ai-warning-evidence">'+tile('alert-triangle','orange')+'<div class="ai-warning-copy"><h5>Enterprise expansion</h5><p>Missing measurable target</p></div>'+icon('arrow-right','ai-warning-chevron')+'</aside>';
   }
@@ -91,12 +91,19 @@
       const p=parent.getBoundingClientRect(),c=child.getBoundingClientRect();
       const o=(owner||parent).getBoundingClientRect();
       const x=o.left+o.width/2-bounds.left-frame.clientLeft;
-      const y=(sibling?p.top+p.height/2:p.bottom)-bounds.top-frame.clientTop;
-      const endX=c.left-bounds.left-frame.clientLeft-2;
+      const y=(sibling?p.top+p.height/2:p.bottom+4)-bounds.top-frame.clientTop;
+      // Selected rows own a visible card edge outside their padded icon.
+      const destination=child.closest('.ai-tree-row.selected')?.getBoundingClientRect()||c;
+      const endX=destination.left-bounds.left-frame.clientLeft-6;
       const endY=c.top+c.height/2-bounds.top-frame.clientTop;
       const r=Math.max(0,Math.min(6,endX-x,endY-y));
       const path=document.createElementNS(ns,'path');
       path.setAttribute('d',`M ${x} ${y} V ${endY-r} Q ${x} ${endY} ${x+r} ${endY} H ${endX}`);
+      path.setAttribute('stroke-linecap','round');
+      if(child.closest('.ai-strategy-step')){
+        path.setAttribute('d',path.getAttribute('d')+` M ${endX-4} ${endY-4} L ${endX} ${endY} L ${endX-4} ${endY+4}`);
+        path.setAttribute('stroke-linejoin','round');
+      }
       svg.append(path);
     });
     frame.append(svg);
