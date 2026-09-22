@@ -30,12 +30,12 @@
 .ai-content{margin-left:86px;padding:14px 16px}
 .ai-content h4{font-size:14px;margin:0 0 14px;font-weight:700}
 .ai-primary,.ai-secondary{position:absolute;background:white;border:1px solid #edf2f9;border-radius:8px}
-.ai-primary{right:0;top:24px;width:240px;padding:16px;box-shadow:0 12px 28px #457cb526;overflow:hidden}
+.ai-primary{right:0;top:24px;width:240px;padding:16px;box-shadow:0 14px 30px #457cb533;overflow:hidden}
 .ai-primary::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#55baff 0%,#7b89ff 36%,#a278f8 68%,#d65ef3 100%)}
 .ai-overlay-title{display:flex;gap:6px;align-items:center;font-size:14px;font-weight:750;line-height:1.25;margin:0 0 12px}
 .ai-sparkle{color:#8438e8;width:20px;height:20px}
 .ai-subtitle{color:var(--ai-muted);font-size:12px;margin:0 0 14px;line-height:1.45}
-.ai-secondary{left:4px;bottom:16px;width:218px;padding:12px;box-shadow:0 8px 20px #457cb51a}
+.ai-secondary{left:4px;bottom:16px;width:218px;padding:12px;box-shadow:0 10px 24px #457cb526}
 .ai-secondary h5{font-size:12px;line-height:1.3;margin:0 0 6px}
 .ai-secondary p{font-size:12px;line-height:1.45;color:var(--ai-muted);margin:0 0 6px}
 .ai-warning-evidence{display:flex;align-items:center;gap:8px}
@@ -134,11 +134,11 @@
 .ai-report-switches{display:flex;align-items:center;gap:8px;font-size:8px;color:var(--ai-muted);margin-bottom:10px}
 .ai-report-switches b{padding:3px 5px;background:white;box-shadow:0 1px 3px #172b4d1f;border-radius:3px;color:var(--ai-ink);font-weight:600}
 .ai-report-switches b+ b{margin-left:4px}
-.ai-status-table{width:100%;margin-top:32px}
+.ai-status-table{width:100%;margin-top:26px}
 .ai-status-table-head,.ai-status-person{display:grid;grid-template-columns:minmax(124px,1.6fr) minmax(52px,1fr) minmax(48px,1fr) minmax(58px,1fr);gap:4px;align-items:center}
 .agent-illustration:has(.ai-status-table) .ai-secondary{bottom:-16px}
 .ai-status-table-head{font-size:8px;color:var(--ai-muted);padding-bottom:6px;border-bottom:1px solid #e4e9f0}
-.ai-status-person{height:28px;border-bottom:1px solid var(--ai-line)}
+.ai-status-person{height:36px;border-bottom:1px solid var(--ai-line)}
 .ai-status-person-name{display:flex;align-items:center;gap:6px}
 .ai-status-person-name small{display:block;font-size:7px;color:var(--ai-muted);margin-top:3px}
 .ai-status-average{font-size:9px;color:var(--ai-muted)}
