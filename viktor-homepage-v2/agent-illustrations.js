@@ -62,7 +62,7 @@
   function strategy(){
     return product('<h4>Strategy overview</h4><div class="ai-strategy">'+[['Vision','eye',''],['Strategy','menu-objectives','purple'],['OKRs','chart-bar','green']].map(([label,name,color])=>'<div class="ai-strategy-step">'+tile(name,color)+'<div><b>'+label+'</b>'+skeleton()+skeleton('65%',true)+'</div></div>').join('')+'</div>','Home')+
       primary('Strategy readiness','<div class="ai-readiness">'+ring(72,100,'/100','var(--ai-green)')+'<strong>Ready with one gap</strong><p>Strategy is clear, but one goal needs a measurable target.</p></div>'+cta('View detailed analysis'))+
-      '<aside class="ai-secondary ai-warning-evidence">'+tile('alert-triangle','orange')+'<div class="ai-warning-copy"><h5>Needs attention</h5><p><strong>Enterprise expansion</strong></p><p>Missing measurable target</p></div>'+icon('chevron-right','ai-warning-chevron')+'</aside>';
+      '<aside class="ai-secondary ai-warning-evidence">'+tile('alert-triangle','orange')+'<div class="ai-warning-copy"><h5>Enterprise expansion</h5><p>Missing measurable target</p></div>'+icon('arrow-right','ai-warning-chevron')+'</aside>';
   }
   const renderers={2:alignment,3:checkin,4:engagement,5:retrospective,1:drafting,0:strategy};
   // Attach connectors to actual tile bounds, never to a decorative side spine.
