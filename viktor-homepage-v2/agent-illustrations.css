@@ -3,7 +3,7 @@
 .agent-tools img[title]{box-sizing:border-box;width:24px;height:24px;min-width:0;flex:0 1 24px;padding:4px;object-fit:contain}
 .agent-tools img[title="Google Docs"],.agent-tools img[title="Google Sheets"]{padding:4px}
 .agent-tools img[title="Jira"]{padding:4.5px}
-.agent-tools img[title="Oboard"]{padding:0;transform:scale(1.35)}
+.agent-tools img[title="Oboard"]{padding:0;transform:scale(1.15)}
 .agent-tools img[title="AI"]{padding:0;transform:scale(1.1)}
 .work{display:grid;grid-template-columns:minmax(0, .8fr) minmax(0, 1.2fr);gap:24px;align-items:center;padding:24px;overflow:visible}
 .work-copy{min-width:0;align-self:start;padding-top:32px}
