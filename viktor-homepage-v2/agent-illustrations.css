@@ -10,7 +10,7 @@
 .work-copy .result>p{font-size:15px;line-height:1.5}
 .work-copy .result-action{display:block;margin-top:20px;padding:16px 0 0;background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none}
 .work-copy .result-action b{display:block;margin-top:12px;text-align:left;white-space:normal;line-height:1.4}
-.work-copy .work-icon{width:48px;height:48px;border-radius:12px}
+.work-copy .work-icon{width:60px;height:60px;border-radius:8px}
 .work-copy .work-icon img{width:28px;height:28px}
 .work-copy .work-title h3{font-size:28px}
 .work-copy .work-title p{font-size:16px;line-height:1.4}
