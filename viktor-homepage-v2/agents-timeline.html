@@ -52,6 +52,17 @@
 .page-switcher{position:fixed;z-index:20;right:18px;top:50%;display:grid;gap:6px;transform:translateY(-50%);padding:6px;border:1px solid #dbe7f8;border-radius:12px;background:rgba(255,255,255,.84);box-shadow:0 8px 24px rgba(20,51,97,.10);backdrop-filter:blur(8px)}.page-switcher a{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#62708a;font-size:12px;font-weight:800;text-decoration:none}.page-switcher a:hover{background:#eaf2ff;color:#1268f3}.page-switcher a[aria-current="page"]{background:#1268f3;color:#fff}
 </style>
 <link rel="stylesheet" href="agent-illustrations.css?rev=product-truth-2">
+<style>
+/* Shared editorial left detail: title, one paragraph, one marketing action. */
+.work-copy .left-detail{margin:32px 0 0 64px;max-width:520px}
+.work-copy .left-detail p{margin:0;color:var(--muted);font-size:16px;line-height:1.5}
+.work-copy .left-detail strong{color:var(--ink);font-weight:600}
+.work-copy .left-cta{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:44px;margin-top:24px;padding:10px 24px;border-radius:8px;background:var(--blue);color:#fff;font-size:16px;font-weight:600;line-height:1.5;text-decoration:none}
+.work-copy .left-cta:hover{filter:brightness(.95)}
+.work-copy .left-cta:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.work-copy .left-cta img{width:20px;height:20px;filter:brightness(0) invert(1)}
+@media(max-width:540px){.work-copy .left-detail{margin-top:24px}.work-copy .left-cta{padding-inline:16px}}
+</style>
 </head>
 <body>
 <main class="page">
@@ -77,12 +88,11 @@
     <section class="work" aria-live="polite">
       <div class="work-copy"><header class="work-head">
         <div class="work-icon"><img id="workIcon" alt=""></div>
-        <div class="work-title"><div class="agent-label">AI agent</div><h3 id="workName"></h3><p id="workDesc"></p></div>
-        <div class="work-meta"><span id="workMeta"></span><button class="rerun" type="button">Run again</button></div>
+        <div class="work-title"><h3 id="workName"></h3><p id="workDesc"></p></div>
       </header>
-      <div class="work-grid">
-        <section class="result"><div class="result-kicker" id="resultKicker"></div><h4 id="resultTitle"></h4><p id="resultCopy"></p><div class="result-action"><div><strong id="focusTitle"></strong><p id="focusEvidence"></p></div><b id="focusAction"></b></div></section>
-        <aside class="summary"><div class="summary-tag">At a glance</div><h4 id="summaryTitle"></h4><p id="summaryCopy"></p><div class="stats"><div class="stat"><b id="statOneValue"></b><span id="statOneLabel"></span></div><div class="stat"><b id="statTwoValue"></b><span id="statTwoLabel"></span></div></div><div class="actions"><button class="action" id="secondaryAction"></button><button class="action primary" id="primaryAction"></button></div></aside>
+      <div class="left-detail">
+        <p><strong id="detailOpening"></strong> <span id="detailBody"></span></p>
+        <a class="left-cta" id="detailCta" href="https://oboard.io/start-trial"><span id="detailCtaLabel"></span><img src="https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/arrow-right.svg" alt=""></a>
       </div>
       </div><div id="agentIllustration" class="agent-illustration" role="img"></div>
     </section>
@@ -94,18 +104,26 @@
 <script>
 const iconBase='https://cdn.jsdelivr.net/npm/@tabler/icons@3.34.1/icons/outline/';
 const agents=[
- {name:'Strategy Readiness',desc:'Pressure-test the strategy before it cascades.',icon:'file-description.svg',meta:'Reviewed 4 strategic priorities<br>Last updated 2 minutes ago',result:'Readiness risks',copy:'Resolve the unclear choices before teams draft their objectives.',heads:['Strategic choice','Readiness signal','Agent recommendation'],rows:[['Win enterprise trust','No measurable reliability threshold','Define a 99.95% SLO and accountable owner'],['Expand in EMEA','Target segment is not specified','Name priority markets and buying teams'],['Improve efficiency','Conflicts with reliability investment','State which cost trade-off is acceptable']],next:'Define a 99.95% SLO and accountable owner',sumTitle:'The direction is strong, but not yet cascade-ready.',sum:'Two choices need measurable boundaries; one needs an explicit trade-off before teams can align.',s1:'3',l1:'risks',s2:'4',l2:'priorities',secondary:'Edit strategy',primary:'Review fixes'},
- {name:'OKR Drafting',desc:'Turn parent goals into measurable team OKRs.',icon:'list-details.svg',meta:'Drafted from “Platform Reliability”<br>Using Q3 planning context',result:'Draft team OKRs',copy:'Each draft inherits the parent outcome and proposes a measurable result.',heads:['Draft objective','Proposed key result','Confidence'],rows:[['Make checkout resilient','Raise successful checkout rate to 99.95%','High'],['Shorten incident recovery','Reduce P1 median MTTR from 75 to 25 min','High'],['Reduce alert fatigue','Cut non-actionable alerts by 40%','Medium']],next:'Review and assign the three drafts',sumTitle:'Three measurable drafts are ready for owner review.',sum:'The agent used last cycle’s baseline, team capacity and the parent strategy—not a blank template.',s1:'3',l1:'drafts',s2:'2',l2:'sources',secondary:'Edit in Oboard',primary:'Review & assign'},
- {name:'Alignment Analysis',desc:'Find disconnected goals and get a concrete fix.',icon:'target-arrow.svg',meta:'Analyzed 12 OKRs across 4 teams<br>Last updated 4 minutes ago',result:'Misaligned objectives',copy:'Review the evidence and apply the suggested fix.',heads:['Objective','Why it’s misaligned','Suggested fix'],rows:[['Grow ARR to $5M','Only 1 of 6 team OKRs supports revenue','Add 2–3 measurable revenue KRs'],['Improve Backend','No link to a strategic outcome','Link to Platform Reliability'],['Expand to EMEA','No owner and 3 open dependencies','Assign an owner and dependencies']],next:'Add 2–3 measurable revenue KRs',sumTitle:'3 of 12 objectives need an alignment fix.',sum:'Addressing these gaps could increase cross-functional clarity before the cycle starts.',s1:'3',l1:'misaligned',s2:'4',l2:'teams',secondary:'Edit in Oboard',primary:'Edit & submit'},
- {name:'Check-in Drafting',desc:'Turn work signals into an update you can confirm.',icon:'message-circle.svg',meta:'Compiled Jira, Slack and KPI signals<br>Drafted 1 minute ago',result:'Draft weekly check-in',copy:'The agent proposes the update; the human owner confirms every statement.',heads:['Check-in field','Drafted update','Evidence'],rows:[['Progress','Checkout success reached 99.94%; KR moves 50% → 75%','KPI + Jira'],['Plans','Scale the worker pool before seasonal peak','Sprint 42'],['Problems','Alerting dependency remains with Platform','Slack thread']],next:'Confirm the evidence-backed check-in',sumTitle:'The key result is back on track.',sum:'The draft explains what changed, what comes next and what still needs attention.',s1:'+25',l1:'progress pts',s2:'3',l2:'signals',secondary:'Edit draft',primary:'Confirm check-in'},
- {name:'Engagement Report',desc:'See who is participating — and who went quiet.',icon:'chart-bar.svg',meta:'Analyzed 38 owners across 7 teams<br>Current cycle · Week 6',result:'Participation signals',copy:'Focus the follow-up where missing updates create the most risk.',heads:['Team','Participation','Signal'],rows:[['Platform','92% · 11 of 12 owners','Healthy'],['Customer Success','64% · 7 of 11 owners','Needs follow-up'],['Sales','38% · 3 of 8 owners','At risk']],next:'Nudge the seven quiet owners',sumTitle:'Two teams need a targeted nudge.',sum:'The gap is concentrated in seven owners, not across the whole company. Follow up precisely.',s1:'7',l1:'quiet owners',s2:'81%',l2:'participation',secondary:'View owners',primary:'Send nudges'},
- {name:'Retrospective Prep',desc:'Bring what moved, stalled and carries forward.',icon:'sparkles.svg',meta:'Prepared from the completed Q3 cycle<br>Includes decisions and evidence',result:'Cycle retrospective',copy:'A concise evidence-backed starting point for the closing conversation.',heads:['Outcome','What the cycle showed','Next decision'],rows:[['Reliability','P1 MTTR fell 58%; below 75% target','Continue for one cycle'],['Alert quality','Noise fell 42%; target exceeded','Standardize across teams'],['EMEA launch','3 dependencies remain open','Carry forward with owner']],next:'Carry EMEA dependencies into the next cycle',sumTitle:'One practice scales; one outcome carries forward.',sum:'The draft separates evidence, decisions and unresolved work so the next cycle starts cleanly.',s1:'2',l1:'achieved',s2:'1',l2:'carried forward',secondary:'Edit retro',primary:'Review & close'}
+ {name:'Strategy Readiness',desc:'Pressure-test your strategy before it cascades.',icon:'file-description.svg'},
+ {name:'OKR Drafting',desc:'Turn parent goals into measurable team OKRs.',icon:'list-details.svg'},
+ {name:'Alignment Analysis',desc:'Find disconnected goals. Get a concrete fix.',icon:'target-arrow.svg'},
+ {name:'Check-in Drafting',desc:'Turn work signals into an update you can confirm.',icon:'message-circle.svg'},
+ {name:'Engagement Report',desc:'See who is participating — and who went quiet.',icon:'chart-bar.svg'},
+ {name:'Retrospective Prep',desc:'Bring what moved, stalled and carries forward.',icon:'sparkles.svg'}
 ];
 const tabs=[...document.querySelectorAll('.agent')],cycle=document.querySelector('.cycle'),phaseTrack=document.querySelector('.phase-track'),phaseDots=[...document.querySelectorAll('.phase-dot')];
-const refs={workIcon,workName,workDesc,workMeta,resultKicker,resultTitle,resultCopy,focusTitle,focusEvidence,focusAction,summaryTitle,summaryCopy,statOneValue,statOneLabel,statTwoValue,statTwoLabel,secondaryAction,primaryAction};
+const leftDetails=[
+ {opening:'Find weak spots before they cascade into team OKRs.',body:'See which goals lack measurable targets, clear ownership or enough direction for teams to execute confidently. Fix the gaps before the next cycle starts.',cta:'Test strategy',subtitle:'Pressure-test your strategy before it cascades.'},
+ {opening:'Turn strategic direction into OKRs your team can actually use.',body:'Start from parent goals, recent performance and team context to create measurable objectives and key results. Review the draft before anything is shared.',cta:'Draft OKRs'},
+ {opening:'See where goals disconnect before execution starts.',body:'Trace objectives through the hierarchy, surface weak links and find goals that lack measurable outcomes. Get a concrete fix for the gaps that matter.',cta:'Check alignment',subtitle:'Find disconnected goals. Get a concrete fix.'},
+ {opening:'Turn recent work into a check-in that is ready to review.',body:'Pull progress from the signals your team already creates, summarize what moved and surface what is blocked. Review the draft and confirm it when it looks right.',cta:'Draft check-in'},
+ {opening:'Spot participation gaps before they become execution gaps.',body:'See who is updating their work, where activity is slowing and which owners may need a timely nudge. Focus attention without chasing the whole team.',cta:'Check engagement'},
+ {opening:'Start the retrospective with the important signals already organized.',body:'Bring together outcomes, stalled work and unresolved dependencies from the completed cycle into a focused agenda. Carry the right context into what comes next.',cta:'Prepare retro'}
+];
+const refs={workIcon,workName,workDesc,detailOpening,detailBody,detailCtaLabel};
 let selected=2;
 function syncGeometry(index){const cycleRect=cycle.getBoundingClientRect(),tabRect=tabs[index].getBoundingClientRect(),trackRect=phaseTrack.getBoundingClientRect(),firstDot=phaseDots[0].getBoundingClientRect(),lastDot=phaseDots.at(-1).getBoundingClientRect();cycle.style.setProperty('--connector-x',`${tabRect.left+tabRect.width/2-cycleRect.left}px`);phaseTrack.style.setProperty('--line-start',`${firstDot.left+firstDot.width/2-trackRect.left}px`);phaseTrack.style.setProperty('--line-end',`${lastDot.left+lastDot.width/2-trackRect.left}px`)}
-function render(index){const a=agents[index],focus=a.rows[0];selected=index;tabs.forEach((t,i)=>t.setAttribute('aria-selected',String(i===index)));syncGeometry(index);refs.workIcon.src=iconBase+a.icon;refs.workName.textContent=a.name;refs.workDesc.textContent=a.desc;refs.workMeta.innerHTML=a.meta;refs.resultKicker.textContent=a.result;refs.resultTitle.textContent=a.sumTitle;refs.resultCopy.textContent=a.sum;refs.focusTitle.textContent=focus[0];refs.focusEvidence.textContent=focus[1];refs.focusAction.textContent=a.next+' →';refs.summaryTitle.textContent=a.sumTitle;refs.summaryCopy.textContent=a.sum;refs.statOneValue.textContent=a.s1;refs.statOneLabel.textContent=a.l1;refs.statTwoValue.textContent=a.s2;refs.statTwoLabel.textContent=a.l2;refs.secondaryAction.textContent=a.secondary;refs.primaryAction.textContent=a.primary;}
+function render(index){const a=agents[index],detail=leftDetails[index];selected=index;tabs.forEach((t,i)=>t.setAttribute('aria-selected',String(i===index)));syncGeometry(index);refs.workIcon.src=iconBase+a.icon;refs.workName.textContent=a.name;refs.workDesc.textContent=detail.subtitle||a.desc;refs.detailOpening.textContent=detail.opening;refs.detailBody.textContent=detail.body;refs.detailCtaLabel.textContent=detail.cta;}
 tabs.forEach((t,i)=>{t.addEventListener('mousedown',e=>e.preventDefault());t.addEventListener('click',()=>{const y=scrollY;render(i);requestAnimationFrame(()=>scrollTo(0,y));});});
 addEventListener('resize',()=>syncGeometry(selected));
 const renderOriginal=render;
