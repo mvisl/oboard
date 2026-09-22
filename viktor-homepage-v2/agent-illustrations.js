@@ -45,7 +45,7 @@
       primary('Engagement','<div class="ai-score-layout">'+ring(61,100)+'<div class="ai-score-copy"><strong class="ai-attention">Needs attention</strong><p>Two owners haven’t updated since the cycle opened.</p></div></div>')+
       secondary('2 owners went quiet','<div class="ai-owner-row">'+person('B')+'<span class="ai-owner-copy">'+skeleton('88%')+skeleton('62%',true)+'</span><time>6 days ago</time></div><div class="ai-owner-row">'+person('M')+'<span class="ai-owner-copy">'+skeleton('100%')+skeleton('70%',true)+'</span><time>Never</time></div>'+cta('Review owners →'));
   }
-  const okrRows=(values,letter)=>values.map((value,i)=>'<div class="ai-okr-row"><span class="ai-tile">'+letter+'</span>'+skeleton()+progress(value,i===0?'var(--ai-green)':'#b9cce4')+'<small>'+value+'%</small></div>').join('');
+  const okrRows=(values,type)=>'<div class="ai-okr-children">'+values.map((value,i)=>'<div class="ai-okr-row"><span class="ai-tile" aria-label="'+(type==='C'?'Company objective':'Department objective')+'">'+type+'</span>'+skeleton()+progress(value,i===0?'var(--ai-green)':'#b9cce4')+'<small>'+value+'%</small></div>').join('')+'</div>';
   function retrospective(){
     const summary='<div class="ai-home-summary"><div class="ai-team-heading">'+person('EN')+'<div>Engineering<small>Engineering department</small></div></div><div class="ai-kpis">'+[[72,'Alignment'],[45,'Engagement'],[61,'OKR progress']].map(([value,label],i)=>'<div><div class="ai-kpi-value"><b>'+value+'%</b>'+(i<2?progress(value):'')+'</div><span>'+label+'</span></div>').join('')+'</div></div>';
     const objectives='<section class="ai-home-panel"><div class="ai-mini-heading">'+icon('menu-objectives')+'Objectives</div>'+[70,50,30].map((value,i)=>'<div class="ai-home-objective"><i class="ai-status-dot status-'+i+'"></i>'+skeleton('112px')+progress(value,['#42c994','#ffbc3c','#9caac0'][i])+'<small>'+value+'%</small></div>').join('')+'</section>';
@@ -55,7 +55,7 @@
       '<aside class="ai-secondary ai-icon-evidence">'+tile('chevrons-right')+'<div><h5>Carry forward</h5><p>EMEA dependencies</p><span style="color:var(--ai-blue)">Move to Q4 →</span></div></aside>';
   }
   function drafting(){
-    return product('<div class="ai-group-heading">'+tile('menu-objectives')+'<div>Company OKRs<small>FY 2026</small></div></div>'+okrRows([70,45,30],'C')+'<div class="ai-group-heading">'+tile('menu-groups')+'<div>Engineering OKRs<small>Engineering department</small></div></div>'+okrRows([60,40,20],'E'),'Objectives')+
+    return product('<div class="ai-group-heading">'+tile('menu-objectives')+'<div>Company OKRs<small>FY 2026</small></div></div>'+okrRows([70,45,30],'C')+'<div class="ai-group-heading">'+tile('menu-groups')+'<div>Engineering OKRs<small>Engineering department</small></div></div>'+okrRows([60,40,20],'Dp'),'Objectives')+
       primary('Draft Engineering OKRs',detailItem('Objective','Improve platform reliability and operational efficiency','menu-objectives')+detailItem('KR 1','Increase service uptime to 99.9%','chart-bar','green')+detailItem('KR 2','Reduce critical incident MTTR by 50%','chart-bar','green')+cta('Review draft OKRs'),'Based on company goals and your department priorities.')+
       '<aside class="ai-secondary ai-icon-evidence">'+tile('file-description','purple')+'<div><h5>Based on</h5><div class="ai-source-row">'+icon('menu-objectives')+'Company goals (FY 2026)</div><div class="ai-source-row">'+icon('menu-groups')+'Engineering priorities</div></div></aside>';
   }
