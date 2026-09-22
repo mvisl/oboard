@@ -2,6 +2,17 @@
 
 Status: **NOT approved — product-source gaps remain.**
 
+## Follow-up: source verification and independent visual review
+
+- Read-only live Objectives → Map inspection confirms a department-objective card (`Dp`) connected to a grouped set of `KR` cards. The expandable table also confirms Objective → KR nesting. This verifies the relationship, not the literal stepped-row composition or icon encoding of the marketing Alignment illustration.
+- Read-only Home → company group → Engineering group inspection confirms the current live Engineering Home uses Objectives’ progress / Metrics progress, a graph, status breakdown and Engineering objectives. It does not match the newer EN / Alignment / Engagement / OKR-progress summary from the supplied Figma/prototype. Do not call that newer representation verified current live UI.
+- Strategy overview remains an approved marketing story with no verified literal product screen. Company/Engineering two-stack grouping and `E` badges remain unverified; do not silently infer them from generic illustration references.
+- Left-detail revision `edbe9a0` was independently reviewed by GPT from six actual 1440×1100 screenshots plus the supplied reference, and by Claude in the live page with screenshots and DOM measurements. Both gave **6/6 visual APPROVE for the shared left component**, not blanket product-fidelity approval.
+- Main-agent measurements: title/body/CTA x=169px at 1440; paragraph line counts 4/5/4/5/4/5 at 16/24; detail height470px and right illustration height420px unchanged; zero broken images in all six states. At800px, the existing stacked layout reflows without page-width overflow.
+- Gemini received all six actual screenshots after reporting it could not visually render the URL. It described five states as visually clean; an initial Strategy overlap claim quoted text absent from that state. Rechecking the fresh57d97a8 screenshot, it withdrew the claim and confirmed clean text and the requested two-level secondary. Reviewer claims were independently checked rather than blindly accepted.
+- Latest user-authorized Strategy-secondary correction is separate from the left-only scope: remove the redundant Needs attention heading, retain warning tile beside Enterprise expansion / Missing measurable target and a right arrow. Other illustration content is unchanged.
+- Strategy correction57d97a8 (`strategy-evidence-2`) received independent GPT and Claude APPROVE plus a positive Gemini visual recheck. Main/browser and Claude measurements agree:240×66 card,40×40 tile, title/subtitle both one line, right arrow, no content overlap. This is a scoped visual approval, not a resolution of the open product-source questions.
+
 ## Follow-up: Check-ins and Engagement — 2026-09-22
 
 Live product was inspected again through the authenticated browser, including screenshots and DOM. No account data or employee portraits were copied into the public prototype.
