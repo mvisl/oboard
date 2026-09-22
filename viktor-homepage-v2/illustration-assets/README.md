@@ -1,5 +1,11 @@
 # Oboard illustration assets
 
+Strategy hierarchy uses unmodified SVG exports from Oboard Design System 25/26, inspected through the Oboard Slava working file on 2026-09-22:
+- `icon-ds-eye.svg`: `eye`, component key `f1a377c66ba19309ee8c0823eeb6f0fb8a444522`, working node `1685:19528`.
+- `icon-ds-target.svg`: `target`, component key `59b60f0f02462e5890bf6de3dac87d189e5ad681`, working node `1657:7874`.
+- `icon-ds-chart-column.svg`: `chart-column`, component key `a76d24fa9162f396e7bfb2233bb87387d5956b46`, working node `3676:1491`.
+Native 24px geometry is preserved. The existing semantic tile colors are applied through CSS masks; paths were not redrawn. The Custom group shape Target/Diagram variants were inspected but do not match the intended eye/target/vertical-bars story.
+
 The seven icon-prefixed SVGs are exact symbol artwork extracted from the public Oboard application bundle at https://app.oboard.io/js/chunk-common.a7943ed6.js on 2026-09-22. Only the symbol wrapper was converted to an SVG document. The logo and glyph paths have not been redrawn.
 
 Service marks were replaced with unmodified official SVG artwork on 2026-09-22. They are rendered as images, not recolored CSS masks:

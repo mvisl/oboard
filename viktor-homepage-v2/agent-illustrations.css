@@ -38,8 +38,8 @@
 .ai-secondary{left:4px;bottom:16px;width:218px;padding:12px;box-shadow:0 8px 20px #457cb51a}
 .ai-secondary h5{font-size:12px;line-height:1.3;margin:0 0 6px}
 .ai-secondary p{font-size:12px;line-height:1.45;color:var(--ai-muted);margin:0 0 6px}
-.ai-warning-evidence{display:flex;align-items:center;gap:10px;width:240px}
-.ai-warning-evidence>.ai-tile{width:40px;height:40px;border-radius:8px;background:#fff0eb;color:#ff7048}
+.ai-warning-evidence{display:flex;align-items:center;gap:8px}
+.ai-warning-evidence>.ai-tile{width:32px;height:32px;border-radius:8px;background:#fff0eb;color:#ff7048}
 .ai-warning-evidence>.ai-tile .ai-icon{width:24px;height:24px}
 .ai-warning-copy{flex:1;min-width:0}
 .ai-warning-copy h5{font-size:12px;margin:0 0 4px}
