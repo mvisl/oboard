@@ -124,13 +124,13 @@
 .ai-checkin-rows .ai-list-row:first-child{background:#eef5ff;border-radius:4px}
 .ai-content:has(.ai-feed-entry) h4{margin-bottom:6px}
 .ai-feed-day{font-size:8px;font-weight:600;margin:0 0 4px;color:var(--ai-muted)}
-.ai-feed-entry{width:298px;border:1px solid #e6ebf3;border-radius:7px;background:white;overflow:hidden}
-.ai-feed-entry header{display:flex;gap:8px;align-items:center;padding:4px 8px;background:#f3f7fd;border-bottom:1px solid var(--ai-line)}
+.ai-feed-entry{width:298px;border:0;border-bottom:1px solid var(--ai-line);border-radius:0;background:transparent;overflow:hidden;padding:8px 0 12px}
+.ai-feed-entry header{display:flex;gap:8px;align-items:center;padding:0;background:transparent;border:0}
 .ai-feed-entry header small{display:block;margin-top:3px;color:var(--ai-muted);font-size:8px}
-.ai-feed-body{padding:3px 8px}
+.ai-feed-body{padding:12px 0 0 32px}
 .ai-feed-entity{display:flex;gap:6px;align-items:center;margin-bottom:2px;height:18px}
 .ai-feed-entity .ai-tile{width:18px;height:18px;font-size:8px}
-.ai-feed-field{display:flex;align-items:center;gap:8px;height:18px;border-bottom:1px solid var(--ai-line);font-size:9px;color:var(--ai-muted)}
+.ai-feed-field{display:flex;align-items:center;gap:8px;height:28px;border:0;font-size:10px;color:var(--ai-muted)}
 .ai-feed-field:last-child{border:0}
 .ai-feed-field b{width:62px;color:var(--ai-ink);font-size:9px}
 .ai-feed-field strong{color:var(--ai-green)}
@@ -192,6 +192,13 @@
 .ai-retro .ai-home-panel{padding:6px;margin-bottom:6px}
 .ai-home-panel .ai-metric-signals>span{background:#effaf5;padding:6px;border-radius:4px;gap:6px}
 .ai-home-panel .ai-metric-signals>span:last-child{background:#fff1f3}
+.ai-retro .ai-home-summary{border:0;border-radius:0;background:transparent;padding:0;margin-bottom:18px}
+.ai-retro .ai-home-summary .ai-team-heading{width:auto;gap:8px;font-size:12px}
+.ai-retro .ai-home-summary .ai-team-heading small{font-size:9px}
+.ai-retro .ai-home-summary .ai-avatar{width:30px;height:30px;font-size:11px}
+.ai-retro .ai-home-panel{border:0;border-radius:0;background:transparent;padding:0;margin-bottom:16px}
+.ai-retro .ai-home-objective{height:28px}
+.ai-retro .ai-home-panel .ai-metric-signals>span{background:transparent;padding:0}
 .ai-outcome-panel{padding:4px 10px;background:#f8f9fc;border-radius:7px}
 .ai-outcome .ai-tile{width:24px;height:24px;border-radius:50%}
 .ai-outcome .ai-tile.green{background:#14c88b;color:white}

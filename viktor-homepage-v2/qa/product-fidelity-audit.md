@@ -41,3 +41,12 @@ Read-only current-product inspection confirmed Home, Check-ins, Objectives and D
 Shared selectors, sidebar icons and active states must be checked in context; matching an icon from a product bundle does not prove the destination exists. Sample values and generated AI output are marketing examples, not claims of shipped product features. AI controls also require product confirmation if presented as shipped UI.
 
 Scope remains narrow: lighter shared left detail, official integration logos and confirmed product-truth corrections only. Preserve all approved right-side geometry, density and story. Do not remove meaning or redesign to resolve a source gap.
+
+## Follow-up verification — 2026-09-22
+
+- Live product confirms type abbreviations C (Company), Dp (Department), T, KPI and KR. Drafting E badges are corrected to Dp; Alignment uses C → Dp → KR instead of repeated navigation glyphs. This verifies entity encoding, not the illustrative screen composition.
+- Check-in background now follows the observed chronological feed pattern. Engagement uses Performance report / People / By status, not a fabricated Team navigation destination.
+- Claude approved Drafting indentation and badges on 80d0ab2, Strategy's shared 218px secondary width on 042872d, and Strategy/Alignment connector spacing on 8e26d14.
+- Revision 36da75b: Claude approved Engagement row spacing, Alignment badges and shared shadow regressions; GPT and Gemini approved the actual Engagement screenshot. These are scoped visual approvals, not global product-fidelity approval.
+- Subsequent user corrections supersede that Engagement placement approval: return its secondary overlay to the shared baseline and lift report rows. Check-in spacing and enlarged left header icon tiles also require fresh verification. Do not report these later revisions as covered by the earlier approval.
+- Still open: literal live counterparts for Strategy overview, stacked Company/Engineering drafting surface, stepped Alignment row composition, and Retrospective's Engineering KPI summary. Do not claim all six are product-verified.
