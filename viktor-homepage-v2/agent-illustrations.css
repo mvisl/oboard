@@ -134,9 +134,9 @@
 .ai-report-switches{display:flex;align-items:center;gap:8px;font-size:8px;color:var(--ai-muted);margin-bottom:10px}
 .ai-report-switches b{padding:3px 5px;background:white;box-shadow:0 1px 3px #172b4d1f;border-radius:3px;color:var(--ai-ink);font-weight:600}
 .ai-report-switches b+ b{margin-left:4px}
-.ai-status-table{width:100%;margin-top:16px}
+.ai-status-table{width:100%;margin-top:32px}
 .ai-status-table-head,.ai-status-person{display:grid;grid-template-columns:minmax(124px,1.6fr) minmax(52px,1fr) minmax(48px,1fr) minmax(58px,1fr);gap:4px;align-items:center}
-.agent-illustration:has(.ai-status-table) .ai-secondary{bottom:0}
+.agent-illustration:has(.ai-status-table) .ai-secondary{bottom:-16px}
 .ai-status-table-head{font-size:8px;color:var(--ai-muted);padding-bottom:6px;border-bottom:1px solid #e4e9f0}
 .ai-status-person{height:28px;border-bottom:1px solid var(--ai-line)}
 .ai-status-person-name{display:flex;align-items:center;gap:6px}
