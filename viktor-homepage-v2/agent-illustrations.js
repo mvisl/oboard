@@ -52,7 +52,7 @@
     const metrics='<section class="ai-home-panel"><div class="ai-mini-heading">'+icon('chart-bar')+'Key metrics</div><div class="ai-metric-signals"><span>↗ '+skeleton()+'<b>+12%</b></span><span>↘ '+skeleton()+'<b>−8%</b></span></div></section>';
     return product('<div class="ai-retro">'+summary+objectives+metrics+'</div>','Home')+
       primary('Retrospective ready','<div class="ai-outcome-panel"><div class="ai-outcome">'+tile('check','green')+'<b>2</b> outcomes achieved</div><div class="ai-outcome carry">'+tile('arrow-right')+'<b>1</b> carries forward</div></div><div class="ai-agenda-panel">'+tile('list-details','purple')+'<div><div class="ai-mini-heading">Proposed agenda</div><ol class="ai-agenda"><li>Review outcomes</li><li>Discuss what stalled</li><li>Set next-cycle priorities</li></ol></div></div>'+cta('Review retrospective'),'Drafted from your completed cycle.')+
-      '<aside class="ai-secondary ai-icon-evidence">'+tile('chevrons-right')+'<div><h5>Carry forward</h5><p>EMEA dependencies</p><span style="color:var(--ai-blue)">Move to Q4 →</span></div></aside>';
+      '<aside class="ai-secondary ai-icon-evidence ai-carry-evidence">'+tile('list-details','purple')+'<div><h5>EMEA dependencies</h5><span class="ai-carry-link">Carry to Q4 →</span></div></aside>';
   }
   function drafting(){
     return product('<div class="ai-group-heading">'+tile('menu-objectives')+'<div>Company OKRs<small>FY 2026</small></div></div>'+okrRows([70,45,30],'C')+'<div class="ai-group-heading">'+tile('menu-groups')+'<div>Engineering OKRs<small>Engineering department</small></div></div>'+okrRows([60,40,20],'Dp'),'Objectives')+

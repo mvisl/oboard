@@ -54,6 +54,9 @@
 .ai-icon-evidence .ai-source-row{font-size:9px;gap:5px;margin-top:6px}
 .ai-icon-evidence .ai-source-row .ai-icon{width:13px;height:13px}
 .ai-draft-sources .ai-source-row .ai-icon{width:16px;height:16px;flex:none}
+.ai-carry-evidence{align-items:center}
+.ai-carry-evidence h5{margin-bottom:4px}
+.ai-carry-link{color:var(--ai-blue);font-size:12px;line-height:1.4}
 .ai-progress{display:block;flex:none;height:6px;width:64px;background:var(--ai-line);border-radius:4px;overflow:hidden}
 .ai-progress i{display:block;height:100%;border-radius:4px;background:var(--progress-color,var(--ai-blue));width:var(--progress)}
 .ai-ring{flex:none;width:88px;height:88px;display:grid;place-items:center;position:relative}
