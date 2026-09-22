@@ -143,6 +143,8 @@
 .ai-report-switches b{padding:3px 5px;background:white;box-shadow:0 1px 3px #172b4d1f;border-radius:3px;color:var(--ai-ink);font-weight:600}
 .ai-report-switches b+ b{margin-left:4px}
 .ai-status-table{width:100%;margin-top:0}
+.ai-content:has(.ai-status-table)>h4{margin-bottom:8px}
+.ai-content:has(.ai-status-table) .ai-report-switches{margin-bottom:0}
 .ai-status-table-head,.ai-status-person{display:grid;grid-template-columns:minmax(124px,1.6fr) minmax(52px,1fr) minmax(48px,1fr) minmax(58px,1fr);gap:4px;align-items:center}
 .ai-status-table-head{font-size:8px;color:var(--ai-muted);padding-bottom:6px;border-bottom:1px solid #e4e9f0}
 .ai-status-person{height:36px;border-bottom:1px solid var(--ai-line)}
